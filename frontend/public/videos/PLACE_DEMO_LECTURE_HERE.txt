@@ -1,0 +1,2 @@
+Place your demo video file in this directory and rename it to "demo-lecture.mp4".
+The frontend video player will look for this file at "frontend/public/videos/demo-lecture.mp4".

@@ -1,0 +1,3197 @@
+# from fastapi import APIRouter, HTTPException, Depends
+# from pydantic import BaseModel
+# from typing import List, Optional, Dict, Any
+# import re
+# from app.dependencies import get_current_student
+# from app.models import User
+# import urllib.request
+# import json
+# import os
+# import joblib
+# import numpy as np
+# from youtube_transcript_api import YouTubeTranscriptApi
+
+# from app.services.rag import vector_store, generator, quiz_generator
+
+# from app.services.rag.chunker import chunk_transcript
+# from app.services.rag.vector_store import index_lecture_chunks
+
+
+# router = APIRouter()
+
+
+# # ============================================================
+# # GLOBAL SESSION STORES
+# # ============================================================
+
+# SESSIONS_STORE = {}
+# WATCH_HISTORY = {}
+# ACTIVE_SESSION_STATE = {}
+
+# MOCK_LECTURES = []
+# MOCK_SUMMARIES = {}
+# TRANSCRIPTS_STORE = {}
+# FINAL_VIDEO_QUIZZES = {}
+
+
+# # ============================================================
+# # QUIZ CONFIGURATION
+# # ============================================================
+
+# # Student must score this percentage or higher to pass.
+# QUIZ_PASS_THRESHOLD = 70
+
+
+# # ============================================================
+# # LOAD TRAINED XGBOOST CONFUSION MODEL
+# # ============================================================
+
+# MODEL_PATH = os.path.join(
+#     os.path.dirname(__file__), "../../cognitrace_confusion_xgboost.pkl"
+# )
+
+# try:
+#     xgb_confusion_model = joblib.load(MODEL_PATH)
+#     print(f"[ML Engine] Successfully loaded XGBoost model from {MODEL_PATH}")
+# except Exception as e:
+#     print(f"[ML Engine] Warning: Could not load trained model from {MODEL_PATH}: {e}")
+#     xgb_confusion_model = None
+
+
+# def evaluate_xgboost_confusion(
+#     pauses_30s: int,
+#     resumes_30s: int,
+#     rewinds_30s: int,
+#     seeks_30s: int,
+#     speed: float,
+#     completion_pct: float,
+# ) -> Dict[str, Any]:
+#     """
+#     Evaluates potential student cognitive friction using the trained XGBoost model
+#     strictly on the latest 30-second interaction window counts.
+#     Features: ['Pause_Count', 'Resume_Count', 'Rewind_Count', 'Forward_Seek_Count', 'Playback_Speed_Num', 'Completion_Num']
+#     """
+#     if xgb_confusion_model is None:
+#         # Fallback rule-based heuristic if model file is missing
+#         is_confused = (rewinds_30s >= 2) or (pauses_30s >= 2 and speed <= 1.0)
+#         c_score = 85 if is_confused else 15
+#         return {
+#             "confusion_score": c_score,
+#             "confusion_status": (
+#                 "High Confusion"
+#                 if c_score >= 70
+#                 else ("Medium Confusion" if c_score >= 35 else "Low Confusion")
+#             ),
+#             "prob_confused": 0.85 if is_confused else 0.15,
+#         }
+
+#     try:
+#         # Prepare feature vector matching the exact order used during model training
+#         features = np.array(
+#             [
+#                 [
+#                     int(pauses_30s),
+#                     int(resumes_30s),
+#                     int(rewinds_30s),
+#                     int(seeks_30s),
+#                     float(speed),
+#                     float(
+#                         completion_pct / 100.0
+#                     ),  # Convert percentage to float 0.0 - 1.0
+#                 ]
+#             ]
+#         )
+
+#         # Predict Class 1 (Confused) Probability
+#         prob_confused = float(xgb_confusion_model.predict_proba(features)[0][1])
+#         c_score = int(round(prob_confused * 100))
+
+#         if c_score >= 70:
+#             status = "High Confusion"
+#         elif c_score >= 35:
+#             status = "Medium Confusion"
+#         else:
+#             status = "Low Confusion"
+
+#         return {
+#             "confusion_score": c_score,
+#             "confusion_status": status,
+#             "prob_confused": round(prob_confused, 4),
+#         }
+#     except Exception as err:
+#         print(f"[ML Engine] Inference Error: {err}")
+#         return {
+#             "confusion_score": 0,
+#             "confusion_status": "Low Confusion",
+#             "prob_confused": 0.0,
+#         }
+
+
+# # ============================================================
+# # PYDANTIC MODELS
+# # ============================================================
+
+
+# class SessionEventLog(BaseModel):
+#     lecture_id: str
+#     event_type: str
+#     timestamp: float
+#     playback_speed: float
+#     watch_duration: float
+
+#     rewind_from: Optional[float] = None
+#     rewind_to: Optional[float] = None
+
+#     previous_timestamp: Optional[float] = None
+#     current_timestamp: Optional[float] = None
+
+#     seconds_delta: Optional[float] = None
+
+#     previous_speed: Optional[float] = None
+#     new_speed: Optional[float] = None
+
+#     # Latest 30-Second Window Metrics
+#     pauses_30s: Optional[int] = 0
+#     resumes_30s: Optional[int] = 0
+#     rewinds_30s: Optional[int] = 0
+#     seeks_30s: Optional[int] = 0
+
+
+# class SearchQuery(BaseModel):
+#     query: str
+
+
+# class TelemetryLog(BaseModel):
+#     paused: int
+#     rewound: int
+#     seeked: int
+#     speed_changes: int
+#     watch_time: float
+#     repeated_timestamps: List[str]
+#     completion_percentage: float
+
+#     # Latest 30-second window metrics from frontend player
+#     pauses_30s: Optional[int] = 0
+#     resumes_30s: Optional[int] = 0
+#     rewinds_30s: Optional[int] = 0
+#     seeks_30s: Optional[int] = 0
+#     current_speed: Optional[float] = 1.0
+
+
+# class HelpCenterRequest(BaseModel):
+#     step: str
+#     user_response: Optional[str] = None
+#     knows_prereq: Optional[bool] = None
+#     lecture_id: Optional[str] = None
+
+#     quiz_passed: Optional[bool] = None
+#     quiz_score: Optional[int] = None
+
+
+# class AskAIRequest(BaseModel):
+#     question: str
+#     lecture_id: str
+#     level: Optional[str] = "medium"
+
+
+# class GenerateQuizRequest(BaseModel):
+#     explanation_text: str
+#     topic: str
+#     level: Optional[str] = "medium"
+#     lecture_id: Optional[str] = None
+
+
+# class YouTubeLectureRequest(BaseModel):
+#     url: str
+
+
+# # ============================================================
+# # YOUTUBE HELPERS
+# # ============================================================
+
+
+# def extract_youtube_video_id(url: str) -> Optional[str]:
+#     pattern = (
+#         r"(?:https?://)?"
+#         r"(?:www\.)?"
+#         r"(?:youtube\.com/(?:[^/]+/.+/|"
+#         r"(?:v|e(?:mbed)?)/|.*[?&]v=)|"
+#         r"youtu\.be/)"
+#         r'([^"&?/\s]{11})'
+#     )
+#     match = re.search(pattern, url)
+#     if match:
+#         return match.group(1)
+#     return None
+
+
+# def get_youtube_metadata(video_id: str):
+#     oembed_url = (
+#         "https://www.youtube.com/oembed?"
+#         f"url=https://www.youtube.com/watch?v={video_id}"
+#         "&format=json"
+#     )
+#     try:
+#         req = urllib.request.Request(oembed_url, headers={"User-Agent": "Mozilla/5.0"})
+#         with urllib.request.urlopen(req, timeout=5) as response:
+#             data = json.loads(response.read().decode())
+#             return {
+#                 "title": data.get("title", f"YouTube Video {video_id}"),
+#                 "author": data.get("author_name", "Unknown Creator"),
+#                 "thumbnail": data.get(
+#                     "thumbnail_url", f"https://i.ytimg.com/vi/{video_id}/hqdefault.jpg"
+#                 ),
+#             }
+#     except Exception:
+#         return {
+#             "title": f"YouTube Video {video_id}",
+#             "author": "Unknown Creator",
+#             "thumbnail": f"https://i.ytimg.com/vi/{video_id}/hqdefault.jpg",
+#         }
+
+
+# def format_seconds_to_timestamp(seconds: float) -> str:
+#     total_seconds = int(seconds)
+#     minutes = total_seconds // 60
+#     secs = total_seconds % 60
+#     return f"{minutes:02d}:{secs:02d}"
+
+
+# # ============================================================
+# # SESSION HELPERS
+# # ============================================================
+
+
+# def create_empty_session(lecture_id: str, lecture: dict):
+#     return {
+#         "student_name": "Alex Mercer",
+#         "lecture_id": lecture_id,
+#         "lecture_title": lecture["title"],
+#         "course_topic": (
+#             lecture["title"].split(":", 1)[1].strip()
+#             if ":" in lecture["title"]
+#             else lecture["title"]
+#         ),
+#         "paused": 0,
+#         "rewound": 0,
+#         "seeked": 0,
+#         "forward_seeks": 0,
+#         "speed_changes": 0,
+#         "watch_time": 0.0,
+#         "repeated_timestamps": [],
+#         "completion_percentage": 0.0,
+#         "quiz_attempts": 0,
+#         "quiz_score": 0,
+#         "quiz_passed": False,
+#         "confusion_score": 0,
+#         "confusion_status": "Low Confusion",
+#         "struggled_concepts": [],
+#         "understood_concepts": [],
+#         "manual_confusion": 0,
+#         "confusion_timestamps": [],
+#         "play_events": 0,
+#     }
+
+
+# def get_or_create_session(lecture_id: str):
+#     lecture = next((l for l in MOCK_LECTURES if l["id"] == lecture_id), None)
+#     if not lecture:
+#         raise HTTPException(status_code=404, detail="Lecture not found")
+
+#     if lecture_id not in SESSIONS_STORE:
+#         SESSIONS_STORE[lecture_id] = create_empty_session(lecture_id, lecture)
+
+#     return SESSIONS_STORE[lecture_id]
+
+
+# # ============================================================
+# # DASHBOARD
+# # ============================================================
+
+
+# @router.get("/dashboard")
+# def get_student_dashboard(current_student: User = Depends(get_current_student)):
+
+#     completed_count = sum(1 for s in SESSIONS_STORE.values() if s.get("quiz_passed"))
+
+#     if not SESSIONS_STORE:
+#         overall_prog = 0
+#         avg_engagement = 0
+#         weekly_hours = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+#     else:
+#         total_lectures = len(MOCK_LECTURES)
+#         overall_prog = (
+#             int(
+#                 sum(
+#                     s.get("completion_percentage", 0.0) for s in SESSIONS_STORE.values()
+#                 )
+#                 / total_lectures
+#             )
+#             if total_lectures > 0
+#             else 0
+#         )
+#         avg_engagement = int(
+#             sum(
+#                 max(0, 100 - s.get("confusion_score", 0))
+#                 for s in SESSIONS_STORE.values()
+#             )
+#             / len(SESSIONS_STORE)
+#         )
+#         total_time = sum(s.get("watch_time", 0.0) for s in SESSIONS_STORE.values())
+#         weekly_hours = [
+#             0.0,
+#             0.0,
+#             0.0,
+#             0.0,
+#             0.0,
+#             0.0,
+#             float(round(total_time / 3600.0, 2)),
+#         ]
+
+#     strong = []
+#     weak = []
+
+#     for s in SESSIONS_STORE.values():
+#         topic = s.get("course_topic", "Concept")
+#         if s.get("quiz_passed"):
+#             strong.append(topic)
+#         elif s.get("quiz_attempts", 0) > 0:
+#             weak.append(topic)
+
+#     recent = []
+#     for key, val in WATCH_HISTORY.items():
+#         progress = int(SESSIONS_STORE.get(key, {}).get("completion_percentage", 0))
+#         recent.append(
+#             {
+#                 "id": key,
+#                 "title": val["title"],
+#                 "progress": progress,
+#                 "last_watched": val["last_watched"],
+#             }
+#         )
+
+#     return {
+#         "student_name": current_student.full_name,
+#         "overall_progress": overall_prog,
+#         "weekly_hours": weekly_hours,
+#         "average_engagement": avg_engagement,
+#         "completed_lectures": completed_count,
+#         "total_lectures": len(MOCK_LECTURES),
+#         "strong_topics": [{"topic": t, "mastery": 90} for t in strong],
+#         "weak_topics": [{"topic": t, "mastery": 45} for t in weak],
+#         "recent_activity": recent,
+#         "recommended_topics": [],
+#     }
+
+
+# # ============================================================
+# # LECTURES
+# # ============================================================
+
+
+# @router.get("/lectures")
+# def get_lectures(current_student: User = Depends(get_current_student)):
+
+#     return MOCK_LECTURES
+
+
+# # ============================================================
+# # TELEMETRY WITH TRAINED XGBOOST MODEL EVALUATION
+# # ============================================================
+
+
+# @router.post("/telemetry")
+# def update_telemetry(
+#     log: TelemetryLog, current_student: User = Depends(get_current_student)
+# ):
+#     ACTIVE_SESSION_STATE["paused"] = log.paused
+#     ACTIVE_SESSION_STATE["rewound"] = log.rewound
+#     ACTIVE_SESSION_STATE["seeked"] = log.seeked
+#     ACTIVE_SESSION_STATE["speed_changes"] = log.speed_changes
+#     ACTIVE_SESSION_STATE["watch_time"] = log.watch_time
+#     ACTIVE_SESSION_STATE["repeated_timestamps"] = log.repeated_timestamps
+#     ACTIVE_SESSION_STATE["completion_percentage"] = log.completion_percentage
+
+#     # Fallback estimations for 30s actions if not directly provided
+#     pauses_30s = log.pauses_30s if log.pauses_30s is not None else min(log.paused, 2)
+#     resumes_30s = (
+#         log.resumes_30s if log.resumes_30s is not None else (1 if pauses_30s > 0 else 0)
+#     )
+#     rewinds_30s = (
+#         log.rewinds_30s if log.rewinds_30s is not None else min(log.rewound, 2)
+#     )
+#     seeks_30s = log.seeks_30s if log.seeks_30s is not None else min(log.seeked, 1)
+#     speed = log.current_speed if log.current_speed is not None else 1.0
+
+#     # Evaluate trained XGBoost model on the latest 30s actions
+#     xgb_result = evaluate_xgboost_confusion(
+#         pauses_30s=pauses_30s,
+#         resumes_30s=resumes_30s,
+#         rewinds_30s=rewinds_30s,
+#         seeks_30s=seeks_30s,
+#         speed=speed,
+#         completion_pct=log.completion_percentage,
+#     )
+
+#     ACTIVE_SESSION_STATE["confusion_score"] = xgb_result["confusion_score"]
+#     ACTIVE_SESSION_STATE["confusion_status"] = xgb_result["confusion_status"]
+
+#     return {
+#         "status": "success",
+#         "confusion_score": xgb_result["confusion_score"],
+#         "confusion_status": xgb_result["confusion_status"],
+#         "trigger_ai_help": xgb_result["confusion_score"] >= 70,
+#     }
+
+
+# # ============================================================
+# # SESSION EVENT LOGGING WITH TRAINED XGBOOST INFERENCE
+# # ============================================================
+
+
+# @router.post("/session-analysis/log")
+# def log_session_event(
+#     log: SessionEventLog, current_student: User = Depends(get_current_student)
+# ):
+#     global ACTIVE_SESSION_STATE
+
+#     def format_time(seconds):
+#         minutes = int(seconds // 60)
+#         secs = int(seconds % 60)
+#         return f"{minutes:02d}:{secs:02d}"
+
+#     # Load session state
+#     if (
+#         not ACTIVE_SESSION_STATE
+#         or ACTIVE_SESSION_STATE.get("lecture_id") != log.lecture_id
+#     ):
+#         if log.lecture_id in SESSIONS_STORE:
+#             ACTIVE_SESSION_STATE.clear()
+#             ACTIVE_SESSION_STATE.update(SESSIONS_STORE[log.lecture_id])
+#         else:
+#             lecture = next(
+#                 (l for l in MOCK_LECTURES if l["id"] == log.lecture_id), None
+#             )
+#             if not lecture:
+#                 raise HTTPException(status_code=404, detail="Lecture not found")
+#             ACTIVE_SESSION_STATE.clear()
+#             ACTIVE_SESSION_STATE.update(create_empty_session(log.lecture_id, lecture))
+
+#     # Record event counters
+#     if log.event_type == "play":
+#         ACTIVE_SESSION_STATE["play_events"] = (
+#             ACTIVE_SESSION_STATE.get("play_events", 0) + 1
+#         )
+#     elif log.event_type == "pause":
+#         ACTIVE_SESSION_STATE["paused"] += 1
+#     elif log.event_type == "rewind":
+#         ACTIVE_SESSION_STATE["rewound"] += 1
+#         prev_t = (
+#             log.previous_timestamp
+#             if log.previous_timestamp is not None
+#             else log.rewind_from
+#         )
+#         curr_t = (
+#             log.current_timestamp
+#             if log.current_timestamp is not None
+#             else log.rewind_to
+#         )
+#         if prev_t is not None and curr_t is not None:
+#             time_range = f"{format_time(curr_t)}-{format_time(prev_t)}"
+#             ACTIVE_SESSION_STATE["repeated_timestamps"].append(time_range)
+#     elif log.event_type in ["seek", "forward_seek"]:
+#         ACTIVE_SESSION_STATE["seeked"] += 1
+#         if log.event_type == "forward_seek":
+#             ACTIVE_SESSION_STATE["forward_seeks"] += 1
+#     elif log.event_type == "speed_change":
+#         ACTIVE_SESSION_STATE["speed_changes"] += 1
+#         if "speed_history" not in ACTIVE_SESSION_STATE:
+#             ACTIVE_SESSION_STATE["speed_history"] = []
+#         ACTIVE_SESSION_STATE["speed_history"].append(
+#             {
+#                 "previous_speed": log.previous_speed,
+#                 "new_speed": log.new_speed,
+#                 "timestamp": log.timestamp,
+#             }
+#         )
+#     elif log.event_type == "manual_confusion":
+#         ACTIVE_SESSION_STATE["manual_confusion"] += 1
+#         ACTIVE_SESSION_STATE["confusion_timestamps"].append(format_time(log.timestamp))
+
+#     # Update watch stats
+#     ACTIVE_SESSION_STATE["completion_percentage"] = max(
+#         ACTIVE_SESSION_STATE["completion_percentage"], log.watch_duration
+#     )
+#     ACTIVE_SESSION_STATE["watch_time"] = max(
+#         ACTIVE_SESSION_STATE["watch_time"], log.timestamp
+#     )
+
+#     # Calculate 30-second window feature inputs
+#     pauses_30s = (
+#         log.pauses_30s
+#         if log.pauses_30s is not None
+#         else (1 if log.event_type == "pause" else 0)
+#     )
+#     resumes_30s = (
+#         log.resumes_30s
+#         if log.resumes_30s is not None
+#         else (1 if log.event_type == "play" else 0)
+#     )
+#     rewinds_30s = (
+#         log.rewinds_30s
+#         if log.rewinds_30s is not None
+#         else (1 if log.event_type == "rewind" else 0)
+#     )
+#     seeks_30s = (
+#         log.seeks_30s
+#         if log.seeks_30s is not None
+#         else (1 if log.event_type in ["seek", "forward_seek"] else 0)
+#     )
+
+#     # Evaluate trained XGBoost model on the latest 30s actions
+#     xgb_result = evaluate_xgboost_confusion(
+#         pauses_30s=pauses_30s,
+#         resumes_30s=resumes_30s,
+#         rewinds_30s=rewinds_30s,
+#         seeks_30s=seeks_30s,
+#         speed=log.playback_speed,
+#         completion_pct=ACTIVE_SESSION_STATE["completion_percentage"],
+#     )
+
+#     c_score = xgb_result["confusion_score"]
+#     ACTIVE_SESSION_STATE["confusion_score"] = c_score
+#     ACTIVE_SESSION_STATE["confusion_status"] = xgb_result["confusion_status"]
+
+#     confusion_detected = c_score >= 70 and log.event_type != "pause"
+#     recommended_action = (
+#         "AI Help Center is available if you would like to clarify this segment."
+#         if confusion_detected
+#         else "Session tracked."
+#     )
+
+#     current_id = ACTIVE_SESSION_STATE.get("lecture_id")
+#     if current_id:
+#         SESSIONS_STORE[current_id] = dict(ACTIVE_SESSION_STATE)
+
+#     return {
+#         "status": "success",
+#         "confusion_detected": confusion_detected,
+#         "confusion_score": c_score,
+#         "confusion_status": ACTIVE_SESSION_STATE["confusion_status"],
+#         "recommended_action": recommended_action,
+#     }
+
+
+# # ============================================================
+# # ACTIVE SESSION
+# # ============================================================
+
+
+# @router.get("/active-session")
+# def get_active_session(current_student: User = Depends(get_current_student)):
+#     return ACTIVE_SESSION_STATE
+
+
+# # ============================================================
+# # SELECT SESSION
+# # ============================================================
+
+
+# @router.post("/session/select")
+# def select_session(req: dict, current_student: User = Depends(get_current_student)):
+#     global ACTIVE_SESSION_STATE
+#     lec_id = req.get("lecture_id")
+#     if not lec_id:
+#         raise HTTPException(status_code=400, detail="Missing lecture_id")
+
+#     lecture = next((l for l in MOCK_LECTURES if l["id"] == lec_id), None)
+#     if not lecture:
+#         raise HTTPException(status_code=404, detail="Lecture not found")
+
+#     current_id = ACTIVE_SESSION_STATE.get("lecture_id")
+#     if current_id:
+#         SESSIONS_STORE[current_id] = dict(ACTIVE_SESSION_STATE)
+
+#     if lec_id in SESSIONS_STORE:
+#         ACTIVE_SESSION_STATE.clear()
+#         ACTIVE_SESSION_STATE.update(SESSIONS_STORE[lec_id])
+#     else:
+#         ACTIVE_SESSION_STATE.clear()
+#         ACTIVE_SESSION_STATE.update(create_empty_session(lec_id, lecture))
+#         SESSIONS_STORE[lec_id] = dict(ACTIVE_SESSION_STATE)
+
+#     WATCH_HISTORY[lec_id] = {
+#         "id": lec_id,
+#         "title": lecture["title"],
+#         "progress": int(ACTIVE_SESSION_STATE["completion_percentage"]),
+#         "last_watched": "Just now",
+#     }
+
+#     return ACTIVE_SESSION_STATE
+
+
+# # ============================================================
+# # RESET
+# # ============================================================
+
+
+# @router.post("/reset")
+# def reset_session(current_student: User = Depends(get_current_student)):
+#     global SESSIONS_STORE, WATCH_HISTORY, ACTIVE_SESSION_STATE
+#     SESSIONS_STORE.clear()
+#     WATCH_HISTORY.clear()
+#     ACTIVE_SESSION_STATE.clear()
+#     return {"status": "reset_completed"}
+
+
+# # ============================================================
+# # SMART SEARCH
+# # ============================================================
+
+
+# @router.post("/search")
+# def smart_search(
+#     query: SearchQuery, current_student: User = Depends(get_current_student)
+# ):
+#     q = query.query.lower()
+#     hits = []
+
+#     for lec_id, entries in TRANSCRIPTS_STORE.items():
+#         lec_title = "Unknown Lecture"
+#         for lec in MOCK_LECTURES:
+#             if lec["id"] == lec_id:
+#                 lec_title = lec["title"]
+#                 break
+
+#         for item in entries:
+#             if q in item["text"].lower():
+#                 hits.append(
+#                     {
+#                         "lecture_id": lec_id,
+#                         "lecture_title": lec_title,
+#                         "timestamp": item["timestamp"],
+#                         "seconds": item["seconds"],
+#                         "snippet": item["text"],
+#                         "relevance": 95,
+#                     }
+#                 )
+
+#     if not hits:
+#         hits.append(
+#             {
+#                 "lecture_id": "lec_2",
+#                 "lecture_title": "Selected Lecture",
+#                 "timestamp": "00:00",
+#                 "seconds": 0,
+#                 "snippet": f"No direct matches for '{query.query}'.",
+#                 "relevance": 40,
+#             }
+#         )
+
+#     return {"query": query.query, "results": hits}
+
+
+# # ============================================================
+# # YOUTUBE LECTURE IMPORT
+# # ============================================================
+
+
+# @router.post("/youtube-lecture")
+# def create_youtube_lecture(
+#     req: YouTubeLectureRequest, current_student: User = Depends(get_current_student)
+# ):
+#     video_id = extract_youtube_video_id(req.url)
+#     if not video_id:
+#         raise HTTPException(status_code=400, detail="Invalid YouTube URL format.")
+
+#     meta = get_youtube_metadata(video_id)
+
+#     try:
+#         api = YouTubeTranscriptApi()
+#         transcript_list = api.list(video_id)
+#         selected_language = "en"
+#         try:
+#             transcript = transcript_list.find_transcript(["en"])
+#         except Exception:
+#             transcript = next(iter(transcript_list))
+#             selected_language = transcript.language_code
+
+#         fetched_data = transcript.fetch()
+#     except Exception:
+#         raise HTTPException(
+#             status_code=400, detail="Transcript unavailable for this video."
+#         )
+
+#     formatted_entries = []
+#     max_seconds = 0
+
+#     for item in fetched_data:
+#         start_seconds = float(item.start)
+#         duration = float(item.duration)
+#         end_seconds = start_seconds + duration
+#         max_seconds = max(max_seconds, end_seconds)
+
+#         formatted_entries.append(
+#             {
+#                 "timestamp": format_seconds_to_timestamp(start_seconds),
+#                 "seconds": int(start_seconds),
+#                 "end_time": format_seconds_to_timestamp(end_seconds),
+#                 "text": item.text,
+#                 "speaker": "Speaker",
+#             }
+#         )
+
+#     new_lec_id = f"lec_{len(MOCK_LECTURES) + 1}"
+#     duration_str = format_seconds_to_timestamp(max_seconds)
+
+#     new_lecture = {
+#         "id": new_lec_id,
+#         "title": meta["title"],
+#         "duration": duration_str,
+#         "video_url": req.url,
+#         "video_type": "youtube",
+#         "youtube_id": video_id,
+#         "category": "YouTube Imports",
+#         "description": f"Imported from YouTube. Creator: {meta['author']}",
+#         "prerequisites": [],
+#         "concepts": ["Imported Concept"],
+#         "thumbnail": meta["thumbnail"],
+#         "transcript_language": selected_language,
+#     }
+
+#     MOCK_LECTURES.append(new_lecture)
+#     TRANSCRIPTS_STORE[new_lec_id] = formatted_entries
+
+#     try:
+#         chunks = chunk_transcript(
+#             transcript_items=formatted_entries,
+#             lecture_id=new_lec_id,
+#             course_id=meta["title"],
+#             chunk_size=5,
+#             overlap=2,
+#         )
+#         index_lecture_chunks(
+#             lecture_id=new_lec_id, course_id=meta["title"], chunks=chunks
+#         )
+#         print(f"[RAG] Indexed {len(chunks)} chunks for lecture {new_lec_id}")
+#     except Exception as e:
+#         print(f"[RAG] Failed to index lecture {new_lec_id}: {e}")
+
+#     ai_materials = generate_ai_study_materials(
+#         lecture=new_lecture,
+#         transcript_chunks=formatted_entries,
+#         source_language=selected_language,
+#     )
+
+#     MOCK_SUMMARIES[new_lec_id] = ai_materials
+
+#     return {
+#         "status": "success",
+#         "lecture": new_lecture,
+#         "language": selected_language,
+#         "rag": {
+#             "indexed": True,
+#             "message": "Transcript chunked and indexed into ChromaDB.",
+#         },
+#         "ai_study_materials": {
+#             "summary_available": bool(
+#                 MOCK_SUMMARIES.get(new_lec_id, {}).get("_summary_available", False)
+#             ),
+#             "revision_notes_available": bool(
+#                 MOCK_SUMMARIES.get(new_lec_id, {}).get(
+#                     "_revision_notes_available", False
+#                 )
+#             ),
+#             "message": "AI study material generation completed.",
+#         },
+#     }
+
+
+# # ============================================================
+# # LECTURE ANALYSIS
+# # ============================================================
+
+
+# @router.get("/lecture/{lecture_id}/analysis")
+# def get_lecture_analysis(
+#     lecture_id: str, current_student: User = Depends(get_current_student)
+# ):
+#     lecture = next((l for l in MOCK_LECTURES if l["id"] == lecture_id), None)
+#     state = SESSIONS_STORE.get(lecture_id)
+
+#     if not state:
+#         state = {
+#             "paused": 0,
+#             "rewound": 0,
+#             "seeked": 0,
+#             "forward_seeks": 0,
+#             "speed_changes": 0,
+#             "watch_time": 0.0,
+#             "completion_percentage": 0.0,
+#             "quiz_attempts": 0,
+#             "quiz_passed": False,
+#             "quiz_score": 0,
+#             "confusion_score": 0,
+#             "confusion_status": "Low Confusion",
+#             "manual_confusion": 0,
+#             "repeated_timestamps": [],
+#             "confusion_timestamps": [],
+#         }
+
+#     summary_info = MOCK_SUMMARIES.get(
+#         lecture_id,
+#         {
+#             "summary": "Summary unavailable.",
+#             "revision_notes": "Revision notes unavailable.",
+#         },
+#     )
+
+#     return {
+#         "lecture_id": lecture_id,
+#         "ai_summary": summary_info["summary"],
+#         "ai_revision_notes": summary_info["revision_notes"],
+#         "final_video_quiz": FINAL_VIDEO_QUIZZES.get(lecture_id),
+#         "session_analytics": {
+#             "total_pauses": state["paused"],
+#             "total_rewinds": state["rewound"],
+#             "total_seeks": state["seeked"],
+#             "forward_seeks": state["forward_seeks"],
+#             "playback_speed_changes": state["speed_changes"],
+#             "watch_percentage": int(state["completion_percentage"]),
+#             "watch_time": state["watch_time"],
+#             "confusion_score": state["confusion_score"],
+#             "confusion_status": state["confusion_status"],
+#             "quiz_score": (
+#                 f"{state['quiz_score']}%" if state["quiz_attempts"] > 0 else "N/A"
+#             ),
+#             "quiz_threshold": QUIZ_PASS_THRESHOLD,
+#             "manual_confusion": state["manual_confusion"],
+#             "repeated_timestamps": state["repeated_timestamps"],
+#             "confusion_timestamps": state["confusion_timestamps"],
+#         },
+#     }
+
+
+# # ============================================================
+# # QUIZ STATUS / THRESHOLD
+# # ============================================================
+
+
+# @router.get("/quiz-status")
+# def get_quiz_status(current_student: User = Depends(get_current_student)):
+#     return {
+#         "pass_threshold": QUIZ_PASS_THRESHOLD,
+#         "description": f"Student must score {QUIZ_PASS_THRESHOLD}% or higher to pass.",
+#     }
+
+
+# # ============================================================
+# # AI HELP CENTER HELPERS
+# # ============================================================
+
+
+# def get_prerequisites_for_topic(lecture: dict) -> List[str]:
+#     existing = lecture.get("prerequisites") or []
+#     if existing:
+#         return existingroute
+
+#     title = lecture.get("title", "").lower()
+#     prerequisite_map = {
+#         "binary search": ["Arrays", "Sorted Data", "Basic Searching Concepts"],
+#         "linked list": ["Arrays", "Pointers", "Dynamic Memory"],
+#         "stack": ["Arrays", "Basic Data Structures", "LIFO Concept"],
+#         "queue": ["Arrays", "Basic Data Structures", "FIFO Concept"],
+#         "tree": ["Binary Tree Basics", "Recursion", "Pointers"],
+#         "graph": [
+#             "Vertices and Edges",
+#             "Basic Data Structures",
+#             "Graph Representation",
+#         ],
+#         "normalization": [
+#             "Relational Databases",
+#             "Primary and Foreign Keys",
+#             "Functional Dependencies",
+#         ],
+#         "1nf": ["Relational Databases", "Database Tables", "Keys"],
+#         "2nf": ["1NF", "Primary Keys", "Functional Dependencies"],
+#         "3nf": ["2NF", "Functional Dependencies", "Candidate Keys"],
+#         "inheritance": [
+#             "Classes and Objects",
+#             "Object-Oriented Programming",
+#             "Methods and Attributes",
+#         ],
+#         "polymorphism": ["Classes and Objects", "Inheritance", "Method Overriding"],
+#         "recursion": ["Functions", "Conditional Statements", "Call Stack"],
+#         "sorting": ["Arrays", "Comparisons", "Loops"],
+#     }
+
+#     for key, prerequisites in prerequisite_map.items():
+#         if key in title:
+#             return prerequisites
+
+#     return [
+#         "Basic terminology of the subject",
+#         "Core concepts introduced before this topic",
+#         "Basic operations used in this topic",
+#     ]
+
+
+# def find_prerequisite_lectures(prerequisites: List[str]) -> List[Dict[str, Any]]:
+#     recommendations = []
+#     for lecture in MOCK_LECTURES:
+#         title = lecture.get("title", "").lower()
+#         matched = False
+#         for prerequisite in prerequisites:
+#             words = [word for word in prerequisite.lower().split() if len(word) > 2]
+#             if words and all(word in title for word in words):
+#                 matched = True
+#                 break
+#         if matched:
+#             recommendations.append(
+#                 {
+#                     "lecture_id": lecture["id"],
+#                     "title": lecture["title"],
+#                     "link": f"/student/session?play={lecture['id']}&t=0",
+#                 }
+#             )
+#     return recommendations
+
+
+# def select_representative_chunks(
+#     chunks: List[Dict[str, Any]], max_chunks: int = 60
+# ) -> List[Dict[str, Any]]:
+#     """Select evenly distributed transcript entries across the whole lecture."""
+#     if not chunks:
+#         return []
+#     if len(chunks) <= max_chunks:
+#         return chunks
+#     if max_chunks <= 1:
+#         return [chunks[0]]
+#     step = (len(chunks) - 1) / (max_chunks - 1)
+#     selected = []
+#     seen = set()
+#     for i in range(max_chunks):
+#         index = round(i * step)
+#         if index not in seen:
+#             selected.append(chunks[index])
+#             seen.add(index)
+#     return selected
+
+
+# def build_transcript_context(
+#     chunks: List[Dict[str, Any]], max_chars: int = 30000
+# ) -> str:
+#     parts = []
+#     for chunk in chunks:
+#         start_time = chunk.get("start_time", chunk.get("seconds", 0))
+#         end_time = chunk.get("end_time", chunk.get("timestamp", ""))
+#         text_value = (
+#             chunk.get("text")
+#             or chunk.get("content")
+#             or chunk.get("chunk_text")
+#             or chunk.get("transcript")
+#             or ""
+#         )
+#         if not str(text_value).strip():
+#             continue
+#         parts.append(f"[{start_time}s - {end_time}]\n{text_value}")
+#     return "\n\n".join(parts)[:max_chars]
+
+
+# def generate_ai_study_materials(
+#     lecture: dict, transcript_chunks: List[Dict[str, Any]], source_language: str = "en"
+# ) -> Dict[str, Any]:
+#     lecture_title = lecture.get("title", "Untitled Lecture")
+
+#     if not transcript_chunks:
+#         return {
+#             "summary": "AI Summary unavailable.",
+#             "revision_notes": "AI Revision Notes unavailable.",
+#         }
+
+#     # Cover the whole lecture by selecting representative sections from beginning to end.
+#     representative_chunks = select_representative_chunks(
+#         transcript_chunks, max_chunks=60
+#     )
+#     transcript_context = build_transcript_context(
+#         representative_chunks, max_chars=30000
+#     )
+
+#     if not transcript_context.strip():
+#         return {
+#             "summary": "AI Summary unavailable.",
+#             "revision_notes": "AI Revision Notes unavailable.",
+#         }
+
+#     summary = None
+#     revision_notes = None
+
+#     try:
+#         summary_prompt = (
+#             f"Create a complete study summary for the lecture '{lecture_title}'.\n\n"
+#             "Use ONLY the supplied lecture transcript.\n"
+#             "Cover the entire lecture, including major topics, definitions, algorithms/procedures, rules, and examples.\n"
+#             "The supplied transcript sections are representative sections distributed across the lecture, "
+#             "so cover the lecture from beginning to end without inventing missing details.\n\n"
+#             f"LECTURE TRANSCRIPT:\n{transcript_context}"
+#         )
+#         summary = generator.generate_explanation(
+#             question=summary_prompt,
+#             context_chunks=representative_chunks,
+#             level="medium",
+#         )
+#         if not isinstance(summary, str) or not summary.strip():
+#             summary = None
+#     except Exception as e:
+#         print(f"[STUDY MATERIALS] Summary generation error: {e}")
+
+#     try:
+#         revision_prompt = (
+#             f"Create detailed exam-oriented revision notes for the lecture '{lecture_title}'.\n\n"
+#             "Use ONLY the supplied lecture transcript.\n"
+#             "Cover the lecture from beginning to end, including important definitions, concepts, "
+#             "procedures, algorithms, rules, examples, comparisons and exam-relevant points when supported by the transcript.\n"
+#             "The supplied transcript sections are representative sections distributed across the lecture, "
+#             "so organize the notes to preserve broad coverage without inventing missing details.\n\n"
+#             f"LECTURE TRANSCRIPT:\n{transcript_context}"
+#         )
+#         revision_notes = generator.generate_explanation(
+#             question=revision_prompt,
+#             context_chunks=representative_chunks,
+#             level="advanced",
+#         )
+#         if not isinstance(revision_notes, str) or not revision_notes.strip():
+#             revision_notes = None
+#     except Exception as e:
+#         print(f"[STUDY MATERIALS] Revision notes generation error: {e}")
+
+#     summary_available = isinstance(summary, str) and bool(summary.strip())
+#     revision_notes_available = isinstance(revision_notes, str) and bool(
+#         revision_notes.strip()
+#     )
+
+#     if not summary_available:
+#         summary = "AI Summary unavailable. Please try importing the lecture again."
+#     if not revision_notes_available:
+#         revision_notes = (
+#             "AI Revision Notes unavailable. Please try importing the lecture again."
+#         )
+
+#     return {
+#         "summary": f"Source Language: {source_language.upper()}\n\n{summary}",
+#         "revision_notes": f"Source Language: {source_language.upper()}\n\n{revision_notes}",
+#         "_summary_available": summary_available,
+#         "_revision_notes_available": revision_notes_available,
+#     }
+
+
+# # ============================================================
+# # AI HELP CENTER
+# # ============================================================
+
+
+# @router.post("/help-center/state")
+# def process_help_center(
+#     req: HelpCenterRequest, current_student: User = Depends(get_current_student)
+# ):
+#     step = req.step
+#     user_response = req.user_response
+#     lec_id = req.lecture_id or ACTIVE_SESSION_STATE.get("lecture_id")
+
+#     if not lec_id:
+#         raise HTTPException(status_code=400, detail="lecture_id is required.")
+
+#     lecture = next((l for l in MOCK_LECTURES if l["id"] == lec_id), None)
+#     if not lecture:
+#         raise HTTPException(status_code=404, detail="Lecture not found.")
+
+#     state = get_or_create_session(lec_id)
+#     topic_name = lecture["title"]
+#     prerequisites = get_prerequisites_for_topic(lecture)
+#     prerequisite_lectures = find_prerequisite_lectures(prerequisites)
+
+#     if step == "start":
+#         return {
+#             "step": "check_prereq",
+#             "topic": topic_name,
+#             "message": f"Before learning '{topic_name}', do you already understand the prerequisite concepts below?",
+#             "prerequisites": prerequisites,
+#             "options": [
+#                 {"id": "yes", "label": "Yes, I understand them"},
+#                 {"id": "no", "label": "No, teach me the prerequisites"},
+#             ],
+#             "recommended_videos": prerequisite_lectures,
+#         }
+
+#     elif step == "check_prereq":
+#         knows = (
+#             req.knows_prereq if req.knows_prereq is not None else user_response == "yes"
+#         )
+#         if not knows:
+#             state["struggled_concepts"] = list(
+#                 set(state.get("struggled_concepts", []) + prerequisites)
+#             )
+#             return {
+#                 "step": "recommend_previous",
+#                 "topic": topic_name,
+#                 "message": "Let's learn the prerequisite concepts before continuing with this topic.",
+#                 "prerequisites": prerequisites,
+#                 "recommended_videos": prerequisite_lectures,
+#             }
+#         return {
+#             "step": "select_explanation",
+#             "topic": topic_name,
+#             "message": f"Great! How would you like '{topic_name}' explained?",
+#             "options": [
+#                 {
+#                     "id": "beginner",
+#                     "label": "Beginner",
+#                     "description": "Simple language and analogies",
+#                 },
+#                 {
+#                     "id": "medium",
+#                     "label": "Medium",
+#                     "description": "College-level technical explanation",
+#                 },
+#                 {
+#                     "id": "advanced",
+#                     "label": "Advanced",
+#                     "description": "Formal and detailed explanation",
+#                 },
+#             ],
+#         }
+
+#     elif step == "select_explanation":
+#         exp_type = (
+#             user_response
+#             if user_response in {"beginner", "medium", "advanced"}
+#             else "medium"
+#         )
+#         try:
+#             chunks = vector_store.query_relevant_chunks(
+#                 question=f"Explain the concept being taught in '{topic_name}'.",
+#                 lecture_id=lec_id,
+#                 top_k=6,
+#             )
+#         except Exception as e:
+#             print(f"[RAG] Retrieval error: {e}")
+#             chunks = []
+
+#         if not chunks:
+#             return {
+#                 "step": "error",
+#                 "message": "No transcript chunks found for this lecture.",
+#             }
+
+#         transcript_context = build_transcript_context(chunks)
+#         try:
+#             explanation_content = generator.generate_explanation(
+#                 question=f"Explain the topic '{topic_name}' using only this lecture.",
+#                 context_chunks=chunks,
+#                 level=exp_type,
+#             )
+#         except Exception as e:
+#             print(f"[Gemini] Explanation error: {e}")
+#             return {
+#                 "step": "error",
+#                 "message": "Gemini could not generate explanation.",
+#             }
+
+#         suggested_timestamps = [
+#             {
+#                 "start_time": c["start_time"],
+#                 "end_time": c["end_time"],
+#                 "text": c["text"],
+#             }
+#             for c in chunks
+#         ]
+
+#         return {
+#             "step": "select_remediation",
+#             "topic": topic_name,
+#             "difficulty": exp_type,
+#             "explanation": explanation_content,
+#             "options": [
+#                 {
+#                     "id": "real_life",
+#                     "label": "Real-Life Example",
+#                     "description": "Understand through practical example",
+#                 },
+#                 {
+#                     "id": "quiz",
+#                     "label": "Take a Quiz",
+#                     "description": "Test understanding of this exact topic",
+#                 },
+#                 {
+#                     "id": "animation",
+#                     "label": "Visual / Animation Explanation",
+#                     "description": "See concept as visual flow",
+#                 },
+#                 {
+#                     "id": "another_video",
+#                     "label": "Recommend Another Video",
+#                     "description": "Find another lecture",
+#                 },
+#             ],
+#             "suggested_timestamps": suggested_timestamps,
+#             "context_available": bool(transcript_context),
+#         }
+
+#     elif step == "select_remediation":
+#         remediation_type = user_response or "quiz"
+#         try:
+#             chunks = vector_store.query_relevant_chunks(
+#                 question=f"Explain '{topic_name}'.", lecture_id=lec_id, top_k=8
+#             )
+#         except Exception:
+#             chunks = []
+
+#         if not chunks:
+#             return {"step": "error", "message": "No transcript chunks found."}
+
+#         transcript_context = build_transcript_context(chunks)
+
+#         if remediation_type == "quiz":
+#             try:
+#                 quiz_questions = quiz_generator.generate_adaptive_quiz(
+#                     explanation_text="Generate quiz from current lecture topic.",
+#                     topic=topic_name,
+#                     difficulty=(
+#                         req.user_response
+#                         if req.user_response in {"beginner", "medium", "advanced"}
+#                         else "medium"
+#                     ),
+#                     transcript_context=transcript_context,
+#                     num_questions=5,
+#                 )
+#             except Exception as e:
+#                 print(f"[Quiz] Error: {e}")
+#                 quiz_questions = []
+
+#             return {
+#                 "step": "quiz",
+#                 "topic": topic_name,
+#                 "quiz_questions": quiz_questions,
+#                 "quiz_threshold": QUIZ_PASS_THRESHOLD,
+#                 "message": f"Quiz questions for '{topic_name}'.",
+#             }
+
+#         elif remediation_type == "real_life":
+#             real_life = generator.generate_explanation(
+#                 question=f"Give a real-life practical example of '{topic_name}'.",
+#                 context_chunks=chunks,
+#                 level="medium",
+#             )
+#             return {"step": "real_life", "topic": topic_name, "content": real_life}
+
+#         elif remediation_type == "animation":
+#             visual = generator.generate_explanation(
+#                 question=f"Create a step-by-step visual animation storyboard for '{topic_name}'.",
+#                 context_chunks=chunks,
+#                 level="medium",
+#             )
+#             return {"step": "animation", "topic": topic_name, "content": visual}
+
+#         elif remediation_type == "another_video":
+#             related = []
+#             topic_words = [w.lower() for w in topic_name.split() if len(w) > 3]
+#             for candidate in MOCK_LECTURES:
+#                 if candidate["id"] == lec_id:
+#                     continue
+#                 if any(word in candidate["title"].lower() for word in topic_words):
+#                     related.append(
+#                         {
+#                             "lecture_id": candidate["id"],
+#                             "title": candidate["title"],
+#                             "duration": candidate.get("duration", ""),
+#                             "link": f"/student/session?play={candidate['id']}&t=0",
+#                         }
+#                     )
+#             return {
+#                 "step": "another_video",
+#                 "topic": topic_name,
+#                 "recommended_videos": related,
+#             }
+
+#     elif step == "submit_quiz":
+#         if req.quiz_score is None and req.quiz_passed is None:
+#             raise HTTPException(
+#                 status_code=400, detail="quiz_score or quiz_passed is required."
+#             )
+
+#         score = (
+#             int(req.quiz_score)
+#             if req.quiz_score is not None
+#             else (QUIZ_PASS_THRESHOLD if req.quiz_passed else 0)
+#         )
+#         passed = score >= QUIZ_PASS_THRESHOLD
+
+#         state["quiz_attempts"] += 1
+#         state["quiz_score"] = score
+#         state["quiz_passed"] = passed
+
+#         if passed:
+#             state["understood_concepts"].append(state["course_topic"])
+#         else:
+#             state["struggled_concepts"].append(state["course_topic"])
+
+#         SESSIONS_STORE[lec_id] = dict(state)
+#         return {
+#             "step": "passed" if passed else "failed",
+#             "passed": passed,
+#             "score": score,
+#             "threshold": QUIZ_PASS_THRESHOLD,
+#             "message": f"Quiz {'passed' if passed else 'not passed'}! Score: {score}%.",
+#         }
+
+#     raise HTTPException(status_code=400, detail="Invalid flow step.")
+
+
+# # ============================================================
+# # ASK AI
+# # ============================================================
+
+
+# @router.post("/ask-ai")
+# def ask_ai_explanation(
+#     req: AskAIRequest, current_student: User = Depends(get_current_student)
+# ):
+#     try:
+#         chunks = vector_store.query_relevant_chunks(
+#             question=req.question, lecture_id=req.lecture_id, top_k=5
+#         )
+#         if not chunks:
+#             return {
+#                 "status": "success",
+#                 "explanation": "No transcript context found. Please ensure lecture is indexed.",
+#                 "level": req.level,
+#                 "suggested_timestamps": [],
+#             }
+
+#         explanation = generator.generate_explanation(
+#             question=req.question, context_chunks=chunks, level=req.level
+#         )
+#         suggested_timestamps = [
+#             {
+#                 "start_time": chunk["start_time"],
+#                 "end_time": chunk["end_time"],
+#                 "text": chunk["text"],
+#             }
+#             for chunk in chunks
+#         ]
+
+#         return {
+#             "status": "success",
+#             "explanation": explanation,
+#             "level": req.level,
+#             "suggested_timestamps": suggested_timestamps,
+#         }
+#     except Exception as e:
+#         print(f"[Gemini] ask-ai error: {e}")
+#         return {
+#             "status": "error",
+#             "explanation": "Gemini could not answer question. Check API Key.",
+#             "level": req.level,
+#             "suggested_timestamps": [],
+#         }
+
+
+# # ============================================================
+# # DYNAMIC QUIZ GENERATION
+# # ============================================================
+
+
+# @router.post("/generate-quiz")
+# def generate_quiz(req: GenerateQuizRequest,current_student: User = Depends(get_current_student)):
+#     try:
+#         level = req.level or "medium"
+#         transcript_context = ""
+
+#         if req.lecture_id:
+#             chunks = vector_store.query_relevant_chunks(
+#                 question=req.topic, lecture_id=req.lecture_id, top_k=10
+#             )
+#             transcript_context = build_transcript_context(chunks)
+
+#         questions = quiz_generator.generate_adaptive_quiz(
+#             explanation_text=req.explanation_text,
+#             topic=req.topic,
+#             difficulty=level,
+#             transcript_context=transcript_context,
+#             num_questions=5,
+#         )
+
+#         return {
+#             "status": "success",
+#             "topic": req.topic,
+#             "questions": questions,
+#             "quiz_threshold": QUIZ_PASS_THRESHOLD,
+#         }
+#     except Exception as e:
+#         print(f"[Quiz] generate-quiz error: {e}")
+#         return {
+#             "status": "error",
+#             "message": f"Quiz generation failed: {str(e)}",
+#             "questions": [],
+#             "quiz_threshold": QUIZ_PASS_THRESHOLD,
+#         }
+
+
+# # ============================================================
+# # VIDEO COMPLETION + END-OF-VIDEO QUIZ
+# # ============================================================
+
+
+# @router.post("/lecture/{lecture_id}/complete")
+# def complete_lecture(
+#     lecture_id: str,
+#     difficulty: str = "medium",
+#     current_student: User = Depends(get_current_student),
+# ):
+#     lecture = next((l for l in MOCK_LECTURES if l["id"] == lecture_id), None)
+#     if not lecture:
+#         raise HTTPException(status_code=404, detail="Lecture not found.")
+
+#     if difficulty not in {"beginner", "medium", "advanced"}:
+#         difficulty = "medium"
+
+#     existing_quiz = FINAL_VIDEO_QUIZZES.get(lecture_id)
+#     if existing_quiz:
+#         state = get_or_create_session(lecture_id)
+#         state["completion_percentage"] = 100.0
+#         SESSIONS_STORE[lecture_id] = dict(state)
+#         return {
+#             "status": "success",
+#             "lecture_id": lecture_id,
+#             "lecture_title": lecture["title"],
+#             "completed": True,
+#             "already_generated": True,
+#             "quiz_available": True,
+#             "final_video_quiz": existing_quiz,
+#         }
+
+#     state = get_or_create_session(lecture_id)
+#     state["completion_percentage"] = 100.0
+#     SESSIONS_STORE[lecture_id] = dict(state)
+
+#     transcript_entries = TRANSCRIPTS_STORE.get(lecture_id, [])
+#     if not transcript_entries:
+#         raise HTTPException(
+#             status_code=404, detail="No transcript found for this lecture."
+#         )
+
+#     representative_entries = select_representative_chunks(
+#         transcript_entries, max_chunks=60
+#     )
+#     full_lecture_text = build_transcript_context(
+#         representative_entries, max_chars=30000
+#     )
+
+#     try:
+#         questions = quiz_generator.generate_video_quiz(
+#             video_title=lecture["title"],
+#             transcript_context=full_lecture_text,
+#             difficulty=difficulty,
+#             num_questions=25,
+#         )
+#     except Exception as e:
+#         raise HTTPException(
+#             status_code=500, detail=f"Whole-video quiz generation failed: {e}"
+#         )
+
+#     if not questions or len(questions) < 20:
+#         raise HTTPException(
+#             status_code=500,
+#             detail=f"Quiz generated only {len(questions)} questions. At least 20 are required.",
+#         )
+
+#     questions = questions[:25]
+#     FINAL_VIDEO_QUIZZES[lecture_id] = {
+#         "quiz_type": "full_video",
+#         "difficulty": difficulty,
+#         "question_count": len(questions),
+#         "questions": questions,
+#         "quiz_threshold": QUIZ_PASS_THRESHOLD,
+#     }
+
+#     return {
+#         "status": "success",
+#         "lecture_id": lecture_id,
+#         "lecture_title": lecture["title"],
+#         "completed": True,
+#         "already_generated": False,
+#         "quiz_available": True,
+#         "final_video_quiz": FINAL_VIDEO_QUIZZES[lecture_id],
+#     }
+
+
+# # ============================================================
+# # STORED FINAL VIDEO QUIZ
+# # ============================================================
+
+
+# @router.get("/lecture/{lecture_id}/final-quiz")
+# def get_final_video_quiz(
+#     lecture_id: str,
+#     difficulty: str = "medium",
+#     current_student: User = Depends(get_current_student),
+# ):
+#     lecture = next((l for l in MOCK_LECTURES if l["id"] == lecture_id), None)
+#     if not lecture:
+#         raise HTTPException(status_code=404, detail="Lecture not found.")
+
+#     quiz = FINAL_VIDEO_QUIZZES.get(lecture_id)
+#     if not quiz:
+#         return {
+#             "status": "not_ready",
+#             "lecture_id": lecture_id,
+#             "lecture_title": lecture["title"],
+#             "quiz_available": False,
+#             "questions": [],
+#             "question_count": 0,
+#             "message": "Whole-video quiz has not been generated yet. Complete the video first.",
+#         }
+
+#     return {
+#         "status": "success",
+#         "lecture_id": lecture_id,
+#         "lecture_title": lecture["title"],
+#         "quiz_available": True,
+#         **quiz,
+#     }
+
+from fastapi import APIRouter, HTTPException, Depends
+from pydantic import BaseModel
+from typing import List, Optional, Dict, Any
+import re
+from app.dependencies import get_current_student
+from app.models import User
+import urllib.request
+import json
+import os
+import uuid
+import joblib
+import numpy as np
+from youtube_transcript_api import YouTubeTranscriptApi
+
+from app.services.rag import vector_store, generator, quiz_generator
+
+from app.services.rag.chunker import chunk_transcript
+from app.services.rag.vector_store import index_lecture_chunks
+
+
+router = APIRouter()
+
+
+# ============================================================
+# PER-STUDENT SESSION STORES
+# ============================================================
+
+# Each authenticated user's data is kept in a separate namespace.
+# These stores are in-memory for Stage L. PostgreSQL persistence for
+# sessions/events/quiz attempts is implemented in Stage O, after Stage N
+# creates real faculty-owned Lecture UUIDs.
+STUDENT_DATA = {}
+
+
+def get_student_data(current_student: User) -> Dict[str, Any]:
+    student_key = str(current_student.id)
+    if student_key not in STUDENT_DATA:
+        STUDENT_DATA[student_key] = {
+            "sessions": {},
+            "watch_history": {},
+            "active_session": {},
+            "lectures": [],
+            "summaries": {},
+            "transcripts": {},
+            "final_video_quizzes": {},
+        }
+    return STUDENT_DATA[student_key]
+
+
+# ============================================================
+# QUIZ CONFIGURATION
+# ============================================================
+
+# Student must score this percentage or higher to pass.
+QUIZ_PASS_THRESHOLD = 70
+
+
+# ============================================================
+# LOAD TRAINED XGBOOST CONFUSION MODEL
+# ============================================================
+
+MODEL_PATH = os.path.join(
+    os.path.dirname(__file__), "../../cognitrace_confusion_xgboost.pkl"
+)
+
+try:
+    xgb_confusion_model = joblib.load(MODEL_PATH)
+    print(f"[ML Engine] Successfully loaded XGBoost model from {MODEL_PATH}")
+except Exception as e:
+    print(f"[ML Engine] Warning: Could not load trained model from {MODEL_PATH}: {e}")
+    xgb_confusion_model = None
+
+
+def evaluate_xgboost_confusion(
+    pauses_30s: int,
+    resumes_30s: int,
+    rewinds_30s: int,
+    seeks_30s: int,
+    speed: float,
+    completion_pct: float,
+) -> Dict[str, Any]:
+    """
+    Evaluates potential student cognitive friction using the trained XGBoost model
+    strictly on the latest 30-second interaction window counts.
+    Features: ['Pause_Count', 'Resume_Count', 'Rewind_Count', 'Forward_Seek_Count', 'Playback_Speed_Num', 'Completion_Num']
+    """
+    if xgb_confusion_model is None:
+        # Fallback rule-based heuristic if model file is missing
+        is_confused = (rewinds_30s >= 2) or (pauses_30s >= 2 and speed <= 1.0)
+        c_score = 85 if is_confused else 15
+        return {
+            "confusion_score": c_score,
+            "confusion_status": (
+                "High Confusion"
+                if c_score >= 70
+                else ("Medium Confusion" if c_score >= 35 else "Low Confusion")
+            ),
+            "prob_confused": 0.85 if is_confused else 0.15,
+        }
+
+    try:
+        # Prepare feature vector matching the exact order used during model training
+        features = np.array(
+            [
+                [
+                    int(pauses_30s),
+                    int(resumes_30s),
+                    int(rewinds_30s),
+                    int(seeks_30s),
+                    float(speed),
+                    float(
+                        completion_pct / 100.0
+                    ),  # Convert percentage to float 0.0 - 1.0
+                ]
+            ]
+        )
+
+        # Predict Class 1 (Confused) Probability
+        prob_confused = float(xgb_confusion_model.predict_proba(features)[0][1])
+        c_score = int(round(prob_confused * 100))
+
+        if c_score >= 70:
+            status = "High Confusion"
+        elif c_score >= 35:
+            status = "Medium Confusion"
+        else:
+            status = "Low Confusion"
+
+        return {
+            "confusion_score": c_score,
+            "confusion_status": status,
+            "prob_confused": round(prob_confused, 4),
+        }
+    except Exception as err:
+        print(f"[ML Engine] Inference Error: {err}")
+        return {
+            "confusion_score": 0,
+            "confusion_status": "Low Confusion",
+            "prob_confused": 0.0,
+        }
+
+
+# ============================================================
+# PYDANTIC MODELS
+# ============================================================
+
+
+class SessionEventLog(BaseModel):
+    lecture_id: str
+    event_type: str
+    timestamp: float
+    playback_speed: float
+    watch_duration: float
+
+    rewind_from: Optional[float] = None
+    rewind_to: Optional[float] = None
+
+    previous_timestamp: Optional[float] = None
+    current_timestamp: Optional[float] = None
+
+    seconds_delta: Optional[float] = None
+
+    previous_speed: Optional[float] = None
+    new_speed: Optional[float] = None
+
+    # Latest 30-Second Window Metrics
+    pauses_30s: Optional[int] = 0
+    resumes_30s: Optional[int] = 0
+    rewinds_30s: Optional[int] = 0
+    seeks_30s: Optional[int] = 0
+
+
+class SearchQuery(BaseModel):
+    query: str
+
+
+class TelemetryLog(BaseModel):
+    paused: int
+    rewound: int
+    seeked: int
+    speed_changes: int
+    watch_time: float
+    repeated_timestamps: List[str]
+    completion_percentage: float
+
+    # Latest 30-second window metrics from frontend player
+    pauses_30s: Optional[int] = 0
+    resumes_30s: Optional[int] = 0
+    rewinds_30s: Optional[int] = 0
+    seeks_30s: Optional[int] = 0
+    current_speed: Optional[float] = 1.0
+
+
+class HelpCenterRequest(BaseModel):
+    step: str
+    user_response: Optional[str] = None
+    knows_prereq: Optional[bool] = None
+    lecture_id: Optional[str] = None
+
+    quiz_passed: Optional[bool] = None
+    quiz_score: Optional[int] = None
+
+
+class AskAIRequest(BaseModel):
+    question: str
+    lecture_id: str
+    level: Optional[str] = "medium"
+
+
+class GenerateQuizRequest(BaseModel):
+    explanation_text: str
+    topic: str
+    level: Optional[str] = "medium"
+    lecture_id: Optional[str] = None
+
+
+class YouTubeLectureRequest(BaseModel):
+    url: str
+
+
+# ============================================================
+# YOUTUBE HELPERS
+# ============================================================
+
+
+def extract_youtube_video_id(url: str) -> Optional[str]:
+    pattern = (
+        r"(?:https?://)?"
+        r"(?:www\.)?"
+        r"(?:youtube\.com/(?:[^/]+/.+/|"
+        r"(?:v|e(?:mbed)?)/|.*[?&]v=)|"
+        r"youtu\.be/)"
+        r'([^"&?/\s]{11})'
+    )
+    match = re.search(pattern, url)
+    if match:
+        return match.group(1)
+    return None
+
+
+def get_youtube_metadata(video_id: str):
+    oembed_url = (
+        "https://www.youtube.com/oembed?"
+        f"url=https://www.youtube.com/watch?v={video_id}"
+        "&format=json"
+    )
+    try:
+        req = urllib.request.Request(oembed_url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=5) as response:
+            data = json.loads(response.read().decode())
+            return {
+                "title": data.get("title", f"YouTube Video {video_id}"),
+                "author": data.get("author_name", "Unknown Creator"),
+                "thumbnail": data.get(
+                    "thumbnail_url", f"https://i.ytimg.com/vi/{video_id}/hqdefault.jpg"
+                ),
+            }
+    except Exception:
+        return {
+            "title": f"YouTube Video {video_id}",
+            "author": "Unknown Creator",
+            "thumbnail": f"https://i.ytimg.com/vi/{video_id}/hqdefault.jpg",
+        }
+
+
+def format_seconds_to_timestamp(seconds: float) -> str:
+    total_seconds = int(seconds)
+    minutes = total_seconds // 60
+    secs = total_seconds % 60
+    return f"{minutes:02d}:{secs:02d}"
+
+
+# ============================================================
+# SESSION HELPERS
+# ============================================================
+
+
+def create_empty_session(lecture_id: str, lecture: dict, student_name: str):
+    return {
+        "student_name": student_name,
+        "lecture_id": lecture_id,
+        "lecture_title": lecture["title"],
+        "course_topic": (
+            lecture["title"].split(":", 1)[1].strip()
+            if ":" in lecture["title"]
+            else lecture["title"]
+        ),
+        "paused": 0,
+        "rewound": 0,
+        "seeked": 0,
+        "forward_seeks": 0,
+        "speed_changes": 0,
+        "watch_time": 0.0,
+        "repeated_timestamps": [],
+        "completion_percentage": 0.0,
+        "quiz_attempts": 0,
+        "quiz_score": 0,
+        "quiz_passed": False,
+        "confusion_score": 0,
+        "confusion_status": "Low Confusion",
+        "struggled_concepts": [],
+        "understood_concepts": [],
+        "manual_confusion": 0,
+        "confusion_timestamps": [],
+        "play_events": 0,
+    }
+
+
+def get_or_create_session(
+    lecture_id: str, student_data: Dict[str, Any], student_name: str
+):
+    lectures = student_data["lectures"]
+    sessions = student_data["sessions"]
+    lecture = next((l for l in lectures if l["id"] == lecture_id), None)
+    if not lecture:
+        raise HTTPException(status_code=404, detail="Lecture not found")
+
+    if lecture_id not in sessions:
+        sessions[lecture_id] = create_empty_session(
+            lecture_id, lecture, student_name
+        )
+
+    return sessions[lecture_id]
+
+
+# ============================================================
+# DASHBOARD
+# ============================================================
+
+
+@router.get("/dashboard")
+def get_student_dashboard(current_student: User = Depends(get_current_student)):
+
+    student_data = get_student_data(current_student)
+    SESSIONS_STORE = student_data["sessions"]
+    WATCH_HISTORY = student_data["watch_history"]
+    MOCK_LECTURES = student_data["lectures"]
+    completed_count = sum(1 for s in SESSIONS_STORE.values() if s.get("quiz_passed"))
+
+    if not SESSIONS_STORE:
+        overall_prog = 0
+        avg_engagement = 0
+        weekly_hours = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    else:
+        total_lectures = len(MOCK_LECTURES)
+        overall_prog = (
+            int(
+                sum(
+                    s.get("completion_percentage", 0.0) for s in SESSIONS_STORE.values()
+                )
+                / total_lectures
+            )
+            if total_lectures > 0
+            else 0
+        )
+        avg_engagement = int(
+            sum(
+                max(0, 100 - s.get("confusion_score", 0))
+                for s in SESSIONS_STORE.values()
+            )
+            / len(SESSIONS_STORE)
+        )
+        total_time = sum(s.get("watch_time", 0.0) for s in SESSIONS_STORE.values())
+        weekly_hours = [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            float(round(total_time / 3600.0, 2)),
+        ]
+
+    strong = []
+    weak = []
+
+    for s in SESSIONS_STORE.values():
+        topic = s.get("course_topic", "Concept")
+        if s.get("quiz_passed"):
+            strong.append(topic)
+        elif s.get("quiz_attempts", 0) > 0:
+            weak.append(topic)
+
+    recent = []
+    for key, val in WATCH_HISTORY.items():
+        progress = int(SESSIONS_STORE.get(key, {}).get("completion_percentage", 0))
+        recent.append(
+            {
+                "id": key,
+                "title": val["title"],
+                "progress": progress,
+                "last_watched": val["last_watched"],
+            }
+        )
+
+    return {
+        "student_name": current_student.full_name,
+        "overall_progress": overall_prog,
+        "weekly_hours": weekly_hours,
+        "average_engagement": avg_engagement,
+        "completed_lectures": completed_count,
+        "total_lectures": len(MOCK_LECTURES),
+        "strong_topics": [{"topic": t, "mastery": 90} for t in strong],
+        "weak_topics": [{"topic": t, "mastery": 45} for t in weak],
+        "recent_activity": recent,
+        "recommended_topics": [],
+    }
+
+
+# ============================================================
+# LECTURES
+# ============================================================
+
+
+@router.get("/lectures")
+def get_lectures(current_student: User = Depends(get_current_student)):
+
+    student_data = get_student_data(current_student)
+    MOCK_LECTURES = student_data["lectures"]
+    return MOCK_LECTURES
+
+
+# ============================================================
+# TELEMETRY WITH TRAINED XGBOOST MODEL EVALUATION
+# ============================================================
+
+
+@router.post("/telemetry")
+def update_telemetry(
+    log: TelemetryLog, current_student: User = Depends(get_current_student)
+):
+    student_data = get_student_data(current_student)
+    ACTIVE_SESSION_STATE = student_data["active_session"]
+    ACTIVE_SESSION_STATE["paused"] = log.paused
+    ACTIVE_SESSION_STATE["rewound"] = log.rewound
+    ACTIVE_SESSION_STATE["seeked"] = log.seeked
+    ACTIVE_SESSION_STATE["speed_changes"] = log.speed_changes
+    ACTIVE_SESSION_STATE["watch_time"] = log.watch_time
+    ACTIVE_SESSION_STATE["repeated_timestamps"] = log.repeated_timestamps
+    ACTIVE_SESSION_STATE["completion_percentage"] = log.completion_percentage
+
+    # Fallback estimations for 30s actions if not directly provided
+    pauses_30s = log.pauses_30s if log.pauses_30s is not None else min(log.paused, 2)
+    resumes_30s = (
+        log.resumes_30s if log.resumes_30s is not None else (1 if pauses_30s > 0 else 0)
+    )
+    rewinds_30s = (
+        log.rewinds_30s if log.rewinds_30s is not None else min(log.rewound, 2)
+    )
+    seeks_30s = log.seeks_30s if log.seeks_30s is not None else min(log.seeked, 1)
+    speed = log.current_speed if log.current_speed is not None else 1.0
+
+    # Evaluate trained XGBoost model on the latest 30s actions
+    xgb_result = evaluate_xgboost_confusion(
+        pauses_30s=pauses_30s,
+        resumes_30s=resumes_30s,
+        rewinds_30s=rewinds_30s,
+        seeks_30s=seeks_30s,
+        speed=speed,
+        completion_pct=log.completion_percentage,
+    )
+
+    ACTIVE_SESSION_STATE["confusion_score"] = xgb_result["confusion_score"]
+    ACTIVE_SESSION_STATE["confusion_status"] = xgb_result["confusion_status"]
+
+    return {
+        "status": "success",
+        "confusion_score": xgb_result["confusion_score"],
+        "confusion_status": xgb_result["confusion_status"],
+        "trigger_ai_help": xgb_result["confusion_score"] >= 70,
+    }
+
+
+# ============================================================
+# SESSION EVENT LOGGING WITH TRAINED XGBOOST INFERENCE
+# ============================================================
+
+
+@router.post("/session-analysis/log")
+def log_session_event(
+    log: SessionEventLog, current_student: User = Depends(get_current_student)
+):
+    student_data = get_student_data(current_student)
+    SESSIONS_STORE = student_data["sessions"]
+    ACTIVE_SESSION_STATE = student_data["active_session"]
+    MOCK_LECTURES = student_data["lectures"]
+
+    def format_time(seconds):
+        minutes = int(seconds // 60)
+        secs = int(seconds % 60)
+        return f"{minutes:02d}:{secs:02d}"
+
+    # Load session state
+    if (
+        not ACTIVE_SESSION_STATE
+        or ACTIVE_SESSION_STATE.get("lecture_id") != log.lecture_id
+    ):
+        if log.lecture_id in SESSIONS_STORE:
+            ACTIVE_SESSION_STATE.clear()
+            ACTIVE_SESSION_STATE.update(SESSIONS_STORE[log.lecture_id])
+        else:
+            lecture = next(
+                (l for l in MOCK_LECTURES if l["id"] == log.lecture_id), None
+            )
+            if not lecture:
+                raise HTTPException(status_code=404, detail="Lecture not found")
+            ACTIVE_SESSION_STATE.clear()
+            ACTIVE_SESSION_STATE.update(create_empty_session(log.lecture_id, lecture, current_student.full_name))
+
+    # Record event counters
+    if log.event_type == "play":
+        ACTIVE_SESSION_STATE["play_events"] = (
+            ACTIVE_SESSION_STATE.get("play_events", 0) + 1
+        )
+    elif log.event_type == "pause":
+        ACTIVE_SESSION_STATE["paused"] += 1
+    elif log.event_type == "rewind":
+        ACTIVE_SESSION_STATE["rewound"] += 1
+        prev_t = (
+            log.previous_timestamp
+            if log.previous_timestamp is not None
+            else log.rewind_from
+        )
+        curr_t = (
+            log.current_timestamp
+            if log.current_timestamp is not None
+            else log.rewind_to
+        )
+        if prev_t is not None and curr_t is not None:
+            time_range = f"{format_time(curr_t)}-{format_time(prev_t)}"
+            ACTIVE_SESSION_STATE["repeated_timestamps"].append(time_range)
+    elif log.event_type in ["seek", "forward_seek"]:
+        ACTIVE_SESSION_STATE["seeked"] += 1
+        if log.event_type == "forward_seek":
+            ACTIVE_SESSION_STATE["forward_seeks"] += 1
+    elif log.event_type == "speed_change":
+        ACTIVE_SESSION_STATE["speed_changes"] += 1
+        if "speed_history" not in ACTIVE_SESSION_STATE:
+            ACTIVE_SESSION_STATE["speed_history"] = []
+        ACTIVE_SESSION_STATE["speed_history"].append(
+            {
+                "previous_speed": log.previous_speed,
+                "new_speed": log.new_speed,
+                "timestamp": log.timestamp,
+            }
+        )
+    elif log.event_type == "manual_confusion":
+        ACTIVE_SESSION_STATE["manual_confusion"] += 1
+        ACTIVE_SESSION_STATE["confusion_timestamps"].append(format_time(log.timestamp))
+
+    # Update watch stats
+    ACTIVE_SESSION_STATE["completion_percentage"] = max(
+        ACTIVE_SESSION_STATE["completion_percentage"], log.watch_duration
+    )
+    ACTIVE_SESSION_STATE["watch_time"] = max(
+        ACTIVE_SESSION_STATE["watch_time"], log.timestamp
+    )
+
+    # Calculate 30-second window feature inputs
+    pauses_30s = (
+        log.pauses_30s
+        if log.pauses_30s is not None
+        else (1 if log.event_type == "pause" else 0)
+    )
+    resumes_30s = (
+        log.resumes_30s
+        if log.resumes_30s is not None
+        else (1 if log.event_type == "play" else 0)
+    )
+    rewinds_30s = (
+        log.rewinds_30s
+        if log.rewinds_30s is not None
+        else (1 if log.event_type == "rewind" else 0)
+    )
+    seeks_30s = (
+        log.seeks_30s
+        if log.seeks_30s is not None
+        else (1 if log.event_type in ["seek", "forward_seek"] else 0)
+    )
+
+    # Evaluate trained XGBoost model on the latest 30s actions
+    xgb_result = evaluate_xgboost_confusion(
+        pauses_30s=pauses_30s,
+        resumes_30s=resumes_30s,
+        rewinds_30s=rewinds_30s,
+        seeks_30s=seeks_30s,
+        speed=log.playback_speed,
+        completion_pct=ACTIVE_SESSION_STATE["completion_percentage"],
+    )
+
+    c_score = xgb_result["confusion_score"]
+    ACTIVE_SESSION_STATE["confusion_score"] = c_score
+    ACTIVE_SESSION_STATE["confusion_status"] = xgb_result["confusion_status"]
+
+    confusion_detected = c_score >= 70 and log.event_type != "pause"
+    recommended_action = (
+        "AI Help Center is available if you would like to clarify this segment."
+        if confusion_detected
+        else "Session tracked."
+    )
+
+    current_id = ACTIVE_SESSION_STATE.get("lecture_id")
+    if current_id:
+        SESSIONS_STORE[current_id] = dict(ACTIVE_SESSION_STATE)
+
+    return {
+        "status": "success",
+        "confusion_detected": confusion_detected,
+        "confusion_score": c_score,
+        "confusion_status": ACTIVE_SESSION_STATE["confusion_status"],
+        "recommended_action": recommended_action,
+    }
+
+
+# ============================================================
+# ACTIVE SESSION
+# ============================================================
+
+
+@router.get("/active-session")
+def get_active_session(current_student: User = Depends(get_current_student)):
+    student_data = get_student_data(current_student)
+    ACTIVE_SESSION_STATE = student_data["active_session"]
+    return ACTIVE_SESSION_STATE
+
+
+# ============================================================
+# SELECT SESSION
+# ============================================================
+
+
+@router.post("/session/select")
+def select_session(req: dict, current_student: User = Depends(get_current_student)):
+    student_data = get_student_data(current_student)
+    SESSIONS_STORE = student_data["sessions"]
+    WATCH_HISTORY = student_data["watch_history"]
+    ACTIVE_SESSION_STATE = student_data["active_session"]
+    MOCK_LECTURES = student_data["lectures"]
+    lec_id = req.get("lecture_id")
+    if not lec_id:
+        raise HTTPException(status_code=400, detail="Missing lecture_id")
+
+    lecture = next((l for l in MOCK_LECTURES if l["id"] == lec_id), None)
+    if not lecture:
+        raise HTTPException(status_code=404, detail="Lecture not found")
+
+    current_id = ACTIVE_SESSION_STATE.get("lecture_id")
+    if current_id:
+        SESSIONS_STORE[current_id] = dict(ACTIVE_SESSION_STATE)
+
+    if lec_id in SESSIONS_STORE:
+        ACTIVE_SESSION_STATE.clear()
+        ACTIVE_SESSION_STATE.update(SESSIONS_STORE[lec_id])
+    else:
+        ACTIVE_SESSION_STATE.clear()
+        ACTIVE_SESSION_STATE.update(create_empty_session(lec_id, lecture, current_student.full_name))
+        SESSIONS_STORE[lec_id] = dict(ACTIVE_SESSION_STATE)
+
+    WATCH_HISTORY[lec_id] = {
+        "id": lec_id,
+        "title": lecture["title"],
+        "progress": int(ACTIVE_SESSION_STATE["completion_percentage"]),
+        "last_watched": "Just now",
+    }
+
+    return ACTIVE_SESSION_STATE
+
+
+# ============================================================
+# RESET
+# ============================================================
+
+
+@router.post("/reset")
+def reset_session(current_student: User = Depends(get_current_student)):
+    student_data = get_student_data(current_student)
+    SESSIONS_STORE = student_data["sessions"]
+    WATCH_HISTORY = student_data["watch_history"]
+    ACTIVE_SESSION_STATE = student_data["active_session"]
+    SESSIONS_STORE.clear()
+    WATCH_HISTORY.clear()
+    ACTIVE_SESSION_STATE.clear()
+    return {"status": "reset_completed"}
+
+
+# ============================================================
+# SMART SEARCH
+# ============================================================
+
+
+@router.post("/search")
+def smart_search(
+    query: SearchQuery, current_student: User = Depends(get_current_student)
+):
+    student_data = get_student_data(current_student)
+    TRANSCRIPTS_STORE = student_data["transcripts"]
+    MOCK_LECTURES = student_data["lectures"]
+    q = query.query.lower()
+    hits = []
+
+    for lec_id, entries in TRANSCRIPTS_STORE.items():
+        lec_title = "Unknown Lecture"
+        for lec in MOCK_LECTURES:
+            if lec["id"] == lec_id:
+                lec_title = lec["title"]
+                break
+
+        for item in entries:
+            if q in item["text"].lower():
+                hits.append(
+                    {
+                        "lecture_id": lec_id,
+                        "lecture_title": lec_title,
+                        "timestamp": item["timestamp"],
+                        "seconds": item["seconds"],
+                        "snippet": item["text"],
+                        "relevance": 95,
+                    }
+                )
+
+    if not hits:
+        hits.append(
+            {
+                "lecture_id": "lec_2",
+                "lecture_title": "Selected Lecture",
+                "timestamp": "00:00",
+                "seconds": 0,
+                "snippet": f"No direct matches for '{query.query}'.",
+                "relevance": 40,
+            }
+        )
+
+    return {"query": query.query, "results": hits}
+
+
+# ============================================================
+# YOUTUBE LECTURE IMPORT
+# ============================================================
+
+
+@router.post("/youtube-lecture")
+def create_youtube_lecture(
+    req: YouTubeLectureRequest, current_student: User = Depends(get_current_student)
+):
+    student_data = get_student_data(current_student)
+    MOCK_LECTURES = student_data["lectures"]
+    TRANSCRIPTS_STORE = student_data["transcripts"]
+    MOCK_SUMMARIES = student_data["summaries"]
+    video_id = extract_youtube_video_id(req.url)
+    if not video_id:
+        raise HTTPException(status_code=400, detail="Invalid YouTube URL format.")
+
+    meta = get_youtube_metadata(video_id)
+
+    try:
+        api = YouTubeTranscriptApi()
+        transcript_list = api.list(video_id)
+        selected_language = "en"
+        try:
+            transcript = transcript_list.find_transcript(["en"])
+        except Exception:
+            transcript = next(iter(transcript_list))
+            selected_language = transcript.language_code
+
+        fetched_data = transcript.fetch()
+    except Exception:
+        raise HTTPException(
+            status_code=400, detail="Transcript unavailable for this video."
+        )
+
+    formatted_entries = []
+    max_seconds = 0
+
+    for item in fetched_data:
+        start_seconds = float(item.start)
+        duration = float(item.duration)
+        end_seconds = start_seconds + duration
+        max_seconds = max(max_seconds, end_seconds)
+
+        formatted_entries.append(
+            {
+                "timestamp": format_seconds_to_timestamp(start_seconds),
+                "seconds": int(start_seconds),
+                "end_time": format_seconds_to_timestamp(end_seconds),
+                "text": item.text,
+                "speaker": "Speaker",
+            }
+        )
+
+    new_lec_id = f"lec_{uuid.uuid4().hex}"
+    duration_str = format_seconds_to_timestamp(max_seconds)
+
+    new_lecture = {
+        "id": new_lec_id,
+        "title": meta["title"],
+        "duration": duration_str,
+        "video_url": req.url,
+        "video_type": "youtube",
+        "youtube_id": video_id,
+        "category": "YouTube Imports",
+        "description": f"Imported from YouTube. Creator: {meta['author']}",
+        "prerequisites": [],
+        "concepts": ["Imported Concept"],
+        "thumbnail": meta["thumbnail"],
+        "transcript_language": selected_language,
+    }
+
+    MOCK_LECTURES.append(new_lecture)
+    TRANSCRIPTS_STORE[new_lec_id] = formatted_entries
+
+    try:
+        chunks = chunk_transcript(
+            transcript_items=formatted_entries,
+            lecture_id=new_lec_id,
+            course_id=meta["title"],
+            chunk_size=5,
+            overlap=2,
+        )
+        index_lecture_chunks(
+            lecture_id=new_lec_id, course_id=meta["title"], chunks=chunks
+        )
+        print(f"[RAG] Indexed {len(chunks)} chunks for lecture {new_lec_id}")
+    except Exception as e:
+        print(f"[RAG] Failed to index lecture {new_lec_id}: {e}")
+
+    ai_materials = generate_ai_study_materials(
+        lecture=new_lecture,
+        transcript_chunks=formatted_entries,
+        source_language=selected_language,
+    )
+
+    MOCK_SUMMARIES[new_lec_id] = ai_materials
+
+    return {
+        "status": "success",
+        "lecture": new_lecture,
+        "language": selected_language,
+        "rag": {
+            "indexed": True,
+            "message": "Transcript chunked and indexed into ChromaDB.",
+        },
+        "ai_study_materials": {
+            "summary_available": bool(
+                MOCK_SUMMARIES.get(new_lec_id, {}).get("_summary_available", False)
+            ),
+            "revision_notes_available": bool(
+                MOCK_SUMMARIES.get(new_lec_id, {}).get(
+                    "_revision_notes_available", False
+                )
+            ),
+            "message": "AI study material generation completed.",
+        },
+    }
+
+
+# ============================================================
+# LECTURE ANALYSIS
+# ============================================================
+
+
+@router.get("/lecture/{lecture_id}/analysis")
+def get_lecture_analysis(
+    lecture_id: str, current_student: User = Depends(get_current_student)
+):
+    student_data = get_student_data(current_student)
+    MOCK_LECTURES = student_data["lectures"]
+    SESSIONS_STORE = student_data["sessions"]
+    MOCK_SUMMARIES = student_data["summaries"]
+    FINAL_VIDEO_QUIZZES = student_data["final_video_quizzes"]
+    lecture = next((l for l in MOCK_LECTURES if l["id"] == lecture_id), None)
+    state = SESSIONS_STORE.get(lecture_id)
+
+    if not state:
+        state = {
+            "paused": 0,
+            "rewound": 0,
+            "seeked": 0,
+            "forward_seeks": 0,
+            "speed_changes": 0,
+            "watch_time": 0.0,
+            "completion_percentage": 0.0,
+            "quiz_attempts": 0,
+            "quiz_passed": False,
+            "quiz_score": 0,
+            "confusion_score": 0,
+            "confusion_status": "Low Confusion",
+            "manual_confusion": 0,
+            "repeated_timestamps": [],
+            "confusion_timestamps": [],
+        }
+
+    summary_info = MOCK_SUMMARIES.get(
+        lecture_id,
+        {
+            "summary": "Summary unavailable.",
+            "revision_notes": "Revision notes unavailable.",
+        },
+    )
+
+    return {
+        "lecture_id": lecture_id,
+        "ai_summary": summary_info["summary"],
+        "ai_revision_notes": summary_info["revision_notes"],
+        "final_video_quiz": FINAL_VIDEO_QUIZZES.get(lecture_id),
+        "session_analytics": {
+            "total_pauses": state["paused"],
+            "total_rewinds": state["rewound"],
+            "total_seeks": state["seeked"],
+            "forward_seeks": state["forward_seeks"],
+            "playback_speed_changes": state["speed_changes"],
+            "watch_percentage": int(state["completion_percentage"]),
+            "watch_time": state["watch_time"],
+            "confusion_score": state["confusion_score"],
+            "confusion_status": state["confusion_status"],
+            "quiz_score": (
+                f"{state['quiz_score']}%" if state["quiz_attempts"] > 0 else "N/A"
+            ),
+            "quiz_threshold": QUIZ_PASS_THRESHOLD,
+            "manual_confusion": state["manual_confusion"],
+            "repeated_timestamps": state["repeated_timestamps"],
+            "confusion_timestamps": state["confusion_timestamps"],
+        },
+    }
+
+
+# ============================================================
+# QUIZ STATUS / THRESHOLD
+# ============================================================
+
+
+@router.get("/quiz-status")
+def get_quiz_status(current_student: User = Depends(get_current_student)):
+    return {
+        "pass_threshold": QUIZ_PASS_THRESHOLD,
+        "description": f"Student must score {QUIZ_PASS_THRESHOLD}% or higher to pass.",
+    }
+
+
+# ============================================================
+# AI HELP CENTER HELPERS
+# ============================================================
+
+
+def get_prerequisites_for_topic(lecture: dict) -> List[str]:
+    existing = lecture.get("prerequisites") or []
+    if existing:
+        return existing
+
+    title = lecture.get("title", "").lower()
+    prerequisite_map = {
+        "binary search": ["Arrays", "Sorted Data", "Basic Searching Concepts"],
+        "linked list": ["Arrays", "Pointers", "Dynamic Memory"],
+        "stack": ["Arrays", "Basic Data Structures", "LIFO Concept"],
+        "queue": ["Arrays", "Basic Data Structures", "FIFO Concept"],
+        "tree": ["Binary Tree Basics", "Recursion", "Pointers"],
+        "graph": [
+            "Vertices and Edges",
+            "Basic Data Structures",
+            "Graph Representation",
+        ],
+        "normalization": [
+            "Relational Databases",
+            "Primary and Foreign Keys",
+            "Functional Dependencies",
+        ],
+        "1nf": ["Relational Databases", "Database Tables", "Keys"],
+        "2nf": ["1NF", "Primary Keys", "Functional Dependencies"],
+        "3nf": ["2NF", "Functional Dependencies", "Candidate Keys"],
+        "inheritance": [
+            "Classes and Objects",
+            "Object-Oriented Programming",
+            "Methods and Attributes",
+        ],
+        "polymorphism": ["Classes and Objects", "Inheritance", "Method Overriding"],
+        "recursion": ["Functions", "Conditional Statements", "Call Stack"],
+        "sorting": ["Arrays", "Comparisons", "Loops"],
+    }
+
+    for key, prerequisites in prerequisite_map.items():
+        if key in title:
+            return prerequisites
+
+    return [
+        "Basic terminology of the subject",
+        "Core concepts introduced before this topic",
+        "Basic operations used in this topic",
+    ]
+
+
+def find_prerequisite_lectures(
+    prerequisites: List[str], lectures: List[Dict[str, Any]]
+) -> List[Dict[str, Any]]:
+    recommendations = []
+    for lecture in lectures:
+        title = lecture.get("title", "").lower()
+        matched = False
+        for prerequisite in prerequisites:
+            words = [word for word in prerequisite.lower().split() if len(word) > 2]
+            if words and all(word in title for word in words):
+                matched = True
+                break
+        if matched:
+            recommendations.append(
+                {
+                    "lecture_id": lecture["id"],
+                    "title": lecture["title"],
+                    "link": f"/student/session?play={lecture['id']}&t=0",
+                }
+            )
+    return recommendations
+
+
+def select_representative_chunks(
+    chunks: List[Dict[str, Any]], max_chunks: int = 60
+) -> List[Dict[str, Any]]:
+    """Select evenly distributed transcript entries across the whole lecture."""
+    if not chunks:
+        return []
+    if len(chunks) <= max_chunks:
+        return chunks
+    if max_chunks <= 1:
+        return [chunks[0]]
+    step = (len(chunks) - 1) / (max_chunks - 1)
+    selected = []
+    seen = set()
+    for i in range(max_chunks):
+        index = round(i * step)
+        if index not in seen:
+            selected.append(chunks[index])
+            seen.add(index)
+    return selected
+
+
+def build_transcript_context(
+    chunks: List[Dict[str, Any]], max_chars: int = 30000
+) -> str:
+    parts = []
+    for chunk in chunks:
+        start_time = chunk.get("start_time", chunk.get("seconds", 0))
+        end_time = chunk.get("end_time", chunk.get("timestamp", ""))
+        text_value = (
+            chunk.get("text")
+            or chunk.get("content")
+            or chunk.get("chunk_text")
+            or chunk.get("transcript")
+            or ""
+        )
+        if not str(text_value).strip():
+            continue
+        parts.append(f"[{start_time}s - {end_time}]\n{text_value}")
+    return "\n\n".join(parts)[:max_chars]
+
+
+def generate_ai_study_materials(
+    lecture: dict, transcript_chunks: List[Dict[str, Any]], source_language: str = "en"
+) -> Dict[str, Any]:
+    lecture_title = lecture.get("title", "Untitled Lecture")
+
+    if not transcript_chunks:
+        return {
+            "summary": "AI Summary unavailable.",
+            "revision_notes": "AI Revision Notes unavailable.",
+        }
+
+    # Cover the whole lecture by selecting representative sections from beginning to end.
+    representative_chunks = select_representative_chunks(
+        transcript_chunks, max_chunks=60
+    )
+    transcript_context = build_transcript_context(
+        representative_chunks, max_chars=30000
+    )
+
+    if not transcript_context.strip():
+        return {
+            "summary": "AI Summary unavailable.",
+            "revision_notes": "AI Revision Notes unavailable.",
+        }
+
+    summary = None
+    revision_notes = None
+
+    try:
+        summary_prompt = (
+            f"Create a complete study summary for the lecture '{lecture_title}'.\n\n"
+            "Use ONLY the supplied lecture transcript.\n"
+            "Cover the entire lecture, including major topics, definitions, algorithms/procedures, rules, and examples.\n"
+            "The supplied transcript sections are representative sections distributed across the lecture, "
+            "so cover the lecture from beginning to end without inventing missing details.\n\n"
+            f"LECTURE TRANSCRIPT:\n{transcript_context}"
+        )
+        summary = generator.generate_explanation(
+            question=summary_prompt,
+            context_chunks=representative_chunks,
+            level="medium",
+        )
+        if not isinstance(summary, str) or not summary.strip():
+            summary = None
+    except Exception as e:
+        print(f"[STUDY MATERIALS] Summary generation error: {e}")
+
+    try:
+        revision_prompt = (
+            f"Create detailed exam-oriented revision notes for the lecture '{lecture_title}'.\n\n"
+            "Use ONLY the supplied lecture transcript.\n"
+            "Cover the lecture from beginning to end, including important definitions, concepts, "
+            "procedures, algorithms, rules, examples, comparisons and exam-relevant points when supported by the transcript.\n"
+            "The supplied transcript sections are representative sections distributed across the lecture, "
+            "so organize the notes to preserve broad coverage without inventing missing details.\n\n"
+            f"LECTURE TRANSCRIPT:\n{transcript_context}"
+        )
+        revision_notes = generator.generate_explanation(
+            question=revision_prompt,
+            context_chunks=representative_chunks,
+            level="advanced",
+        )
+        if not isinstance(revision_notes, str) or not revision_notes.strip():
+            revision_notes = None
+    except Exception as e:
+        print(f"[STUDY MATERIALS] Revision notes generation error: {e}")
+
+    summary_available = isinstance(summary, str) and bool(summary.strip())
+    revision_notes_available = isinstance(revision_notes, str) and bool(
+        revision_notes.strip()
+    )
+
+    if not summary_available:
+        summary = "AI Summary unavailable. Please try importing the lecture again."
+    if not revision_notes_available:
+        revision_notes = (
+            "AI Revision Notes unavailable. Please try importing the lecture again."
+        )
+
+    return {
+        "summary": f"Source Language: {source_language.upper()}\n\n{summary}",
+        "revision_notes": f"Source Language: {source_language.upper()}\n\n{revision_notes}",
+        "_summary_available": summary_available,
+        "_revision_notes_available": revision_notes_available,
+    }
+
+
+# ============================================================
+# AI HELP CENTER
+# ============================================================
+
+
+@router.post("/help-center/state")
+def process_help_center(
+    req: HelpCenterRequest, current_student: User = Depends(get_current_student)
+):
+    student_data = get_student_data(current_student)
+    ACTIVE_SESSION_STATE = student_data["active_session"]
+    MOCK_LECTURES = student_data["lectures"]
+    SESSIONS_STORE = student_data["sessions"]
+    step = req.step
+    user_response = req.user_response
+    lec_id = req.lecture_id or ACTIVE_SESSION_STATE.get("lecture_id")
+
+    if not lec_id:
+        raise HTTPException(status_code=400, detail="lecture_id is required.")
+
+    lecture = next((l for l in MOCK_LECTURES if l["id"] == lec_id), None)
+    if not lecture:
+        raise HTTPException(status_code=404, detail="Lecture not found.")
+
+    state = get_or_create_session(lec_id, student_data, current_student.full_name)
+    topic_name = lecture["title"]
+    prerequisites = get_prerequisites_for_topic(lecture)
+    prerequisite_lectures = find_prerequisite_lectures(prerequisites, MOCK_LECTURES)
+
+    if step == "start":
+        return {
+            "step": "check_prereq",
+            "topic": topic_name,
+            "message": f"Before learning '{topic_name}', do you already understand the prerequisite concepts below?",
+            "prerequisites": prerequisites,
+            "options": [
+                {"id": "yes", "label": "Yes, I understand them"},
+                {"id": "no", "label": "No, teach me the prerequisites"},
+            ],
+            "recommended_videos": prerequisite_lectures,
+        }
+
+    elif step == "check_prereq":
+        knows = (
+            req.knows_prereq if req.knows_prereq is not None else user_response == "yes"
+        )
+        if not knows:
+            state["struggled_concepts"] = list(
+                set(state.get("struggled_concepts", []) + prerequisites)
+            )
+            return {
+                "step": "recommend_previous",
+                "topic": topic_name,
+                "message": "Let's learn the prerequisite concepts before continuing with this topic.",
+                "prerequisites": prerequisites,
+                "recommended_videos": prerequisite_lectures,
+            }
+        return {
+            "step": "select_explanation",
+            "topic": topic_name,
+            "message": f"Great! How would you like '{topic_name}' explained?",
+            "options": [
+                {
+                    "id": "beginner",
+                    "label": "Beginner",
+                    "description": "Simple language and analogies",
+                },
+                {
+                    "id": "medium",
+                    "label": "Medium",
+                    "description": "College-level technical explanation",
+                },
+                {
+                    "id": "advanced",
+                    "label": "Advanced",
+                    "description": "Formal and detailed explanation",
+                },
+            ],
+        }
+
+    elif step == "select_explanation":
+        exp_type = (
+            user_response
+            if user_response in {"beginner", "medium", "advanced"}
+            else "medium"
+        )
+        try:
+            chunks = vector_store.query_relevant_chunks(
+                question=f"Explain the concept being taught in '{topic_name}'.",
+                lecture_id=lec_id,
+                top_k=6,
+            )
+        except Exception as e:
+            print(f"[RAG] Retrieval error: {e}")
+            chunks = []
+
+        if not chunks:
+            return {
+                "step": "error",
+                "message": "No transcript chunks found for this lecture.",
+            }
+
+        transcript_context = build_transcript_context(chunks)
+        try:
+            explanation_content = generator.generate_explanation(
+                question=f"Explain the topic '{topic_name}' using only this lecture.",
+                context_chunks=chunks,
+                level=exp_type,
+            )
+        except Exception as e:
+            print(f"[Gemini] Explanation error: {e}")
+            return {
+                "step": "error",
+                "message": "Gemini could not generate explanation.",
+            }
+
+        suggested_timestamps = [
+            {
+                "start_time": c["start_time"],
+                "end_time": c["end_time"],
+                "text": c["text"],
+            }
+            for c in chunks
+        ]
+
+        return {
+            "step": "select_remediation",
+            "topic": topic_name,
+            "difficulty": exp_type,
+            "explanation": explanation_content,
+            "options": [
+                {
+                    "id": "real_life",
+                    "label": "Real-Life Example",
+                    "description": "Understand through practical example",
+                },
+                {
+                    "id": "quiz",
+                    "label": "Take a Quiz",
+                    "description": "Test understanding of this exact topic",
+                },
+                {
+                    "id": "animation",
+                    "label": "Visual / Animation Explanation",
+                    "description": "See concept as visual flow",
+                },
+                {
+                    "id": "another_video",
+                    "label": "Recommend Another Video",
+                    "description": "Find another lecture",
+                },
+            ],
+            "suggested_timestamps": suggested_timestamps,
+            "context_available": bool(transcript_context),
+        }
+
+    elif step == "select_remediation":
+        remediation_type = user_response or "quiz"
+        try:
+            chunks = vector_store.query_relevant_chunks(
+                question=f"Explain '{topic_name}'.", lecture_id=lec_id, top_k=8
+            )
+        except Exception:
+            chunks = []
+
+        if not chunks:
+            return {"step": "error", "message": "No transcript chunks found."}
+
+        transcript_context = build_transcript_context(chunks)
+
+        if remediation_type == "quiz":
+            try:
+                quiz_questions = quiz_generator.generate_adaptive_quiz(
+                    explanation_text="Generate quiz from current lecture topic.",
+                    topic=topic_name,
+                    difficulty=(
+                        req.user_response
+                        if req.user_response in {"beginner", "medium", "advanced"}
+                        else "medium"
+                    ),
+                    transcript_context=transcript_context,
+                    num_questions=5,
+                )
+            except Exception as e:
+                print(f"[Quiz] Error: {e}")
+                quiz_questions = []
+
+            return {
+                "step": "quiz",
+                "topic": topic_name,
+                "quiz_questions": quiz_questions,
+                "quiz_threshold": QUIZ_PASS_THRESHOLD,
+                "message": f"Quiz questions for '{topic_name}'.",
+            }
+
+        elif remediation_type == "real_life":
+            real_life = generator.generate_explanation(
+                question=f"Give a real-life practical example of '{topic_name}'.",
+                context_chunks=chunks,
+                level="medium",
+            )
+            return {"step": "real_life", "topic": topic_name, "content": real_life}
+
+        elif remediation_type == "animation":
+            visual = generator.generate_explanation(
+                question=f"Create a step-by-step visual animation storyboard for '{topic_name}'.",
+                context_chunks=chunks,
+                level="medium",
+            )
+            return {"step": "animation", "topic": topic_name, "content": visual}
+
+        elif remediation_type == "another_video":
+            related = []
+            topic_words = [w.lower() for w in topic_name.split() if len(w) > 3]
+            for candidate in MOCK_LECTURES:
+                if candidate["id"] == lec_id:
+                    continue
+                if any(word in candidate["title"].lower() for word in topic_words):
+                    related.append(
+                        {
+                            "lecture_id": candidate["id"],
+                            "title": candidate["title"],
+                            "duration": candidate.get("duration", ""),
+                            "link": f"/student/session?play={candidate['id']}&t=0",
+                        }
+                    )
+            return {
+                "step": "another_video",
+                "topic": topic_name,
+                "recommended_videos": related,
+            }
+
+    elif step == "submit_quiz":
+        if req.quiz_score is None and req.quiz_passed is None:
+            raise HTTPException(
+                status_code=400, detail="quiz_score or quiz_passed is required."
+            )
+
+        score = (
+            int(req.quiz_score)
+            if req.quiz_score is not None
+            else (QUIZ_PASS_THRESHOLD if req.quiz_passed else 0)
+        )
+        passed = score >= QUIZ_PASS_THRESHOLD
+
+        state["quiz_attempts"] += 1
+        state["quiz_score"] = score
+        state["quiz_passed"] = passed
+
+        if passed:
+            state["understood_concepts"].append(state["course_topic"])
+        else:
+            state["struggled_concepts"].append(state["course_topic"])
+
+        SESSIONS_STORE[lec_id] = dict(state)
+        return {
+            "step": "passed" if passed else "failed",
+            "passed": passed,
+            "score": score,
+            "threshold": QUIZ_PASS_THRESHOLD,
+            "message": f"Quiz {'passed' if passed else 'not passed'}! Score: {score}%.",
+        }
+
+    raise HTTPException(status_code=400, detail="Invalid flow step.")
+
+
+# ============================================================
+# ASK AI
+# ============================================================
+
+
+@router.post("/ask-ai")
+def ask_ai_explanation(
+    req: AskAIRequest, current_student: User = Depends(get_current_student)
+):
+    student_data = get_student_data(current_student)
+    if not any(l["id"] == req.lecture_id for l in student_data["lectures"]):
+        raise HTTPException(status_code=404, detail="Lecture not found.")
+
+    try:
+        chunks = vector_store.query_relevant_chunks(
+            question=req.question, lecture_id=req.lecture_id, top_k=5
+        )
+        if not chunks:
+            return {
+                "status": "success",
+                "explanation": "No transcript context found. Please ensure lecture is indexed.",
+                "level": req.level,
+                "suggested_timestamps": [],
+            }
+
+        explanation = generator.generate_explanation(
+            question=req.question, context_chunks=chunks, level=req.level
+        )
+        suggested_timestamps = [
+            {
+                "start_time": chunk["start_time"],
+                "end_time": chunk["end_time"],
+                "text": chunk["text"],
+            }
+            for chunk in chunks
+        ]
+
+        return {
+            "status": "success",
+            "explanation": explanation,
+            "level": req.level,
+            "suggested_timestamps": suggested_timestamps,
+        }
+    except Exception as e:
+        print(f"[Gemini] ask-ai error: {e}")
+        return {
+            "status": "error",
+            "explanation": "Gemini could not answer question. Check API Key.",
+            "level": req.level,
+            "suggested_timestamps": [],
+        }
+
+
+# ============================================================
+# DYNAMIC QUIZ GENERATION
+# ============================================================
+
+
+@router.post("/generate-quiz")
+def generate_quiz(req: GenerateQuizRequest,current_student: User = Depends(get_current_student)):
+    if req.lecture_id:
+        student_data = get_student_data(current_student)
+        if not any(l["id"] == req.lecture_id for l in student_data["lectures"]):
+            raise HTTPException(status_code=404, detail="Lecture not found.")
+
+    try:
+        level = req.level or "medium"
+        transcript_context = ""
+
+        if req.lecture_id:
+            chunks = vector_store.query_relevant_chunks(
+                question=req.topic, lecture_id=req.lecture_id, top_k=10
+            )
+            transcript_context = build_transcript_context(chunks)
+
+        questions = quiz_generator.generate_adaptive_quiz(
+            explanation_text=req.explanation_text,
+            topic=req.topic,
+            difficulty=level,
+            transcript_context=transcript_context,
+            num_questions=5,
+        )
+
+        return {
+            "status": "success",
+            "topic": req.topic,
+            "questions": questions,
+            "quiz_threshold": QUIZ_PASS_THRESHOLD,
+        }
+    except Exception as e:
+        print(f"[Quiz] generate-quiz error: {e}")
+        return {
+            "status": "error",
+            "message": f"Quiz generation failed: {str(e)}",
+            "questions": [],
+            "quiz_threshold": QUIZ_PASS_THRESHOLD,
+        }
+
+
+# ============================================================
+# VIDEO COMPLETION + END-OF-VIDEO QUIZ
+# ============================================================
+
+
+@router.post("/lecture/{lecture_id}/complete")
+def complete_lecture(
+    lecture_id: str,
+    difficulty: str = "medium",
+    current_student: User = Depends(get_current_student),
+):
+    student_data = get_student_data(current_student)
+    MOCK_LECTURES = student_data["lectures"]
+    FINAL_VIDEO_QUIZZES = student_data["final_video_quizzes"]
+    SESSIONS_STORE = student_data["sessions"]
+    TRANSCRIPTS_STORE = student_data["transcripts"]
+    lecture = next((l for l in MOCK_LECTURES if l["id"] == lecture_id), None)
+    if not lecture:
+        raise HTTPException(status_code=404, detail="Lecture not found.")
+
+    if difficulty not in {"beginner", "medium", "advanced"}:
+        difficulty = "medium"
+
+    existing_quiz = FINAL_VIDEO_QUIZZES.get(lecture_id)
+    if existing_quiz:
+        state = get_or_create_session(lecture_id, student_data, current_student.full_name)
+        state["completion_percentage"] = 100.0
+        SESSIONS_STORE[lecture_id] = dict(state)
+        return {
+            "status": "success",
+            "lecture_id": lecture_id,
+            "lecture_title": lecture["title"],
+            "completed": True,
+            "already_generated": True,
+            "quiz_available": True,
+            "final_video_quiz": existing_quiz,
+        }
+
+    state = get_or_create_session(lecture_id, student_data, current_student.full_name)
+    state["completion_percentage"] = 100.0
+    SESSIONS_STORE[lecture_id] = dict(state)
+
+    transcript_entries = TRANSCRIPTS_STORE.get(lecture_id, [])
+    if not transcript_entries:
+        raise HTTPException(
+            status_code=404, detail="No transcript found for this lecture."
+        )
+
+    representative_entries = select_representative_chunks(
+        transcript_entries, max_chunks=60
+    )
+    full_lecture_text = build_transcript_context(
+        representative_entries, max_chars=30000
+    )
+
+    try:
+        questions = quiz_generator.generate_video_quiz(
+            video_title=lecture["title"],
+            transcript_context=full_lecture_text,
+            difficulty=difficulty,
+            num_questions=25,
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Whole-video quiz generation failed: {e}"
+        )
+
+    if not questions or len(questions) < 20:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Quiz generated only {len(questions)} questions. At least 20 are required.",
+        )
+
+    questions = questions[:25]
+    FINAL_VIDEO_QUIZZES[lecture_id] = {
+        "quiz_type": "full_video",
+        "difficulty": difficulty,
+        "question_count": len(questions),
+        "questions": questions,
+        "quiz_threshold": QUIZ_PASS_THRESHOLD,
+    }
+
+    return {
+        "status": "success",
+        "lecture_id": lecture_id,
+        "lecture_title": lecture["title"],
+        "completed": True,
+        "already_generated": False,
+        "quiz_available": True,
+        "final_video_quiz": FINAL_VIDEO_QUIZZES[lecture_id],
+    }
+
+
+# ============================================================
+# STORED FINAL VIDEO QUIZ
+# ============================================================
+
+
+@router.get("/lecture/{lecture_id}/final-quiz")
+def get_final_video_quiz(
+    lecture_id: str,
+    difficulty: str = "medium",
+    current_student: User = Depends(get_current_student),
+):
+    student_data = get_student_data(current_student)
+    MOCK_LECTURES = student_data["lectures"]
+    FINAL_VIDEO_QUIZZES = student_data["final_video_quizzes"]
+    lecture = next((l for l in MOCK_LECTURES if l["id"] == lecture_id), None)
+    if not lecture:
+        raise HTTPException(status_code=404, detail="Lecture not found.")
+
+    quiz = FINAL_VIDEO_QUIZZES.get(lecture_id)
+    if not quiz:
+        return {
+            "status": "not_ready",
+            "lecture_id": lecture_id,
+            "lecture_title": lecture["title"],
+            "quiz_available": False,
+            "questions": [],
+            "question_count": 0,
+            "message": "Whole-video quiz has not been generated yet. Complete the video first.",
+        }
+
+    return {
+        "status": "success",
+        "lecture_id": lecture_id,
+        "lecture_title": lecture["title"],
+        "quiz_available": True,
+        **quiz,
+    }
