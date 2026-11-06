@@ -112,7 +112,12 @@ from app.routers.faculty_store import (
 
 )
 
-
+from app.services.faculty.lecture_storage import (
+    save_metadata,
+    save_transcript,
+    get_transcript,
+    get_lecture_directory,
+)
 
 
 
@@ -122,39 +127,6 @@ from app.routers.faculty_store import (
 
 # ============================================================
 
-
-
-from app.services.youtube.service import (
-
-    extract_youtube_video_id,
-
-    get_youtube_metadata,
-
-    get_youtube_transcript,
-
-    get_local_video_transcript,
-
-)
-
-
-
-from app.services.faculty.lecture_storage import (
-
-    save_metadata,
-
-    save_transcript,
-
-    get_transcript,
-
-    get_lecture_directory,
-
-)
-
-
-
-from app.services.rag.chunker import chunk_transcript
-
-from app.services.rag.vector_store import index_lecture_chunks
 
 
 
@@ -401,7 +373,8 @@ def index_transcript(
     ChromaDB indexing fails.
 
     """
-
+    from app.services.rag.chunker import chunk_transcript
+    from app.services.rag.vector_store import index_lecture_chunks
 
 
     if not transcript:
@@ -1003,7 +976,11 @@ def import_youtube_lecture(
     Add lecture to Faculty store
 
     """
-
+    from app.services.youtube.service import (
+    extract_youtube_video_id,
+    get_youtube_metadata,
+    get_youtube_transcript,
+    )
 
 
     # --------------------------------------------------------
@@ -1615,6 +1592,7 @@ async def upload_local_lecture(
     Add lecture to Faculty store
 
     """
+    from app.services.youtube.service import get_local_video_transcript
 
 
 

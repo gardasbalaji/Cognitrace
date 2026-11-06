@@ -135,10 +135,7 @@
 #     return formatted_results
 
 import os
-import chromadb
 from typing import List, Dict, Any
-from app.services.rag import bge_service
-
 
 # Define local persistent directory for ChromaDB in backend root
 CHROMA_DB_DIR = os.path.abspath(
@@ -156,13 +153,16 @@ class ChromaDBManager:
     _collection = None
 
     @classmethod
-    def get_client(cls) -> chromadb.PersistentClient:
-
+    def get_client(cls):
         if cls._client is None:
+            # Import ChromaDB only when the database is needed
+            import chromadb
 
             os.makedirs(CHROMA_DB_DIR, exist_ok=True)
 
-            cls._client = chromadb.PersistentClient(path=CHROMA_DB_DIR)
+            cls._client = chromadb.PersistentClient(
+                path=CHROMA_DB_DIR
+            )
 
         return cls._client
 
@@ -225,6 +225,7 @@ def index_lecture_chunks(
     Existing chunk IDs are updated using upsert().
     """
 
+    from app.services.rag import bge_service
     if not chunks:
         return
 
@@ -276,6 +277,7 @@ def query_relevant_chunks(
     Performs semantic BGE retrieval from ChromaDB
     while restricting results to the requested lecture.
     """
+    from app.services.rag import bge_service
 
     collection = ChromaDBManager.get_collection()
 

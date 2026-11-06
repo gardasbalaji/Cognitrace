@@ -2210,7 +2210,7 @@
 #     }
 
 
-from pyexpat import features
+from pyexpat import features, model
 
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
@@ -2237,8 +2237,8 @@ import json
 import os
 import uuid
 from datetime import datetime, timezone, timedelta
-import joblib
-import numpy as np
+
+
 from youtube_transcript_api import YouTubeTranscriptApi
 
 from app.services.rag import vector_store, generator, quiz_generator
@@ -2658,19 +2658,35 @@ QUIZ_PASS_THRESHOLD = 70
 
 
 # ============================================================
-# LOAD TRAINED XGBOOST CONFUSION MODEL
+# LAZY LOAD TRAINED XGBOOST CONFUSION MODEL
 # ============================================================
 
-MODEL_PATH = os.path.join(
-    os.path.dirname(__file__), "../../cognitrace_confusion_xgboost.pkl"
+MODEL_PATH = os.path.abspath(
+    os.path.join(
+        os.path.dirname(__file__),
+        "../../cognitrace_confusion_xgboost.pkl"
+    )
 )
 
-try:
-    xgb_confusion_model = joblib.load(MODEL_PATH)
-    print("[ML Engine] Successfully loaded XGBoost model")
-except Exception as e:
-    print(f"[ML Engine] Warning: Could not load trained model: {e}")
-    xgb_confusion_model = None
+xgb_confusion_model = None
+xgb_model_loaded = False
+
+
+def get_xgboost_model():
+    import joblib
+    global xgb_confusion_model, xgb_model_loaded
+
+    if not xgb_model_loaded:
+        try:
+            xgb_confusion_model = joblib.load(MODEL_PATH)
+            print("[ML Engine] Successfully loaded XGBoost model")
+        except Exception as e:
+            print(f"[ML Engine] Warning: Could not load trained model: {e}")
+            xgb_confusion_model = None
+
+        xgb_model_loaded = True
+
+    return xgb_confusion_model
 
 
 def evaluate_xgboost_confusion(
@@ -2686,7 +2702,9 @@ def evaluate_xgboost_confusion(
     strictly on the latest 30-second interaction window counts.
     Features: ['Pause_Count', 'Resume_Count', 'Rewind_Count', 'Forward_Seek_Count', 'Playback_Speed_Num', 'Completion_Num']
     """
-    if xgb_confusion_model is None:
+    model = get_xgboost_model()
+
+    if model is None:
         # Fallback rule-based heuristic if model file is missing
         is_confused = (rewinds_30s >= 2) or (pauses_30s >= 2 and speed <= 1.0)
         c_score = 85 if is_confused else 15
@@ -2699,7 +2717,7 @@ def evaluate_xgboost_confusion(
             ),
             "prob_confused": 0.85 if is_confused else 0.15,
         }
-
+    import numpy as np
     try:
         # Prepare feature vector matching the exact order used during model training
         features = np.array(
@@ -2719,15 +2737,15 @@ def evaluate_xgboost_confusion(
 
         # Predict Class 1 (Confused) Probability
         # prob_confused = float(xgb_confusion_model.predict_proba(features)[0][1])
-        if 1 not in xgb_confusion_model.classes_:
+        if 1 not in model.classes_:
             raise ValueError(
-                f"Expected confusion class 1; found {xgb_confusion_model.classes_}"
+                f"Expected confusion class 1; found {model.classes_}"
             )
 
-        class_index = list(xgb_confusion_model.classes_).index(1)
+        class_index = list(model.classes_).index(1)
 
         prob_confused = float(
-            xgb_confusion_model.predict_proba(features)[0][class_index]
+            model.predict_proba(features)[0][class_index]
         )
         c_score = int(round(prob_confused * 100))
 

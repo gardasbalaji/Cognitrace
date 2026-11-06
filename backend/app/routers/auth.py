@@ -266,9 +266,13 @@ def google_authenticate(
     request: GoogleAuthRequest,
     db: Session = Depends(get_db),
 ):
-    if not GOOGLE_AUTH_AVAILABLE:
+    try:
+        from google.oauth2 import id_token as google_id_token
+        from google.auth.transport import requests as google_requests
+    except ImportError:
         raise HTTPException(
-            status_code=500, detail="Google authentication library is not available on server."
+            status_code=500,
+            detail="Google authentication library is not available on server."
         )
 
     google_client_id = os.getenv("GOOGLE_CLIENT_ID", "").strip()

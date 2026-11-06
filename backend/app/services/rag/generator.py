@@ -1,7 +1,5 @@
 
 from typing import List, Dict, Any
-
-from groq import Groq
 from app.config import settings
 
 
@@ -22,6 +20,7 @@ class GroqRAGGenerator:
             return None
 
         try:
+            from groq import Groq
             cls._client = Groq(api_key=api_key)
             print("[GROQ] API client initialized successfully.")
             return cls._client

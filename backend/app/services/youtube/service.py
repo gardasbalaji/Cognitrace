@@ -7,11 +7,7 @@ import tempfile
 import urllib.request
 from pathlib import Path
 from typing import Optional
-from urllib.parse import parse_qs, urlparse
-
-import yt_dlp
-from faster_whisper import WhisperModel
-from youtube_transcript_api import YouTubeTranscriptApi
+from urllib.parse import parse_qs, urlparse 
 
 
 # ============================================================
@@ -41,28 +37,34 @@ _faster_whisper_compute_type = None
 # FFMPEG
 # ============================================================
 
+import shutil
+
 def ensure_ffmpeg_available() -> None:
     """
-    Makes the project-local FFmpeg available to Python.
-
-    FFmpeg is stored inside:
-
-        backend/ffmpeg/bin/ffmpeg.exe
+    Locate FFmpeg on Windows or Linux.
     """
 
-    if not FFMPEG_EXE.exists():
+    # First check whether FFmpeg is installed system-wide.
+    system_ffmpeg = shutil.which("ffmpeg")
+
+    if system_ffmpeg:
+        ffmpeg_dir = str(Path(system_ffmpeg).parent)
+
+    # Fall back to the project-local Windows installation.
+    elif FFMPEG_EXE.exists():
+        ffmpeg_dir = str(FFMPEG_BIN_DIR)
+
+    else:
         raise FileNotFoundError(
-            f"Project FFmpeg not found at: {FFMPEG_EXE}"
+            "FFmpeg was not found. Install FFmpeg "
+            "or provide the project-local executable."
         )
 
     current_path = os.environ.get("PATH", "")
-    ffmpeg_dir = str(FFMPEG_BIN_DIR)
 
     if ffmpeg_dir not in current_path.split(os.pathsep):
         os.environ["PATH"] = (
-            ffmpeg_dir
-            + os.pathsep
-            + current_path
+            ffmpeg_dir + os.pathsep + current_path
         )
 
 
@@ -72,15 +74,8 @@ def ensure_ffmpeg_available() -> None:
 
 def get_faster_whisper_model():
     """
-    Load faster-whisper only once.
-
-    Preferred configuration:
-        GPU  -> CUDA + float16
-
-    Fallback:
-        CPU  -> int8
-
-    The model is intentionally kept lightweight.
+    Load Faster-Whisper only when local transcription is requested.
+    Reuse the same model instance for subsequent requests.
     """
 
     global _faster_whisper_model
@@ -90,20 +85,16 @@ def get_faster_whisper_model():
     if _faster_whisper_model is not None:
         return _faster_whisper_model
 
-    print("=" * 60)
-    print("[FASTER-WHISPER] Loading transcription model...")
-    print("[FASTER-WHISPER] Model: base")
-    print("=" * 60)
+    from faster_whisper import WhisperModel
 
-    # --------------------------------------------------------
-    # Try GPU first.
-    # --------------------------------------------------------
+    # Use tiny on memory-constrained deployments.
+    model_size = os.getenv("WHISPER_MODEL_SIZE", "tiny")
+
+    print(f"[FASTER-WHISPER] Loading {model_size} model on CPU...")
 
     try:
-        print("[FASTER-WHISPER] Trying CUDA GPU...")
-
         _faster_whisper_model = WhisperModel(
-            "base",
+            model_size,
             device="cpu",
             compute_type="int8",
         )
@@ -111,69 +102,15 @@ def get_faster_whisper_model():
         _faster_whisper_device = "cpu"
         _faster_whisper_compute_type = "int8"
 
-        print(
-            "[FASTER-WHISPER] GPU init skipped (missing DLLs), loaded CPU."
-        )
-        print(
-            "[FASTER-WHISPER] Device: CPU"
-        )
-        print(
-            "[FASTER-WHISPER] Compute type: int8"
-        )
+        print("[FASTER-WHISPER] Model loaded successfully.")
 
         return _faster_whisper_model
 
-    except Exception as gpu_error:
-
-        print(
-            "[FASTER-WHISPER] CUDA initialization failed."
-        )
-        print(
-            "[FASTER-WHISPER] CUDA reason:"
-        )
-        print(str(gpu_error))
-
-        print(
-            "[FASTER-WHISPER] Falling back to CPU..."
-        )
-
-    # --------------------------------------------------------
-    # CPU fallback.
-    # --------------------------------------------------------
-
-    try:
-
-        _faster_whisper_model = WhisperModel(
-            "base",
-            device="cpu",
-            compute_type="int8",
-        )
-
-        _faster_whisper_device = "cpu"
-        _faster_whisper_compute_type = "int8"
-
-        print(
-            "[FASTER-WHISPER] CPU model loaded successfully."
-        )
-        print(
-            "[FASTER-WHISPER] Device: CPU"
-        )
-        print(
-            "[FASTER-WHISPER] Compute type: int8"
-        )
-
-        return _faster_whisper_model
-
-    except Exception as cpu_error:
-
-        print(
-            "[FASTER-WHISPER] CPU model loading failed."
-        )
-
+    except Exception as exc:
+        print(f"[FASTER-WHISPER] Model loading failed: {exc}")
         raise RuntimeError(
-            "Unable to load faster-whisper on either "
-            "GPU or CPU."
-        ) from cpu_error
+            "Unable to load Faster-Whisper on CPU."
+        ) from exc
 
 
 # ============================================================
@@ -473,6 +410,7 @@ def get_youtube_captions(
     faster-whisper is NOT used here.
     """
 
+    from youtube_transcript_api import YouTubeTranscriptApi
     print(
         f"[YOUTUBE] Trying YouTubeTranscriptApi "
         f"for {video_id}..."
@@ -607,6 +545,7 @@ def download_youtube_audio(
     use this when YouTube captions are available.
     """
 
+    import yt_dlp
     ensure_ffmpeg_available()
 
     youtube_url = (

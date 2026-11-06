@@ -2,7 +2,6 @@
 import json
 from typing import List, Dict, Any, Optional
 
-from groq import Groq
 from app.config import settings
 
 
@@ -39,6 +38,7 @@ class GroqQuizGenerator:
             return None
  
         try:
+            from groq import Groq
             cls._client = Groq(api_key=api_key)
             print("[GROQ QUIZ] Groq client connected.")
             return cls._client

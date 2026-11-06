@@ -238,9 +238,6 @@ from app.routers import (
     faculty,
     health,
     student,
-    test_bge,
-    test_rag,
-    test_vector_db,
 )
 
 
@@ -279,8 +276,6 @@ app.include_router(
     prefix=f"{settings.API_V1_STR}/faculty",
     tags=["Faculty"],
 )
-app.include_router(test_bge.router, prefix="/api/v1/test", tags=["Test"])
-app.include_router(test_vector_db.router, prefix="/api/v1/test", tags=["Test"])
 app.include_router(
     auth.router,
     prefix=f"{settings.API_V1_STR}/auth",
