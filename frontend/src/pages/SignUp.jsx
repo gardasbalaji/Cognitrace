@@ -174,28 +174,32 @@ export default function SignUp() {
 
     let intervalId = null;
     let attempts = 0;
+    let isInitialized = false;
 
     const tryInit = () => {
-      if (!mountedRef.current) return;
+      if (!mountedRef.current || isInitialized) return true;
       if (window.google?.accounts?.id) {
         const rendered = initializeGoogleButton(googleClientId);
-        if (rendered && intervalId) {
-          clearInterval(intervalId);
-          intervalId = null;
+        if (rendered) {
+          isInitialized = true;
+          return true;
         }
       }
+      return false;
     };
 
     // Try immediately
-    tryInit();
+    if (tryInit()) {
+      return;
+    }
 
     // If script is loading or DOM container is mounting, poll briefly
     intervalId = setInterval(() => {
       attempts++;
-      tryInit();
-      if (attempts > 30) {
-        if (intervalId) clearInterval(intervalId);
-        if (!window.google?.accounts?.id && mountedRef.current) {
+      if (tryInit() || attempts > 30) {
+        clearInterval(intervalId);
+        intervalId = null;
+        if (!isInitialized && !window.google?.accounts?.id && mountedRef.current) {
           setGoogleError('Google Sign-Up could not be loaded. Please check your connection or ad blocker.');
         }
       }
