@@ -1,4 +1,5 @@
 import os
+import logging
 from typing import Literal, Optional
 from uuid import UUID
 from datetime import datetime, timezone
@@ -27,6 +28,8 @@ try:
 except ImportError:
     GOOGLE_AUTH_AVAILABLE = False
 
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(tags=["Authentication"])
 
@@ -275,23 +278,33 @@ def google_authenticate(
             detail="Google authentication library is not available on server."
         )
 
-    google_client_id = os.getenv("GOOGLE_CLIENT_ID", "").strip()
-
-    if not google_client_id:
-        raise HTTPException(
-            status_code=503,
-            detail="Google authentication is not configured on the server. Please configure GOOGLE_CLIENT_ID.",
-        )
+    valid_audiences = [
+        "665689614355-pftf1b4otha1kvi53n0vsruh25vmjqh6.apps.googleusercontent.com",
+        "454928666283-b2a12stu9r96pkni5ur32r0cd4heflj1.apps.googleusercontent.com",
+    ]
+    env_client_id = os.getenv("GOOGLE_CLIENT_ID", "").strip()
+    if env_client_id and env_client_id not in valid_audiences:
+        valid_audiences.append(env_client_id)
 
     try:
         transport_request = google_requests.Request()
         id_info = google_id_token.verify_oauth2_token(
             request.id_token,
             transport_request,
-            google_client_id,
+            audience=None,
             clock_skew_in_seconds=10,
         )
-    except Exception:
+        token_aud = id_info.get("aud")
+        if token_aud not in valid_audiences:
+            logger.error(f"Google token audience '{token_aud}' not in valid audiences: {valid_audiences}")
+            raise HTTPException(
+                status_code=401,
+                detail="Google sign-in failed. The token could not be verified. Please try again.",
+            )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Google token verification failed: {e}")
         raise HTTPException(
             status_code=401,
             detail="Google sign-in failed. The token could not be verified. Please try again.",
