@@ -3178,7 +3178,7 @@ export default function SessionAnalysis() {
 
 
 
-            <p className="text-[11px] text-slate-400 mt-1">
+            <p className="text-[11px] text-[#68766B] mt-1">
 
               Generating AI summary, AI notes and whole-video quiz...
 
@@ -3216,7 +3216,7 @@ export default function SessionAnalysis() {
 
 
 
-            <p className="text-[11px] text-slate-400 mt-1">
+            <p className="text-[11px] text-[#68766B] mt-1">
 
               AI summary, AI notes and whole-video quiz are ready.
 
@@ -3264,7 +3264,7 @@ export default function SessionAnalysis() {
 
 
 
-            <p className="text-[11px] text-slate-400 mt-1">
+            <p className="text-[11px] text-[#68766B] mt-1">
 
               Click to retry generating the lecture artifacts.
 
@@ -4002,7 +4002,7 @@ export default function SessionAnalysis() {
 
     return (
 
-      <div className="flex-1 flex items-center justify-center min-h-screen bg-brand-950">
+      <div className="flex-1 flex items-center justify-center min-h-screen bg-[#F8F8F2]">
 
 
 
@@ -4014,7 +4014,7 @@ export default function SessionAnalysis() {
 
 
 
-          <p className="text-xs text-slate-500 mt-3">
+          <p className="text-xs text-[#68766B] mt-3">
 
             Loading lecture...
 
@@ -4044,7 +4044,7 @@ export default function SessionAnalysis() {
 
     return (
 
-      <div className="flex-1 flex items-center justify-center min-h-screen bg-brand-950">
+      <div className="flex-1 flex items-center justify-center min-h-screen bg-[#F8F8F2]">
 
 
 
@@ -4052,11 +4052,11 @@ export default function SessionAnalysis() {
 
 
 
-          <AlertCircle className="h-8 w-8 text-rose-400 mx-auto" />
+          <AlertCircle className="h-8 w-8 text-rose-500 mx-auto" />
 
 
 
-          <p className="text-sm text-white font-bold mt-3">
+          <p className="text-base text-black font-extrabold mt-3">
 
             No lecture found
 
@@ -4146,7 +4146,7 @@ export default function SessionAnalysis() {
 
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm px-4">
 
-          <div className="w-full max-w-md rounded-2xl border border-primary-500/30 bg-brand-950 p-6 shadow-2xl">
+          <div className="w-full max-w-md rounded-2xl border border-primary-500/30 bg-[#F8F8F2] border border-[#D9E1D2] p-6 shadow-2xl">
 
             <div className="text-center">
 
@@ -4158,7 +4158,7 @@ export default function SessionAnalysis() {
 
 
 
-              <h2 className="text-xl font-bold text-white mt-4">
+              <h2 className="text-xl font-bold text-[#26332A] mt-4">
 
                 Lecture Completed
 
@@ -4166,7 +4166,7 @@ export default function SessionAnalysis() {
 
 
 
-              <p className="text-sm text-slate-400 mt-2 leading-relaxed">
+              <p className="text-sm text-[#68766B] mt-2 leading-relaxed">
 
                 Your AI Summary and AI Revision Notes are now ready for review.
 
@@ -4190,7 +4190,7 @@ export default function SessionAnalysis() {
 
                 disabled={!aiArtifacts.summary}
 
-                className="w-full py-3 rounded-xl bg-primary-600 hover:bg-primary-500 disabled:opacity-40 text-white text-xs font-bold"
+                className="w-full py-3 rounded-xl bg-primary-600 hover:bg-primary-500 disabled:opacity-40 text-[#26332A] text-xs font-bold"
 
               >
 
@@ -4212,7 +4212,7 @@ export default function SessionAnalysis() {
 
                 disabled={!aiArtifacts.revisionNotes}
 
-                className="w-full py-3 rounded-xl bg-primary-600/10 border border-primary-500/20 hover:bg-primary-600 hover:text-white disabled:opacity-40 text-primary-300 text-xs font-bold"
+                className="w-full py-3 rounded-xl bg-primary-600/10 border border-primary-500/20 hover:bg-primary-600 hover:text-[#26332A] disabled:opacity-40 text-primary-300 text-xs font-bold"
 
               >
 
@@ -4258,11 +4258,11 @@ export default function SessionAnalysis() {
 
         <div className="fixed inset-0 z-[110] flex items-center justify-center bg-black/80 backdrop-blur-sm px-4 py-6">
 
-          <div className="w-full max-w-3xl max-h-[90vh] overflow-hidden rounded-2xl border border-primary-500/30 bg-brand-950 shadow-2xl flex flex-col">
+          <div className="w-full max-w-3xl max-h-[90vh] overflow-hidden rounded-2xl border border-primary-500/30 bg-[#F8F8F2] border border-[#D9E1D2] shadow-2xl flex flex-col">
 
 
 
-            <div className="p-5 border-b border-slate-800 flex items-center justify-between shrink-0">
+            <div className="p-5 border-b border-[#D9E1D2] flex items-center justify-between shrink-0">
 
               <div>
 
@@ -4272,13 +4272,13 @@ export default function SessionAnalysis() {
 
                 </p>
 
-                <h2 className="text-xl font-bold text-white mt-1">
+                <h2 className="text-xl font-bold text-[#26332A] mt-1">
 
                   {selectedLecture.title}
 
                 </h2>
 
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-[#68766B] mt-1">
 
                   {quizQuestions.length} questions covering the complete lecture
 
@@ -4318,7 +4318,7 @@ export default function SessionAnalysis() {
 
                   </p>
 
-                  <p className="text-[11px] text-slate-400 mt-1">
+                  <p className="text-[11px] text-[#68766B] mt-1">
 
                     {quizError}
 
@@ -4330,7 +4330,7 @@ export default function SessionAnalysis() {
 
                     disabled={quizLoading}
 
-                    className="mt-3 px-4 py-2 rounded-lg bg-primary-600 hover:bg-primary-500 disabled:opacity-50 text-white text-xs font-bold"
+                    className="mt-3 px-4 py-2 rounded-lg bg-primary-600 hover:bg-primary-500 disabled:opacity-50 text-[#26332A] text-xs font-bold"
 
                   >
 
@@ -4350,7 +4350,7 @@ export default function SessionAnalysis() {
 
                   <div className="h-8 w-8 border-2 border-primary-500 border-t-transparent rounded-full animate-spin mx-auto" />
 
-                  <p className="text-xs text-slate-400 mt-3">
+                  <p className="text-xs text-[#68766B] mt-3">
 
                     Loading your whole-video quiz...
 
@@ -4374,7 +4374,7 @@ export default function SessionAnalysis() {
 
                     key={questionIndex}
 
-                    className="p-5 rounded-2xl bg-brand-900/40 border border-slate-800"
+                    className="p-5 rounded-2xl bg-[#FCFCF8] border border-[#D9E1D2]"
 
                   >
 
@@ -4388,7 +4388,7 @@ export default function SessionAnalysis() {
 
 
 
-                      <p className="text-sm font-semibold text-white leading-relaxed">
+                      <p className="text-sm font-semibold text-[#26332A] leading-relaxed">
 
                         {getQuestionText(question)}
 
@@ -4432,9 +4432,9 @@ export default function SessionAnalysis() {
 
                               selected
 
-                                ? 'border-primary-500 bg-primary-500/15 text-white'
+                                ? 'border-[#315C46] bg-[#DCE8DC] text-black font-extrabold'
 
-                                : 'border-slate-800 bg-brand-950/50 text-slate-400 hover:border-primary-500/40 hover:text-white'
+                                : 'border-[#D9E1D2] bg-[#FCFCF8] text-black font-medium hover:border-[#315C46]'
 
                             }`}
 
@@ -4482,13 +4482,13 @@ export default function SessionAnalysis() {
 
                 }`}>
 
-                  <p className="text-lg font-bold text-white">
+                  <p className="text-lg font-bold text-[#26332A]">
 
                     Quiz Score: {quizScore.percentage}%
 
                   </p>
 
-                  <p className="text-xs text-slate-400 mt-1">
+                  <p className="text-xs text-[#68766B] mt-1">
 
                     {quizScore.correct} correct out of {quizScore.total}
 
@@ -4524,7 +4524,7 @@ export default function SessionAnalysis() {
 
 
 
-            <div className="p-5 border-t border-slate-800 flex gap-3 shrink-0">
+            <div className="p-5 border-t border-[#D9E1D2] flex gap-3 shrink-0">
 
               <button
 
@@ -4562,7 +4562,7 @@ export default function SessionAnalysis() {
 
                   }
 
-                  className="flex-1 py-3 rounded-xl bg-primary-600 hover:bg-primary-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-bold"
+                  className="flex-1 py-3 rounded-xl bg-primary-600 hover:bg-primary-500 disabled:opacity-40 disabled:cursor-not-allowed text-[#26332A] text-xs font-bold"
 
                 >
 
@@ -4584,7 +4584,7 @@ export default function SessionAnalysis() {
 
                   }}
 
-                  className="flex-1 py-3 rounded-xl bg-primary-600 hover:bg-primary-500 text-white text-xs font-bold"
+                  className="flex-1 py-3 rounded-xl bg-primary-600 hover:bg-primary-500 text-[#26332A] text-xs font-bold"
 
                 >
 
@@ -4604,7 +4604,7 @@ export default function SessionAnalysis() {
 
 
 
-      <div className="flex-1 p-8 overflow-y-auto bg-brand-950">
+      <div className="flex-1 p-8 overflow-y-auto bg-[#F8F8F2] text-[#26332A]">
 
 
 
@@ -4626,7 +4626,7 @@ export default function SessionAnalysis() {
 
 
 
-            <h1 className="text-2xl font-outfit font-bold text-white">
+            <h1 className="text-2xl font-outfit font-bold text-[#26332A]">
 
               {selectedLecture.title}
 
@@ -4634,7 +4634,7 @@ export default function SessionAnalysis() {
 
 
 
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-[#68766B] mt-1">
 
               Session Analysis & Learning Behaviour
 
@@ -4654,7 +4654,7 @@ export default function SessionAnalysis() {
 
             }
 
-            className="px-4 py-2.5 bg-brand-900 border border-slate-800 hover:bg-brand-800 rounded-xl text-xs font-bold text-slate-300"
+            className="px-4 py-2.5 bg-[#FCFCF8] border border-[#D9E1D2] hover:bg-[#E8EDE1] rounded-xl text-xs font-bold text-[#315C46]"
 
           >
 
@@ -4688,7 +4688,7 @@ export default function SessionAnalysis() {
 
 
 
-            <div className="glass-panel rounded-2xl border border-slate-800 overflow-hidden">
+            <div className="glass-panel rounded-2xl border border-[#D9E1D2] overflow-hidden">
 
 
 
@@ -4778,7 +4778,7 @@ export default function SessionAnalysis() {
 
 
 
-              <div className="p-5 border-t border-slate-800">
+              <div className="p-5 border-t border-[#D9E1D2]">
 
 
 
@@ -4790,7 +4790,7 @@ export default function SessionAnalysis() {
 
 
 
-                    <p className="text-[10px] text-slate-600 uppercase tracking-wider">
+                    <p className="text-[10px] text-[#68766B] uppercase tracking-wider">
 
                       Current Position
 
@@ -4798,7 +4798,7 @@ export default function SessionAnalysis() {
 
 
 
-                    <p className="text-sm font-bold text-white mt-1">
+                    <p className="text-sm font-bold text-[#26332A] mt-1">
 
                       {formatTime(
 
@@ -4818,7 +4818,7 @@ export default function SessionAnalysis() {
 
 
 
-                    <p className="text-[10px] text-slate-600 uppercase tracking-wider">
+                    <p className="text-[10px] text-[#68766B] uppercase tracking-wider">
 
                       Playback Speed
 
@@ -4826,7 +4826,7 @@ export default function SessionAnalysis() {
 
 
 
-                    <p className="text-sm font-bold text-white mt-1">
+                    <p className="text-sm font-bold text-[#26332A] mt-1">
 
                       {
 
@@ -4870,7 +4870,7 @@ export default function SessionAnalysis() {
 
                 disabled={!aiArtifacts.summary}
 
-                className="py-3 px-4 bg-primary-600/10 border border-primary-500/20 hover:bg-primary-600 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed text-primary-300 rounded-xl text-xs font-bold transition-all"
+                className="py-3 px-4 bg-primary-600/10 border border-primary-500/20 hover:bg-primary-600 hover:text-[#26332A] disabled:opacity-50 disabled:cursor-not-allowed text-primary-300 rounded-xl text-xs font-bold transition-all"
 
               >
 
@@ -4890,7 +4890,7 @@ export default function SessionAnalysis() {
 
                 disabled={!aiArtifacts.revisionNotes}
 
-                className="py-3 px-4 bg-primary-600/10 border border-primary-500/20 hover:bg-primary-600 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed text-primary-300 rounded-xl text-xs font-bold transition-all"
+                className="py-3 px-4 bg-primary-600/10 border border-primary-500/20 hover:bg-primary-600 hover:text-[#26332A] disabled:opacity-50 disabled:cursor-not-allowed text-primary-300 rounded-xl text-xs font-bold transition-all"
 
               >
 
@@ -4982,11 +4982,11 @@ export default function SessionAnalysis() {
 
             ------------------------------------------------ */}
 
-            <div className="glass-panel rounded-2xl border border-slate-800 mt-6 overflow-hidden">
+            <div className="glass-panel rounded-2xl border border-[#D9E1D2] mt-6 overflow-hidden">
 
 
 
-              <div className="flex border-b border-slate-800">
+              <div className="flex border-b border-[#D9E1D2]">
 
 
 
@@ -5010,7 +5010,7 @@ export default function SessionAnalysis() {
 
                       ? 'text-primary-400 border-b-2 border-primary-500'
 
-                      : 'text-slate-500'
+                      : 'text-[#68766B]'
 
                   }`}
 
@@ -5046,7 +5046,7 @@ export default function SessionAnalysis() {
 
                       ? 'text-primary-400 border-b-2 border-primary-500'
 
-                      : 'text-slate-500'
+                      : 'text-[#68766B]'
 
                   }`}
 
@@ -5086,7 +5086,7 @@ export default function SessionAnalysis() {
 
 
 
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-[#68766B]">
 
                         No activity recorded yet.
 
@@ -5124,7 +5124,7 @@ export default function SessionAnalysis() {
 
                             }
 
-                            className="p-3 bg-brand-900/30 border border-slate-800 rounded-xl"
+                            className="p-3 bg-[#FCFCF8] border border-[#D9E1D2] rounded-xl"
 
                           >
 
@@ -5146,7 +5146,7 @@ export default function SessionAnalysis() {
 
 
 
-                              <span className="text-[10px] text-slate-600">
+                              <span className="text-[10px] text-[#68766B]">
 
                                 {formatTime(
 
@@ -5164,7 +5164,7 @@ export default function SessionAnalysis() {
 
                             {log.metadata && (
 
-                              <pre className="text-[10px] text-slate-600 mt-2 whitespace-pre-wrap">
+                              <pre className="text-[10px] text-[#68766B] mt-2 whitespace-pre-wrap">
 
                                 {JSON.stringify(
 
@@ -5230,7 +5230,7 @@ export default function SessionAnalysis() {
 
 
 
-                      <p className="text-xs text-slate-500 mt-3">
+                      <p className="text-xs text-[#68766B] mt-3">
 
                         Loading transcript...
 
@@ -5252,7 +5252,7 @@ export default function SessionAnalysis() {
 
 
 
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-[#68766B]">
 
                         Transcript unavailable.
 
@@ -5346,7 +5346,7 @@ export default function SessionAnalysis() {
 
                               }
 
-                              className="w-full text-left p-3 bg-brand-900/30 hover:bg-brand-900/60 border border-slate-800 hover:border-primary-500/20 rounded-xl"
+                              className="w-full text-left p-3 bg-[#E2E8D8] hover:bg-[#D9E1D2] border border-[#D9E1D2] hover:border-primary-500/20 rounded-xl"
 
                             >
 
@@ -5368,7 +5368,7 @@ export default function SessionAnalysis() {
 
 
 
-                                <p className="text-xs text-slate-400 leading-relaxed">
+                                <p className="text-xs text-[#68766B] leading-relaxed">
 
                                   {
 
@@ -5426,7 +5426,7 @@ export default function SessionAnalysis() {
 
 
 
-            <div className="glass-panel rounded-2xl border border-slate-800 p-5">
+            <div className="glass-panel rounded-2xl border border-[#D9E1D2] p-5">
 
 
 
@@ -5450,7 +5450,7 @@ export default function SessionAnalysis() {
 
 
 
-                  <h3 className="text-sm font-outfit font-bold text-white">
+                  <h3 className="text-sm font-outfit font-bold text-[#26332A]">
 
                     Session Analysis
 
@@ -5458,7 +5458,7 @@ export default function SessionAnalysis() {
 
 
 
-                  <p className="text-[10px] text-slate-500">
+                  <p className="text-[10px] text-[#68766B]">
 
                     Learning behaviour
 
@@ -5482,11 +5482,11 @@ export default function SessionAnalysis() {
 
 
 
-                  <div className="p-4 bg-brand-900/30 border border-slate-800 rounded-xl">
+                  <div className="p-4 bg-[#FCFCF8] border border-[#D9E1D2] rounded-xl">
 
 
 
-                    <p className="text-[9px] text-slate-600 uppercase">
+                    <p className="text-[9px] text-[#68766B] uppercase">
 
                       Completion
 
@@ -5494,7 +5494,7 @@ export default function SessionAnalysis() {
 
 
 
-                    <p className="text-xl font-bold text-white mt-1">
+                    <p className="text-xl font-bold text-[#26332A] mt-1">
 
                       {Math.round(
 
@@ -5524,11 +5524,11 @@ export default function SessionAnalysis() {
 
 
 
-                    <div className="p-3 bg-brand-900/30 border border-slate-800 rounded-xl">
+                    <div className="p-3 bg-[#FCFCF8] border border-[#D9E1D2] rounded-xl">
 
 
 
-                      <p className="text-[9px] text-slate-600 uppercase">
+                      <p className="text-[9px] text-[#68766B] uppercase">
 
                         Plays
 
@@ -5536,7 +5536,7 @@ export default function SessionAnalysis() {
 
 
 
-                      <p className="text-sm font-bold text-white mt-1">
+                      <p className="text-sm font-bold text-[#26332A] mt-1">
 
                         {
 
@@ -5556,11 +5556,11 @@ export default function SessionAnalysis() {
 
 
 
-                    <div className="p-3 bg-brand-900/30 border border-slate-800 rounded-xl">
+                    <div className="p-3 bg-[#FCFCF8] border border-[#D9E1D2] rounded-xl">
 
 
 
-                      <p className="text-[9px] text-slate-600 uppercase">
+                      <p className="text-[9px] text-[#68766B] uppercase">
 
                         Pauses
 
@@ -5568,7 +5568,7 @@ export default function SessionAnalysis() {
 
 
 
-                      <p className="text-sm font-bold text-white mt-1">
+                      <p className="text-sm font-bold text-[#26332A] mt-1">
 
                         {
 
@@ -5588,11 +5588,11 @@ export default function SessionAnalysis() {
 
 
 
-                    <div className="p-3 bg-brand-900/30 border border-slate-800 rounded-xl">
+                    <div className="p-3 bg-[#FCFCF8] border border-[#D9E1D2] rounded-xl">
 
 
 
-                      <p className="text-[9px] text-slate-600 uppercase">
+                      <p className="text-[9px] text-[#68766B] uppercase">
 
                         Rewinds
 
@@ -5600,7 +5600,7 @@ export default function SessionAnalysis() {
 
 
 
-                      <p className="text-sm font-bold text-white mt-1">
+                      <p className="text-sm font-bold text-[#26332A] mt-1">
 
                         {
 
@@ -5620,11 +5620,11 @@ export default function SessionAnalysis() {
 
 
 
-                    <div className="p-3 bg-brand-900/30 border border-slate-800 rounded-xl">
+                    <div className="p-3 bg-[#FCFCF8] border border-[#D9E1D2] rounded-xl">
 
 
 
-                      <p className="text-[9px] text-slate-600 uppercase">
+                      <p className="text-[9px] text-[#68766B] uppercase">
 
                         Forwards
 
@@ -5632,7 +5632,7 @@ export default function SessionAnalysis() {
 
 
 
-                      <p className="text-sm font-bold text-white mt-1">
+                      <p className="text-sm font-bold text-[#26332A] mt-1">
 
                         {
 
@@ -5652,11 +5652,11 @@ export default function SessionAnalysis() {
 
 
 
-                    <div className="p-3 bg-brand-900/30 border border-slate-800 rounded-xl">
+                    <div className="p-3 bg-[#FCFCF8] border border-[#D9E1D2] rounded-xl">
 
 
 
-                      <p className="text-[9px] text-slate-600 uppercase">
+                      <p className="text-[9px] text-[#68766B] uppercase">
 
                         Avg Speed
 
@@ -5664,7 +5664,7 @@ export default function SessionAnalysis() {
 
 
 
-                      <p className="text-sm font-bold text-white mt-1">
+                      <p className="text-sm font-bold text-[#26332A] mt-1">
 
                         {
 
@@ -5700,7 +5700,7 @@ export default function SessionAnalysis() {
 
 
 
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-[#68766B]">
 
                     Session analysis will appear as you watch.
 
@@ -5726,11 +5726,11 @@ export default function SessionAnalysis() {
 
             ------------------------------------------------ */}
 
-            <div className="glass-panel rounded-2xl border border-slate-800 p-5">
+            <div className="glass-panel rounded-2xl border border-[#D9E1D2] p-5">
 
 
 
-              <h3 className="text-sm font-outfit font-bold text-white">
+              <h3 className="text-sm font-outfit font-bold text-[#26332A]">
 
                 AI Learning Artifacts
 
@@ -5738,7 +5738,7 @@ export default function SessionAnalysis() {
 
 
 
-              <p className="text-[10px] text-slate-500 mt-1 mb-4">
+              <p className="text-[10px] text-[#68766B] mt-1 mb-4">
 
                 Available while you watch
 
@@ -5750,11 +5750,11 @@ export default function SessionAnalysis() {
 
 
 
-                <div className="p-3 bg-brand-900/30 border border-slate-800 rounded-xl">
+                <div className="p-3 bg-[#FCFCF8] border border-[#D9E1D2] rounded-xl">
 
 
 
-                  <p className="text-[9px] text-slate-600 uppercase">
+                  <p className="text-[9px] text-[#68766B] uppercase">
 
                     AI Summary
 
@@ -5762,7 +5762,7 @@ export default function SessionAnalysis() {
 
 
 
-                  <p className="text-xs text-slate-400 mt-2">
+                  <p className="text-xs text-[#68766B] mt-2">
 
                     {aiArtifacts.summary
 
@@ -5778,11 +5778,11 @@ export default function SessionAnalysis() {
 
 
 
-                <div className="p-3 bg-brand-900/30 border border-slate-800 rounded-xl">
+                <div className="p-3 bg-[#FCFCF8] border border-[#D9E1D2] rounded-xl">
 
 
 
-                  <p className="text-[9px] text-slate-600 uppercase">
+                  <p className="text-[9px] text-[#68766B] uppercase">
 
                     AI Notes
 
@@ -5790,7 +5790,7 @@ export default function SessionAnalysis() {
 
 
 
-                  <p className="text-xs text-slate-400 mt-2">
+                  <p className="text-xs text-[#68766B] mt-2">
 
                     {aiArtifacts.revisionNotes
 
@@ -5806,11 +5806,11 @@ export default function SessionAnalysis() {
 
 
 
-                <div className="p-3 bg-brand-900/30 border border-slate-800 rounded-xl">
+                <div className="p-3 bg-[#FCFCF8] border border-[#D9E1D2] rounded-xl">
 
 
 
-                  <p className="text-[9px] text-slate-600 uppercase">
+                  <p className="text-[9px] text-[#68766B] uppercase">
 
                     Whole Video Quiz
 
@@ -5818,7 +5818,7 @@ export default function SessionAnalysis() {
 
 
 
-                  <p className="text-xs text-slate-400 mt-2">
+                  <p className="text-xs text-[#68766B] mt-2">
 
                     {aiArtifacts.finalVideoQuiz
 
@@ -5890,7 +5890,7 @@ export default function SessionAnalysis() {
 
 
 
-                <h3 className="text-sm font-outfit font-bold text-white">
+                <h3 className="text-sm font-outfit font-bold text-[#26332A]">
 
                   Confusion Detected
 
@@ -5898,7 +5898,7 @@ export default function SessionAnalysis() {
 
 
 
-                <p className="text-xs text-slate-400 mt-2 leading-relaxed">
+                <p className="text-xs text-[#68766B] mt-2 leading-relaxed">
 
                   CogniTrace detected that you may need help with this concept.
 
@@ -5922,7 +5922,7 @@ export default function SessionAnalysis() {
 
                 onClick={handleDismissConfusion}
 
-                className="flex-1 py-3 bg-brand-900 border border-slate-800 hover:bg-brand-800 text-slate-300 rounded-xl text-xs font-bold"
+                className="flex-1 py-3 bg-[#FCFCF8] border border-[#D9E1D2] hover:bg-[#E8EDE1] text-[#315C46] rounded-xl text-xs font-bold"
 
               >
 

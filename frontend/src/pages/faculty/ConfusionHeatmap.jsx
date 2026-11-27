@@ -171,24 +171,24 @@ export default function ConfusionHeatmap() {
     if (percentage >= 50) {
       return {
         container:
-          "bg-rose-500/20 border-rose-500/40 text-rose-300",
+          "bg-[#FEE2E2] border-[#B45353]/40 text-[#B45353] font-bold",
         shadow:
-          "shadow-lg shadow-rose-500/5",
+          "shadow-sm",
       };
     }
 
     if (percentage >= 30) {
       return {
         container:
-          "bg-amber-500/20 border-amber-500/40 text-amber-300",
+          "bg-[#FEF3C7] border-[#A87827]/40 text-[#A87827] font-bold",
         shadow:
-          "shadow-lg shadow-amber-500/5",
+          "shadow-sm",
       };
     }
 
     return {
       container:
-        "bg-brand-900/35 border-slate-850 text-slate-400",
+        "bg-[#DCE8DC] border-[#6F9279]/40 text-[#264B39] font-bold",
       shadow: "",
     };
   };
@@ -199,11 +199,11 @@ export default function ConfusionHeatmap() {
 
   if (loadingLectures) {
     return (
-      <div className="flex-1 p-8 flex items-center justify-center">
+      <div className="flex-1 p-8 flex items-center justify-center bg-[#F8F8F2] text-[#68766B]">
         <div className="text-center">
-          <div className="h-8 w-8 rounded-full border-2 border-t-accent-500 border-slate-800 animate-spin mx-auto mb-4" />
+          <div className="h-8 w-8 rounded-full border-2 border-t-[#315C46] border-[#D9E1D2] animate-spin mx-auto mb-4" />
 
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[#68766B]">
             Loading your lectures...
           </p>
         </div>
@@ -212,18 +212,18 @@ export default function ConfusionHeatmap() {
   }
 
   return (
-    <div className="flex-1 p-8 overflow-y-auto space-y-8 max-w-5xl mx-auto">
+    <div className="flex-1 p-8 overflow-y-auto space-y-8 max-w-5xl mx-auto bg-[#F8F8F2] text-[#26332A]">
 
       {/* Header */}
-      <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between border-b border-slate-800 pb-6">
+      <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between border-b border-[#D9E1D2] pb-6">
 
         <div className="space-y-2">
 
-          <h3 className="font-outfit font-extrabold text-2xl text-white">
+          <h3 className="font-outfit font-extrabold text-2xl text-[#26332A]">
             Confusion Heatmap
           </h3>
 
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-[#68766B]">
             Timeline analysis of student interaction signals
             such as pauses, rewinds, and other confusion indicators.
           </p>
@@ -234,7 +234,7 @@ export default function ConfusionHeatmap() {
         {lectures.length > 0 && (
           <div className="flex items-center gap-2">
 
-            <label className="text-xs font-semibold text-slate-500">
+            <label className="text-xs font-semibold text-[#26332A]">
               Select Lecture:
             </label>
 
@@ -243,7 +243,7 @@ export default function ConfusionHeatmap() {
               onChange={(event) =>
                 setSelectedId(event.target.value)
               }
-              className="bg-brand-900 border border-slate-800 px-3 py-2 rounded-lg text-xs font-semibold text-white focus:outline-none focus:border-accent-500 max-w-[280px]"
+              className="bg-[#FCFCF8] border border-[#D9E1D2] px-3 py-2 rounded-lg text-xs font-semibold text-[#26332A] focus:outline-none focus:border-accent-500 max-w-[280px]"
             >
               {lectures.map((lecture) => {
 
@@ -277,20 +277,20 @@ export default function ConfusionHeatmap() {
       {lectures.length === 0 && (
         <div className="glass-panel rounded-2xl p-10 text-center">
 
-          <Info className="h-10 w-10 text-slate-600 mx-auto mb-4" />
+          <Info className="h-10 w-10 text-[#68766B] mx-auto mb-4" />
 
-          <h4 className="text-white font-bold mb-2">
+          <h4 className="text-[#26332A] font-bold mb-2">
             No Lectures Available
           </h4>
 
-          <p className="text-sm text-slate-500 mb-6">
+          <p className="text-sm text-[#68766B] mb-6">
             Import a lecture first. The heatmap will use analytics
             from lectures that actually exist in your backend storage.
           </p>
 
           <button
             onClick={loadLectures}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-accent-500/10 border border-accent-500/30 text-accent-400 text-xs font-bold hover:bg-accent-500/20"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#E2E8D8] border border-[#D9E1D2] text-[#315C46] text-xs font-bold hover:bg-accent-500/20"
           >
             <RefreshCw className="h-4 w-4" />
             Refresh
@@ -301,23 +301,23 @@ export default function ConfusionHeatmap() {
 
       {/* Selected lecture */}
       {lectures.length > 0 && selectedLecture && (
-        <div className="glass-panel rounded-2xl p-5 border-slate-850">
+        <div className="glass-panel rounded-2xl p-5 border-[#D9E1D2]">
 
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
 
             <div>
-              <span className="text-[9px] text-accent-400 font-bold uppercase tracking-widest">
+              <span className="text-[9px] text-[#315C46] font-bold uppercase tracking-widest">
                 Selected Lecture
               </span>
 
-              <h4 className="text-lg font-bold text-white mt-1">
+              <h4 className="text-lg font-bold text-[#26332A] mt-1">
                 {selectedLecture.title ||
                   selectedLecture.name ||
                   selectedLecture.metadata?.title ||
                   "Untitled Lecture"}
               </h4>
 
-              <p className="text-[10px] text-slate-500 mt-1 font-mono">
+              <p className="text-[10px] text-[#68766B] mt-1 font-mono">
                 ID:{" "}
                 {selectedLecture.id ||
                   selectedLecture.lecture_id}
@@ -327,7 +327,7 @@ export default function ConfusionHeatmap() {
             <button
               onClick={() => loadHeatmap(selectedId)}
               disabled={loadingHeatmap}
-              className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 text-xs font-semibold disabled:opacity-50"
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-[#D9E1D2] text-[#68766B] hover:text-[#26332A] hover:border-slate-300 text-xs font-semibold disabled:opacity-50"
             >
               <RefreshCw
                 className={`h-4 w-4 ${
@@ -357,7 +357,7 @@ export default function ConfusionHeatmap() {
                 Analytics Information
               </p>
 
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-[#68766B] mt-1">
                 {error}
               </p>
             </div>
@@ -371,9 +371,9 @@ export default function ConfusionHeatmap() {
       {loadingHeatmap && (
         <div className="glass-panel p-20 text-center rounded-2xl">
 
-          <div className="h-8 w-8 rounded-full border-2 border-t-accent-500 border-slate-800 animate-spin mx-auto mb-4" />
+          <div className="h-8 w-8 rounded-full border-2 border-t-[#315C46] border-[#D9E1D2] animate-spin mx-auto mb-4" />
 
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[#68766B]">
             Loading confusion analytics...
           </p>
 
@@ -386,13 +386,13 @@ export default function ConfusionHeatmap() {
         heatmap.length === 0 && (
           <div className="glass-panel rounded-2xl p-12 text-center">
 
-            <Flame className="h-10 w-10 text-slate-600 mx-auto mb-4" />
+            <Flame className="h-10 w-10 text-[#68766B] mx-auto mb-4" />
 
-            <h4 className="text-white font-bold mb-2">
+            <h4 className="text-[#26332A] font-bold mb-2">
               No Confusion Data Yet
             </h4>
 
-            <p className="text-sm text-slate-500 max-w-md mx-auto">
+            <p className="text-sm text-[#68766B] max-w-md mx-auto">
               This lecture exists in your backend, but there
               are no confusion analytics available for it yet.
               No artificial values are being displayed.
@@ -407,10 +407,10 @@ export default function ConfusionHeatmap() {
           <div className="space-y-8">
 
             {/* Timeline */}
-            <div className="glass-panel rounded-2xl p-6 border-slate-850">
+            <div className="glass-panel rounded-2xl p-6 border-[#D9E1D2]">
 
-              <h4 className="font-outfit font-bold text-xs text-white uppercase tracking-wider mb-6 flex items-center gap-2">
-                <Flame className="h-4 w-4 text-accent-500" />
+              <h4 className="font-outfit font-bold text-xs text-[#26332A] uppercase tracking-wider mb-6 flex items-center gap-2">
+                <Flame className="h-4 w-4 text-[#315C46]" />
                 Timeline Heatmap Density
               </h4>
 
@@ -465,20 +465,20 @@ export default function ConfusionHeatmap() {
               </div>
 
               {/* Legend */}
-              <div className="flex flex-wrap gap-4 mt-6 pt-5 border-t border-slate-800/45 text-[10px] text-slate-500 font-semibold uppercase tracking-wider">
+              <div className="flex flex-wrap gap-4 mt-6 pt-5 border-t border-[#D9E1D2] text-[10px] text-[#26332A] font-semibold uppercase tracking-wider">
 
                 <span className="flex items-center gap-1.5">
-                  <span className="h-3 w-3 rounded bg-brand-900 border border-slate-850" />
+                  <span className="h-3 w-3 rounded bg-[#DCE8DC] border border-[#6F9279]/40" />
                   &lt; 30% Normal
                 </span>
 
                 <span className="flex items-center gap-1.5">
-                  <span className="h-3 w-3 rounded bg-amber-500/20 border border-amber-500/40" />
+                  <span className="h-3 w-3 rounded bg-[#FEF3C7] border border-[#A87827]/40" />
                   30% - 49% Elevated
                 </span>
 
                 <span className="flex items-center gap-1.5">
-                  <span className="h-3 w-3 rounded bg-rose-500/20 border border-rose-500/40" />
+                  <span className="h-3 w-3 rounded bg-[#FEE2E2] border border-[#B45353]/40" />
                   ≥ 50% High
                 </span>
 
@@ -487,16 +487,16 @@ export default function ConfusionHeatmap() {
             </div>
 
             {/* Detailed annotations */}
-            <div className="glass-panel rounded-2xl p-6 border-slate-850 space-y-4">
+            <div className="glass-panel rounded-2xl p-6 border-[#D9E1D2] space-y-4">
 
-              <h4 className="font-outfit font-bold text-xs text-white uppercase tracking-wider">
+              <h4 className="font-outfit font-bold text-xs text-[#26332A] uppercase tracking-wider">
                 Detailed Timeline Annotations
               </h4>
 
               {highConfusionSegments.length === 0 ? (
-                <div className="p-5 bg-brand-950/40 rounded-xl border border-slate-850">
+                <div className="p-5 bg-[#D9E1D2]/40 rounded-xl border border-[#D9E1D2]">
 
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-[#68766B]">
                     No elevated confusion segments were returned
                     by the backend for this lecture.
                   </p>
@@ -520,7 +520,7 @@ export default function ConfusionHeatmap() {
                       return (
                         <div
                           key={`${label}-annotation-${index}`}
-                          className="p-4 bg-brand-950/40 rounded-xl border border-slate-850 flex gap-3 text-xs leading-relaxed text-slate-400"
+                          className="p-4 bg-[#D9E1D2]/40 rounded-xl border border-[#D9E1D2] flex gap-3 text-xs leading-relaxed text-[#68766B]"
                         >
 
                           <AlertTriangle
@@ -533,18 +533,18 @@ export default function ConfusionHeatmap() {
 
                           <div>
 
-                            <p className="font-bold text-white mb-1">
+                            <p className="font-bold text-[#26332A] mb-1">
                               Confusion activity at{" "}
                               {label}
                             </p>
 
                             <p>
                               Backend reported{" "}
-                              <span className="font-semibold text-white">
+                              <span className="font-semibold text-[#26332A]">
                                 {count}
                               </span>{" "}
                               confusion flag(s), representing{" "}
-                              <span className="font-semibold text-white">
+                              <span className="font-semibold text-[#26332A]">
                                 {percentage}%
                               </span>{" "}
                               confusion for this segment.

@@ -449,7 +449,7 @@ export default function FacultyLectures() {
       return 'text-amber-400 bg-amber-500/10 border-amber-500/20';
     }
 
-    return 'text-slate-300 bg-slate-800 border-slate-700';
+    return 'text-[#68766B] bg-slate-800 border-slate-300';
   };
 
   // ============================================================
@@ -457,7 +457,7 @@ export default function FacultyLectures() {
   // ============================================================
 
   return (
-    <div className="flex-1 overflow-y-auto bg-brand-950">
+    <div className="flex-1 overflow-y-auto bg-[#F8F8F2] text-[#26332A]">
 
       <div className="max-w-7xl mx-auto p-6 lg:p-8 space-y-8">
 
@@ -469,16 +469,16 @@ export default function FacultyLectures() {
 
           <div className="flex items-center gap-3">
 
-            <div className="h-11 w-11 rounded-xl bg-primary-500/10 border border-primary-500/20 flex items-center justify-center">
-              <BookOpen className="h-5 w-5 text-primary-400" />
+            <div className="h-11 w-11 rounded-xl bg-[#315C46]/10 border border-[#315C46]/20 flex items-center justify-center">
+              <BookOpen className="h-5 w-5 text-[#315C46]" />
             </div>
 
             <div>
-              <h1 className="text-2xl font-outfit font-bold text-white">
+              <h1 className="text-2xl font-outfit font-bold text-[#26332A]">
                 Upload / Import Lecture
               </h1>
 
-              <p className="text-sm text-slate-400 mt-1">
+              <p className="text-sm text-[#68766B] mt-1">
                 Add lecture videos to CogniTrace for
                 transcript generation, analytics and
                 AI-powered learning assistance.
@@ -500,7 +500,7 @@ export default function FacultyLectures() {
               YOUTUBE IMPORT
           ==================================================== */}
 
-          <section className="glass-panel rounded-2xl border border-slate-800 p-6">
+          <section className="glass-panel rounded-2xl border border-[#D9E1D2] p-6">
 
             <div className="flex items-start gap-4 mb-6">
 
@@ -509,11 +509,11 @@ export default function FacultyLectures() {
               </div>
 
               <div>
-                <h2 className="text-lg font-outfit font-bold text-white">
+                <h2 className="text-lg font-outfit font-bold text-[#26332A]">
                   Import from YouTube
                 </h2>
 
-                <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                <p className="text-xs text-[#68766B] mt-1 leading-relaxed">
                   Paste a YouTube lecture URL. CogniTrace
                   will fetch metadata, retrieve the available
                   transcript and index it for AI search.
@@ -534,12 +534,12 @@ export default function FacultyLectures() {
               {/* Classification */}
               <div className="space-y-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-2">Subject</label>
+                  <label className="block text-xs font-semibold text-[#68766B] mb-2">Subject</label>
                   <div className="flex gap-2">
                     <select
                       value={selectedSubject}
                       onChange={(e) => setSelectedSubject(e.target.value)}
-                      className="flex-1 px-4 py-3 rounded-xl bg-brand-900/60 border border-slate-800 text-sm text-white focus:border-primary-500"
+                      className="flex-1 px-4 py-3 rounded-xl bg-[#FCFCF8] border border-[#D9E1D2] text-sm text-[#26332A] focus:border-[#315C46]"
                     >
                       <option value="">Select a subject...</option>
                       {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
@@ -548,20 +548,20 @@ export default function FacultyLectures() {
                   </div>
                   {addingSubject && (
                     <div className="flex gap-2 mt-2">
-                      <input type="text" value={newSubject} onChange={e => setNewSubject(e.target.value)} placeholder="New Subject" className="flex-1 px-3 py-2 rounded-lg bg-brand-800 text-xs text-white" />
-                      <button type="button" onClick={handleAddSubject} className="px-3 py-2 bg-primary-600 text-white rounded-lg text-xs">Save</button>
+                      <input type="text" value={newSubject} onChange={e => setNewSubject(e.target.value)} placeholder="New Subject" className="flex-1 px-3 py-2 rounded-lg bg-black text-xs text-white" />
+                      <button type="button" onClick={handleAddSubject} className="px-3 py-2 bg-black text-white rounded-lg text-xs">Save</button>
                     </div>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-2">Category</label>
+                  <label className="block text-xs font-semibold text-[#68766B] mb-2">Category</label>
                   <div className="flex gap-2">
                     <select
                       value={selectedCategory}
                       onChange={(e) => setSelectedCategory(e.target.value)}
                       disabled={!selectedSubject}
-                      className="flex-1 px-4 py-3 rounded-xl bg-brand-900/60 border border-slate-800 text-sm text-white focus:border-primary-500 disabled:opacity-50"
+                      className="flex-1 px-4 py-3 rounded-xl bg-[#FCFCF8] border border-[#D9E1D2] text-sm text-[#26332A] focus:border-[#315C46] disabled:opacity-50"
                     >
                       <option value="">Select a category...</option>
                       {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -570,20 +570,20 @@ export default function FacultyLectures() {
                   </div>
                   {addingCategory && (
                     <div className="flex gap-2 mt-2">
-                      <input type="text" value={newCategory} onChange={e => setNewCategory(e.target.value)} placeholder="New Category" className="flex-1 px-3 py-2 rounded-lg bg-brand-800 text-xs text-white" />
-                      <button type="button" onClick={handleAddCategory} className="px-3 py-2 bg-primary-600 text-white rounded-lg text-xs">Save</button>
+                      <input type="text" value={newCategory} onChange={e => setNewCategory(e.target.value)} placeholder="New Category" className="flex-1 px-3 py-2 rounded-lg bg-black text-xs text-white" />
+                      <button type="button" onClick={handleAddCategory} className="px-3 py-2 bg-black text-white rounded-lg text-xs">Save</button>
                     </div>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-2">Subcategory (optional)</label>
+                  <label className="block text-xs font-semibold text-[#68766B] mb-2">Subcategory (optional)</label>
                   <div className="flex gap-2">
                     <select
                       value={selectedSubcategory}
                       onChange={(e) => setSelectedSubcategory(e.target.value)}
                       disabled={!selectedCategory}
-                      className="flex-1 px-4 py-3 rounded-xl bg-brand-900/60 border border-slate-800 text-sm text-white focus:border-primary-500 disabled:opacity-50"
+                      className="flex-1 px-4 py-3 rounded-xl bg-[#FCFCF8] border border-[#D9E1D2] text-sm text-[#26332A] focus:border-[#315C46] disabled:opacity-50"
                     >
                       <option value="">Select a subcategory...</option>
                       {subcategories.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
@@ -592,18 +592,18 @@ export default function FacultyLectures() {
                   </div>
                   {addingSubcategory && (
                     <div className="flex gap-2 mt-2">
-                      <input type="text" value={newSubcategory} onChange={e => setNewSubcategory(e.target.value)} placeholder="New Subcategory" className="flex-1 px-3 py-2 rounded-lg bg-brand-800 text-xs text-white" />
-                      <button type="button" onClick={handleAddSubcategory} className="px-3 py-2 bg-primary-600 text-white rounded-lg text-xs">Save</button>
+                      <input type="text" value={newSubcategory} onChange={e => setNewSubcategory(e.target.value)} placeholder="New Subcategory" className="flex-1 px-3 py-2 rounded-lg bg-black text-xs text-white" />
+                      <button type="button" onClick={handleAddSubcategory} className="px-3 py-2 bg-black text-white rounded-lg text-xs">Save</button>
                     </div>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-2">Prerequisite Video (optional)</label>
+                  <label className="block text-xs font-semibold text-[#68766B] mb-2">Prerequisite Video (optional)</label>
                   <select
                     value={selectedPrerequisiteLectureId}
                     onChange={(e) => setSelectedPrerequisiteLectureId(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl bg-brand-900/60 border border-slate-800 text-sm text-white focus:border-primary-500"
+                    className="w-full px-4 py-3 rounded-xl bg-[#FCFCF8] border border-[#D9E1D2] text-sm text-[#26332A] focus:border-[#315C46]"
                   >
                     <option value="">None (No prerequisite video)</option>
                     {lectures.map((lec) => (
@@ -612,13 +612,13 @@ export default function FacultyLectures() {
                       </option>
                     ))}
                   </select>
-                  <p className="text-[11px] text-slate-500 mt-1">
+                  <p className="text-[11px] text-[#68766B] mt-1">
                     Select an existing lecture video that students should watch before this one.
                   </p>
                 </div>
               </div>
 
-<label className="block text-xs font-semibold text-slate-300 mb-2">
+<label className="block text-xs font-semibold text-[#68766B] mb-2">
                   YouTube URL
                 </label>
 
@@ -630,7 +630,7 @@ export default function FacultyLectures() {
                   }
                   placeholder="https://www.youtube.com/watch?v=..."
                   disabled={youtubeLoading}
-                  className="w-full px-4 py-3 rounded-xl bg-brand-900/60 border border-slate-800 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-primary-500 transition-colors disabled:opacity-60"
+                  className="w-full px-4 py-3 rounded-xl bg-[#FCFCF8] border border-[#D9E1D2] text-sm text-[#26332A] placeholder-slate-600 focus:outline-none focus:border-[#315C46] transition-colors disabled:opacity-60"
                 />
 
               </div>
@@ -642,7 +642,7 @@ export default function FacultyLectures() {
                   youtubeLoading ||
                   !youtubeUrl.trim() || !selectedSubject || !selectedCategory
                 }
-                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-primary-600 hover:bg-primary-500 disabled:bg-slate-800 disabled:text-slate-500 text-white text-sm font-semibold transition-all"
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-black hover:bg-slate-800 disabled:bg-slate-800 disabled:text-[#68766B] text-[#26332A] text-sm font-semibold transition-all"
               >
 
                 {youtubeLoading ? (
@@ -665,7 +665,7 @@ export default function FacultyLectures() {
             {/* YouTube Error */}
 
             {youtubeError && (
-              <div className="mt-4 flex items-start gap-3 rounded-xl border border-rose-500/20 bg-rose-500/10 p-3">
+              <div className="mt-4 flex items-start gap-3 rounded-xl border border-[#FECDD3] bg-[#FFF1F2] text-[#BE123C] p-3">
 
                 <AlertCircle className="h-4 w-4 text-rose-400 mt-0.5 shrink-0" />
 
@@ -698,20 +698,20 @@ export default function FacultyLectures() {
               LOCAL VIDEO UPLOAD
           ==================================================== */}
 
-          <section className="glass-panel rounded-2xl border border-slate-800 p-6">
+          <section className="glass-panel rounded-2xl border border-[#D9E1D2] p-6">
 
             <div className="flex items-start gap-4 mb-6">
 
-              <div className="h-11 w-11 rounded-xl bg-primary-500/10 border border-primary-500/20 flex items-center justify-center shrink-0">
-                <UploadCloud className="h-5 w-5 text-primary-400" />
+              <div className="h-11 w-11 rounded-xl bg-[#315C46]/10 border border-[#315C46]/20 flex items-center justify-center shrink-0">
+                <UploadCloud className="h-5 w-5 text-[#315C46]" />
               </div>
 
               <div>
-                <h2 className="text-lg font-outfit font-bold text-white">
+                <h2 className="text-lg font-outfit font-bold text-[#26332A]">
                   Upload Video File
                 </h2>
 
-                <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                <p className="text-xs text-[#68766B] mt-1 leading-relaxed">
                   Upload a local lecture video. CogniTrace
                   will store the video and generate its
                   transcript using Whisper.
@@ -734,12 +734,12 @@ export default function FacultyLectures() {
               {/* Classification */}
               <div className="space-y-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-2">Subject</label>
+                  <label className="block text-xs font-semibold text-[#68766B] mb-2">Subject</label>
                   <div className="flex gap-2">
                     <select
                       value={selectedSubject}
                       onChange={(e) => setSelectedSubject(e.target.value)}
-                      className="flex-1 px-4 py-3 rounded-xl bg-brand-900/60 border border-slate-800 text-sm text-white focus:border-primary-500"
+                      className="flex-1 px-4 py-3 rounded-xl bg-[#FCFCF8] border border-[#D9E1D2] text-sm text-[#26332A] focus:border-[#315C46]"
                     >
                       <option value="">Select a subject...</option>
                       {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
@@ -748,20 +748,20 @@ export default function FacultyLectures() {
                   </div>
                   {addingSubject && (
                     <div className="flex gap-2 mt-2">
-                      <input type="text" value={newSubject} onChange={e => setNewSubject(e.target.value)} placeholder="New Subject" className="flex-1 px-3 py-2 rounded-lg bg-brand-800 text-xs text-white" />
-                      <button type="button" onClick={handleAddSubject} className="px-3 py-2 bg-primary-600 text-white rounded-lg text-xs">Save</button>
+                      <input type="text" value={newSubject} onChange={e => setNewSubject(e.target.value)} placeholder="New Subject" className="flex-1 px-3 py-2 rounded-lg bg-black text-xs text-white" />
+                      <button type="button" onClick={handleAddSubject} className="px-3 py-2 bg-black text-white rounded-lg text-xs">Save</button>
                     </div>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-2">Category</label>
+                  <label className="block text-xs font-semibold text-[#68766B] mb-2">Category</label>
                   <div className="flex gap-2">
                     <select
                       value={selectedCategory}
                       onChange={(e) => setSelectedCategory(e.target.value)}
                       disabled={!selectedSubject}
-                      className="flex-1 px-4 py-3 rounded-xl bg-brand-900/60 border border-slate-800 text-sm text-white focus:border-primary-500 disabled:opacity-50"
+                      className="flex-1 px-4 py-3 rounded-xl bg-[#FCFCF8] border border-[#D9E1D2] text-sm text-[#26332A] focus:border-[#315C46] disabled:opacity-50"
                     >
                       <option value="">Select a category...</option>
                       {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -770,20 +770,20 @@ export default function FacultyLectures() {
                   </div>
                   {addingCategory && (
                     <div className="flex gap-2 mt-2">
-                      <input type="text" value={newCategory} onChange={e => setNewCategory(e.target.value)} placeholder="New Category" className="flex-1 px-3 py-2 rounded-lg bg-brand-800 text-xs text-white" />
-                      <button type="button" onClick={handleAddCategory} className="px-3 py-2 bg-primary-600 text-white rounded-lg text-xs">Save</button>
+                      <input type="text" value={newCategory} onChange={e => setNewCategory(e.target.value)} placeholder="New Category" className="flex-1 px-3 py-2 rounded-lg bg-black text-xs text-white" />
+                      <button type="button" onClick={handleAddCategory} className="px-3 py-2 bg-black text-white rounded-lg text-xs">Save</button>
                     </div>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-2">Subcategory (optional)</label>
+                  <label className="block text-xs font-semibold text-[#68766B] mb-2">Subcategory (optional)</label>
                   <div className="flex gap-2">
                     <select
                       value={selectedSubcategory}
                       onChange={(e) => setSelectedSubcategory(e.target.value)}
                       disabled={!selectedCategory}
-                      className="flex-1 px-4 py-3 rounded-xl bg-brand-900/60 border border-slate-800 text-sm text-white focus:border-primary-500 disabled:opacity-50"
+                      className="flex-1 px-4 py-3 rounded-xl bg-[#FCFCF8] border border-[#D9E1D2] text-sm text-[#26332A] focus:border-[#315C46] disabled:opacity-50"
                     >
                       <option value="">Select a subcategory...</option>
                       {subcategories.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
@@ -792,18 +792,18 @@ export default function FacultyLectures() {
                   </div>
                   {addingSubcategory && (
                     <div className="flex gap-2 mt-2">
-                      <input type="text" value={newSubcategory} onChange={e => setNewSubcategory(e.target.value)} placeholder="New Subcategory" className="flex-1 px-3 py-2 rounded-lg bg-brand-800 text-xs text-white" />
-                      <button type="button" onClick={handleAddSubcategory} className="px-3 py-2 bg-primary-600 text-white rounded-lg text-xs">Save</button>
+                      <input type="text" value={newSubcategory} onChange={e => setNewSubcategory(e.target.value)} placeholder="New Subcategory" className="flex-1 px-3 py-2 rounded-lg bg-black text-xs text-white" />
+                      <button type="button" onClick={handleAddSubcategory} className="px-3 py-2 bg-black text-white rounded-lg text-xs">Save</button>
                     </div>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-2">Prerequisite Video (optional)</label>
+                  <label className="block text-xs font-semibold text-[#68766B] mb-2">Prerequisite Video (optional)</label>
                   <select
                     value={selectedPrerequisiteLectureId}
                     onChange={(e) => setSelectedPrerequisiteLectureId(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl bg-brand-900/60 border border-slate-800 text-sm text-white focus:border-primary-500"
+                    className="w-full px-4 py-3 rounded-xl bg-[#FCFCF8] border border-[#D9E1D2] text-sm text-[#26332A] focus:border-[#315C46]"
                   >
                     <option value="">None (No prerequisite video)</option>
                     {lectures.map((lec) => (
@@ -812,13 +812,13 @@ export default function FacultyLectures() {
                       </option>
                     ))}
                   </select>
-                  <p className="text-[11px] text-slate-500 mt-1">
+                  <p className="text-[11px] text-[#68766B] mt-1">
                     Select an existing lecture video that students should watch before this one.
                   </p>
                 </div>
               </div>
 
-<label className="block text-xs font-semibold text-slate-300 mb-2">
+<label className="block text-xs font-semibold text-[#68766B] mb-2">
                   Video File
                 </label>
 
@@ -828,19 +828,19 @@ export default function FacultyLectures() {
                   accept=".mp4,.mov,.mkv,.avi,.webm,.m4v,video/*"
                   onChange={handleFileChange}
                   disabled={uploadLoading}
-                  className="block w-full text-xs text-slate-400 file:mr-3 file:px-4 file:py-2.5 file:rounded-lg file:border-0 file:bg-primary-600 file:text-white file:font-semibold file:cursor-pointer hover:file:bg-primary-500"
+                  className="block w-full text-xs text-[#68766B] file:mr-3 file:px-4 file:py-2.5 file:rounded-lg file:border-0 file:bg-black file:text-[#26332A] file:font-semibold file:cursor-pointer hover:file:bg-primary-500"
                 />
 
                 {selectedFile && (
-                  <div className="mt-3 flex items-center gap-2 text-xs text-slate-400">
+                  <div className="mt-3 flex items-center gap-2 text-xs text-[#68766B]">
 
-                    <FileVideo className="h-4 w-4 text-primary-400" />
+                    <FileVideo className="h-4 w-4 text-[#315C46]" />
 
                     <span className="truncate">
                       {selectedFile.name}
                     </span>
 
-                    <span className="text-slate-600">
+                    <span className="text-[#68766B]">
                       (
                       {(
                         selectedFile.size /
@@ -859,7 +859,7 @@ export default function FacultyLectures() {
 
               <div>
 
-                <label className="block text-xs font-semibold text-slate-300 mb-2">
+                <label className="block text-xs font-semibold text-[#68766B] mb-2">
                   Lecture Title
                 </label>
 
@@ -871,7 +871,7 @@ export default function FacultyLectures() {
                   }
                   placeholder="Enter lecture title"
                   disabled={uploadLoading}
-                  className="w-full px-4 py-3 rounded-xl bg-brand-900/60 border border-slate-800 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-primary-500 transition-colors disabled:opacity-60"
+                  className="w-full px-4 py-3 rounded-xl bg-[#FCFCF8] border border-[#D9E1D2] text-sm text-[#26332A] placeholder-slate-600 focus:outline-none focus:border-[#315C46] transition-colors disabled:opacity-60"
                 />
 
               </div>
@@ -881,9 +881,9 @@ export default function FacultyLectures() {
 
               <div>
 
-                <label className="block text-xs font-semibold text-slate-300 mb-2">
+                <label className="block text-xs font-semibold text-[#68766B] mb-2">
                   Description
-                  <span className="text-slate-600 ml-1">
+                  <span className="text-[#68766B] ml-1">
                     (optional)
                   </span>
                 </label>
@@ -898,7 +898,7 @@ export default function FacultyLectures() {
                   placeholder="Brief description of the lecture"
                   rows={2}
                   disabled={uploadLoading}
-                  className="w-full px-4 py-3 rounded-xl bg-brand-900/60 border border-slate-800 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-primary-500 transition-colors resize-none disabled:opacity-60"
+                  className="w-full px-4 py-3 rounded-xl bg-[#FCFCF8] border border-[#D9E1D2] text-sm text-[#26332A] placeholder-slate-600 focus:outline-none focus:border-[#315C46] transition-colors resize-none disabled:opacity-60"
                 />
 
               </div>
@@ -911,7 +911,7 @@ export default function FacultyLectures() {
                   !selectedFile ||
                   !localTitle.trim() || !selectedSubject || !selectedCategory
                 }
-                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-primary-600 hover:bg-primary-500 disabled:bg-slate-800 disabled:text-slate-500 text-white text-sm font-semibold transition-all"
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-black hover:bg-slate-800 disabled:bg-slate-800 disabled:text-[#68766B] text-[#26332A] text-sm font-semibold transition-all"
               >
 
                 {uploadLoading ? (
@@ -934,7 +934,7 @@ export default function FacultyLectures() {
             {/* Upload Error */}
 
             {uploadError && (
-              <div className="mt-4 flex items-start gap-3 rounded-xl border border-rose-500/20 bg-rose-500/10 p-3">
+              <div className="mt-4 flex items-start gap-3 rounded-xl border border-[#FECDD3] bg-[#FFF1F2] text-[#BE123C] p-3">
 
                 <AlertCircle className="h-4 w-4 text-rose-400 mt-0.5 shrink-0" />
 
@@ -970,13 +970,13 @@ export default function FacultyLectures() {
         ====================================================== */}
 
         {(youtubeResult || uploadResult) && (
-          <section className="glass-panel rounded-2xl border border-slate-800 p-6">
+          <section className="glass-panel rounded-2xl border border-[#D9E1D2] p-6">
 
             <div className="flex items-center gap-2 mb-5">
 
               <CheckCircle className="h-5 w-5 text-emerald-400" />
 
-              <h2 className="text-lg font-outfit font-bold text-white">
+              <h2 className="text-lg font-outfit font-bold text-[#26332A]">
                 Lecture Processing Complete
               </h2>
 
@@ -1003,13 +1003,13 @@ export default function FacultyLectures() {
 
                   {/* Lecture */}
 
-                  <div className="rounded-xl border border-slate-800 bg-brand-900/40 p-4">
+                  <div className="rounded-xl border border-[#D9E1D2] bg-[#E2E8D8] p-4">
 
                     <div className="flex items-center gap-2 mb-2">
 
-                      <BookOpen className="h-4 w-4 text-primary-400" />
+                      <BookOpen className="h-4 w-4 text-[#315C46]" />
 
-                      <span className="text-[10px] uppercase tracking-wider text-slate-500 font-bold">
+                      <span className="text-[10px] uppercase tracking-wider text-[#26332A] font-bold">
                         Lecture
                       </span>
 
@@ -1024,13 +1024,13 @@ export default function FacultyLectures() {
 
                   {/* Transcript */}
 
-                  <div className="rounded-xl border border-slate-800 bg-brand-900/40 p-4">
+                  <div className="rounded-xl border border-[#D9E1D2] bg-[#E2E8D8] p-4">
 
                     <div className="flex items-center gap-2 mb-2">
 
-                      <FileText className="h-4 w-4 text-primary-400" />
+                      <FileText className="h-4 w-4 text-[#315C46]" />
 
-                      <span className="text-[10px] uppercase tracking-wider text-slate-500 font-bold">
+                      <span className="text-[10px] uppercase tracking-wider text-[#26332A] font-bold">
                         Transcript
                       </span>
 
@@ -1047,13 +1047,13 @@ export default function FacultyLectures() {
 
                   {/* Duration */}
 
-                  <div className="rounded-xl border border-slate-800 bg-brand-900/40 p-4">
+                  <div className="rounded-xl border border-[#D9E1D2] bg-[#E2E8D8] p-4">
 
                     <div className="flex items-center gap-2 mb-2">
 
-                      <Clock className="h-4 w-4 text-primary-400" />
+                      <Clock className="h-4 w-4 text-[#315C46]" />
 
-                      <span className="text-[10px] uppercase tracking-wider text-slate-500 font-bold">
+                      <span className="text-[10px] uppercase tracking-wider text-[#26332A] font-bold">
                         Duration
                       </span>
 
@@ -1070,13 +1070,13 @@ export default function FacultyLectures() {
 
                   {/* RAG */}
 
-                  <div className="rounded-xl border border-slate-800 bg-brand-900/40 p-4">
+                  <div className="rounded-xl border border-[#D9E1D2] bg-[#E2E8D8] p-4">
 
                     <div className="flex items-center gap-2 mb-2">
 
-                      <Database className="h-4 w-4 text-primary-400" />
+                      <Database className="h-4 w-4 text-[#315C46]" />
 
-                      <span className="text-[10px] uppercase tracking-wider text-slate-500 font-bold">
+                      <span className="text-[10px] uppercase tracking-wider text-[#26332A] font-bold">
                         AI Index
                       </span>
 
@@ -1109,11 +1109,11 @@ export default function FacultyLectures() {
 
             <div>
 
-              <h2 className="text-lg font-outfit font-bold text-white">
+              <h2 className="text-lg font-outfit font-bold text-[#26332A]">
                 Faculty Lecture Library
               </h2>
 
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-[#68766B] mt-1">
                 Lectures currently available in CogniTrace.
               </p>
 
@@ -1123,7 +1123,7 @@ export default function FacultyLectures() {
             <button
               onClick={loadLectures}
               disabled={loadingLectures}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-800 bg-brand-900/40 text-xs text-slate-400 hover:text-white hover:border-slate-700 transition-colors"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg border border-[#D9E1D2] bg-[#E2E8D8] text-xs text-[#68766B] hover:text-[#26332A] hover:border-slate-300 transition-colors"
             >
 
               <RefreshCw
@@ -1144,11 +1144,11 @@ export default function FacultyLectures() {
           {/* Loading */}
 
           {loadingLectures && (
-            <div className="glass-panel rounded-2xl border border-slate-800 p-10 flex items-center justify-center">
+            <div className="glass-panel rounded-2xl border border-[#D9E1D2] p-10 flex items-center justify-center">
 
-              <div className="flex items-center gap-3 text-sm text-slate-400">
+              <div className="flex items-center gap-3 text-sm text-[#68766B]">
 
-                <Loader2 className="h-5 w-5 animate-spin text-primary-400" />
+                <Loader2 className="h-5 w-5 animate-spin text-[#315C46]" />
 
                 Loading lectures...
 
@@ -1163,15 +1163,15 @@ export default function FacultyLectures() {
           {!loadingLectures &&
             lectures.length === 0 && (
 
-              <div className="glass-panel rounded-2xl border border-slate-800 p-10 text-center">
+              <div className="glass-panel rounded-2xl border border-[#D9E1D2] p-10 text-center">
 
-                <FileVideo className="h-10 w-10 text-slate-700 mx-auto mb-3" />
+                <FileVideo className="h-10 w-10 text-[#68766B] mx-auto mb-3" />
 
-                <h3 className="text-sm font-semibold text-slate-300">
+                <h3 className="text-sm font-semibold text-[#68766B]">
                   No lectures imported yet
                 </h3>
 
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-[#68766B] mt-1">
                   Upload a video or import a YouTube lecture
                   above to create your first lecture.
                 </p>
@@ -1196,12 +1196,12 @@ export default function FacultyLectures() {
                   return (
                     <div
                       key={lecture.id}
-                      className="glass-panel rounded-2xl border border-slate-800 overflow-hidden hover:border-primary-500/30 transition-colors"
+                      className="glass-panel rounded-2xl border border-[#D9E1D2] overflow-hidden hover:border-[#315C46]/20 transition-colors"
                     >
 
                       {/* Thumbnail */}
 
-                      <div className="relative aspect-video bg-brand-900">
+                      <div className="relative aspect-video bg-[#E2E8D8]">
 
                         {isYoutube &&
                         lecture.thumbnail ? (
@@ -1213,7 +1213,7 @@ export default function FacultyLectures() {
                         ) : (
                           <div className="w-full h-full flex items-center justify-center">
 
-                            <FileVideo className="h-10 w-10 text-slate-700" />
+                            <FileVideo className="h-10 w-10 text-[#68766B]" />
 
                           </div>
                         )}
@@ -1224,7 +1224,7 @@ export default function FacultyLectures() {
 
                         <div className="absolute top-3 left-3">
 
-                          <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-1 rounded-md bg-black/60 border border-white/10 text-slate-200 backdrop-blur-sm">
+                          <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-1 rounded-md bg-black/60 border border-white/10 text-white backdrop-blur-sm">
                             {getSourceLabel(lecture)}
                           </span>
 
@@ -1248,12 +1248,12 @@ export default function FacultyLectures() {
 
                         <div>
 
-                          <h3 className="text-sm font-outfit font-bold text-white line-clamp-2">
+                          <h3 className="text-sm font-outfit font-bold text-[#26332A] line-clamp-2">
                             {lecture.title}
                           </h3>
 
                           {lecture.description && (
-                            <p className="text-xs text-slate-500 mt-2 line-clamp-2">
+                            <p className="text-xs text-[#68766B] mt-2 line-clamp-2">
                               {lecture.description}
                             </p>
                           )}
@@ -1275,7 +1275,7 @@ export default function FacultyLectures() {
 
 
                           {lecture.transcript_language && (
-                            <span className="text-[10px] text-slate-500">
+                            <span className="text-[10px] text-[#68766B]">
                               Transcript:{' '}
                               {String(
                                 lecture.transcript_language
@@ -1296,7 +1296,7 @@ export default function FacultyLectures() {
                                 lecture
                               )
                             }
-                            className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg bg-primary-600 hover:bg-primary-500 text-white text-xs font-semibold transition-colors"
+                            className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg bg-[#315C46] hover:bg-[#264B39] text-[#FFFFFF] text-xs font-semibold transition-colors shadow-sm"
                           >
 
                             <Play className="h-3.5 w-3.5" />
@@ -1312,7 +1312,7 @@ export default function FacultyLectures() {
                                 href={lecture.video_url}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="flex items-center justify-center px-3 py-2.5 rounded-lg border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition-colors"
+                                className="flex items-center justify-center px-3 py-2.5 rounded-lg border border-[#D9E1D2] text-[#68766B] hover:text-[#26332A] hover:border-slate-300 transition-colors"
                                 title="Open YouTube video"
                               >
 
@@ -1341,21 +1341,21 @@ export default function FacultyLectures() {
 
         {selectedLecture && (
 
-          <section className="glass-panel rounded-2xl border border-slate-800 p-6 space-y-5">
+          <section className="glass-panel rounded-2xl border border-[#D9E1D2] p-6 space-y-5">
 
             <div className="flex items-start justify-between gap-4">
 
               <div>
 
-                <span className="text-[10px] text-primary-400 font-bold uppercase tracking-widest">
+                <span className="text-[10px] text-[#315C46] font-bold uppercase tracking-widest">
                   Lecture Preview
                 </span>
 
-                <h2 className="text-xl font-outfit font-bold text-white mt-1">
+                <h2 className="text-xl font-outfit font-bold text-[#26332A] mt-1">
                   {selectedLecture.title}
                 </h2>
 
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-[#68766B] mt-1">
                   {selectedLecture.course_name ||
                     'CS 101: Fundamentals of Database Systems'}
                 </p>
@@ -1367,7 +1367,7 @@ export default function FacultyLectures() {
                 onClick={() =>
                   setSelectedLecture(null)
                 }
-                className="text-xs text-slate-500 hover:text-white"
+                className="text-xs text-[#68766B] hover:text-[#26332A]"
               >
                 Close
               </button>
@@ -1379,7 +1379,7 @@ export default function FacultyLectures() {
 
             {selectedLecture.youtube_id ? (
 
-              <div className="relative aspect-video max-w-4xl mx-auto rounded-xl overflow-hidden bg-black border border-slate-800">
+              <div className="relative aspect-video max-w-4xl mx-auto rounded-xl overflow-hidden bg-black border border-[#D9E1D2]">
 
                 <iframe
                   src={getYoutubeEmbedUrl(
@@ -1395,16 +1395,16 @@ export default function FacultyLectures() {
 
             ) : (
 
-              <div className="rounded-xl border border-slate-800 bg-brand-900/40 p-10 text-center">
+              <div className="rounded-xl border border-[#D9E1D2] bg-[#E2E8D8] p-10 text-center">
 
-                <FileVideo className="h-10 w-10 text-slate-700 mx-auto mb-3" />
+                <FileVideo className="h-10 w-10 text-[#68766B] mx-auto mb-3" />
 
-                <p className="text-sm text-slate-400">
+                <p className="text-sm text-[#68766B]">
                   This lecture is stored as a local
                   video file on the backend.
                 </p>
 
-                <p className="text-xs text-slate-600 mt-1">
+                <p className="text-xs text-[#68766B] mt-1">
                   Local video playback can be connected
                   to the Student lecture player later.
                 </p>
@@ -1418,13 +1418,13 @@ export default function FacultyLectures() {
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
 
-              <div className="rounded-xl bg-brand-900/40 border border-slate-800 p-3">
+              <div className="rounded-xl bg-[#FCFCF8] border border-[#D9E1D2] p-3">
 
-                <p className="text-[9px] uppercase tracking-wider text-slate-600 font-bold">
+                <p className="text-[9px] uppercase tracking-wider text-[#26332A] font-bold">
                   Source
                 </p>
 
-                <p className="text-xs text-slate-300 font-semibold mt-1">
+                <p className="text-xs text-[#68766B] font-semibold mt-1">
                   {getSourceLabel(
                     selectedLecture
                   )}
@@ -1433,13 +1433,13 @@ export default function FacultyLectures() {
               </div>
 
 
-              <div className="rounded-xl bg-brand-900/40 border border-slate-800 p-3">
+              <div className="rounded-xl bg-[#FCFCF8] border border-[#D9E1D2] p-3">
 
-                <p className="text-[9px] uppercase tracking-wider text-slate-600 font-bold">
+                <p className="text-[9px] uppercase tracking-wider text-[#26332A] font-bold">
                   Duration
                 </p>
 
-                <p className="text-xs text-slate-300 font-semibold mt-1">
+                <p className="text-xs text-[#68766B] font-semibold mt-1">
                   {selectedLecture.duration ||
                     'N/A'}
                 </p>
@@ -1447,9 +1447,9 @@ export default function FacultyLectures() {
               </div>
 
 
-              <div className="rounded-xl bg-brand-900/40 border border-slate-800 p-3">
+              <div className="rounded-xl bg-[#FCFCF8] border border-[#D9E1D2] p-3">
 
-                <p className="text-[9px] uppercase tracking-wider text-slate-600 font-bold">
+                <p className="text-[9px] uppercase tracking-wider text-[#26332A] font-bold">
                   Status
                 </p>
 
@@ -1461,13 +1461,13 @@ export default function FacultyLectures() {
               </div>
 
 
-              <div className="rounded-xl bg-brand-900/40 border border-slate-800 p-3">
+              <div className="rounded-xl bg-[#FCFCF8] border border-[#D9E1D2] p-3">
 
-                <p className="text-[9px] uppercase tracking-wider text-slate-600 font-bold">
+                <p className="text-[9px] uppercase tracking-wider text-[#26332A] font-bold">
                   Lecture ID
                 </p>
 
-                <p className="text-xs text-slate-300 font-semibold mt-1">
+                <p className="text-xs text-[#68766B] font-semibold mt-1">
                   {selectedLecture.id}
                 </p>
 

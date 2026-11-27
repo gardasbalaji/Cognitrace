@@ -154,13 +154,13 @@ export default function StudentAnalyticsPlaceholder() {
 
   if (loading) {
     return (
-      <div className="flex-1 flex items-center justify-center p-8 min-h-screen bg-brand-950">
+      <div className="flex-1 flex items-center justify-center p-8 min-h-screen bg-[#F8F8F2]">
 
         <div className="flex flex-col items-center gap-4">
 
-          <RefreshCw className="h-9 w-9 text-accent-500 animate-spin" />
+          <RefreshCw className="h-9 w-9 text-[#315C46] animate-spin" />
 
-          <span className="text-slate-400 text-sm font-medium">
+          <span className="text-[#68766B] text-sm font-medium">
             Loading student analytics...
           </span>
 
@@ -176,12 +176,12 @@ export default function StudentAnalyticsPlaceholder() {
 
   if (!student) {
     return (
-      <div className="flex-1 p-8 bg-brand-950 min-h-screen">
+      <div className="flex-1 p-8 bg-[#F8F8F2] min-h-screen">
 
         <button
           type="button"
           onClick={() => navigate('/faculty/risk')}
-          className="flex items-center gap-2 text-xs text-slate-400 hover:text-white transition mb-6"
+          className="flex items-center gap-2 text-xs text-[#68766B] hover:text-[#26332A] transition mb-6"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Student Risk
@@ -189,13 +189,13 @@ export default function StudentAnalyticsPlaceholder() {
 
         <div className="glass-panel rounded-2xl p-16 text-center">
 
-          <Info className="h-10 w-10 text-slate-500 mx-auto mb-4" />
+          <Info className="h-10 w-10 text-[#68766B] mx-auto mb-4" />
 
-          <h2 className="text-lg font-bold text-white mb-2">
+          <h2 className="text-lg font-bold text-[#26332A] mb-2">
             Student analytics unavailable
           </h2>
 
-          <p className="text-xs text-slate-500 max-w-md mx-auto">
+          <p className="text-xs text-[#68766B] max-w-md mx-auto">
             {error ||
               'No analytics are currently available for this student.'}
           </p>
@@ -211,7 +211,7 @@ export default function StudentAnalyticsPlaceholder() {
   // ============================================================
 
   return (
-    <div className="flex-1 p-8 overflow-y-auto space-y-8 max-w-6xl mx-auto bg-brand-950 text-slate-100 min-h-screen">
+    <div className="flex-1 p-8 overflow-y-auto space-y-8 max-w-6xl mx-auto bg-[#F8F8F2] text-[#26332A] min-h-screen">
 
       {/* ======================================================
           HEADER
@@ -224,21 +224,21 @@ export default function StudentAnalyticsPlaceholder() {
           <button
             type="button"
             onClick={() => navigate('/faculty/risk')}
-            className="flex items-center gap-2 text-xs text-slate-400 hover:text-white transition mb-4"
+            className="flex items-center gap-2 text-xs text-[#68766B] hover:text-[#26332A] transition mb-4"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Student Risk
           </button>
 
-          <span className="px-2.5 py-0.5 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-[10px] font-bold uppercase tracking-wider">
+          <span className="px-2.5 py-0.5 rounded-full bg-[#315C46]/10 border border-[#315C46]/20 text-[#315C46] text-[10px] font-bold uppercase tracking-wider">
             Faculty Student Analytics
           </span>
 
-          <h1 className="font-outfit font-bold text-2xl text-white mt-2">
+          <h1 className="font-outfit font-bold text-2xl text-[#26332A] mt-2">
             {student.name || student.student_id}
           </h1>
 
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-[#68766B] mt-1">
             Student ID: {student.student_id}
           </p>
 
@@ -247,7 +247,7 @@ export default function StudentAnalyticsPlaceholder() {
         <button
           type="button"
           onClick={loadData}
-          className="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-800 text-xs font-semibold text-slate-400 hover:text-white hover:border-slate-700 transition"
+          className="flex items-center gap-2 px-3 py-2 rounded-lg border border-[#D9E1D2] text-xs font-semibold text-[#68766B] hover:text-[#26332A] hover:border-slate-300 transition"
         >
           <RefreshCw className="h-4 w-4" />
           Refresh
@@ -267,19 +267,19 @@ export default function StudentAnalyticsPlaceholder() {
 
           <div className="flex items-center gap-4">
 
-            <div className="h-14 w-14 rounded-full bg-primary-500/10 border border-primary-500/20 flex items-center justify-center">
+            <div className="h-14 w-14 rounded-full bg-[#315C46]/10 border border-[#315C46]/20 flex items-center justify-center">
 
-              <User className="h-7 w-7 text-primary-400" />
+              <User className="h-7 w-7 text-[#315C46]" />
 
             </div>
 
             <div>
 
-              <h2 className="text-base font-bold text-white">
+              <h2 className="text-base font-bold text-[#26332A]">
                 {student.name || 'Student'}
               </h2>
 
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-[#68766B]">
                 {student.student_id}
               </p>
 
@@ -287,15 +287,15 @@ export default function StudentAnalyticsPlaceholder() {
 
           </div>
 
-          <div className="mt-6 pt-5 border-t border-slate-800 space-y-4">
+          <div className="mt-6 pt-5 border-t border-[#D9E1D2] space-y-4">
 
             <div className="flex justify-between">
 
-              <span className="text-xs text-slate-500">
+              <span className="text-xs text-[#68766B]">
                 Completed Lectures
               </span>
 
-              <span className="text-xs font-bold text-white">
+              <span className="text-xs font-bold text-[#26332A]">
                 {displayValue(student.completed_count)}
               </span>
 
@@ -303,11 +303,11 @@ export default function StudentAnalyticsPlaceholder() {
 
             <div className="flex justify-between">
 
-              <span className="text-xs text-slate-500">
+              <span className="text-xs text-[#68766B]">
                 Average Quiz Score
               </span>
 
-              <span className="text-xs font-bold text-white">
+              <span className="text-xs font-bold text-[#26332A]">
                 {displayValue(student.avg_quiz_score, '%')}
               </span>
 
@@ -315,11 +315,11 @@ export default function StudentAnalyticsPlaceholder() {
 
             <div className="flex justify-between">
 
-              <span className="text-xs text-slate-500">
+              <span className="text-xs text-[#68766B]">
                 Engagement Trend
               </span>
 
-              <span className="text-xs font-bold text-white">
+              <span className="text-xs font-bold text-[#26332A]">
                 {displayValue(student.engagement_trend)}
               </span>
 
@@ -337,11 +337,11 @@ export default function StudentAnalyticsPlaceholder() {
 
             <div>
 
-              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+              <p className="text-[10px] text-[#26332A] font-bold uppercase tracking-wider">
                 Risk Level
               </p>
 
-              <p className="text-3xl font-extrabold text-white mt-2">
+              <p className="text-3xl font-extrabold text-[#26332A] mt-2">
                 {displayValue(student.risk_level)}
               </p>
 
@@ -357,15 +357,15 @@ export default function StudentAnalyticsPlaceholder() {
 
           </div>
 
-          <div className="mt-6 pt-5 border-t border-slate-800">
+          <div className="mt-6 pt-5 border-t border-[#D9E1D2]">
 
             <div className="flex justify-between items-center">
 
-              <span className="text-xs text-slate-500">
+              <span className="text-xs text-[#68766B]">
                 Risk Score
               </span>
 
-              <span className="text-lg font-bold text-white">
+              <span className="text-lg font-bold text-[#26332A]">
                 {displayValue(student.risk_score)}
               </span>
 
@@ -383,7 +383,7 @@ export default function StudentAnalyticsPlaceholder() {
 
             <div>
 
-              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+              <p className="text-[10px] text-[#26332A] font-bold uppercase tracking-wider">
                 Confusion Level
               </p>
 
@@ -397,17 +397,17 @@ export default function StudentAnalyticsPlaceholder() {
 
             </div>
 
-            <div className="h-12 w-12 rounded-xl bg-primary-500/10 border border-primary-500/20 flex items-center justify-center">
+            <div className="h-12 w-12 rounded-xl bg-[#315C46]/10 border border-[#315C46]/20 flex items-center justify-center">
 
-              <Activity className="h-6 w-6 text-primary-400" />
+              <Activity className="h-6 w-6 text-[#315C46]" />
 
             </div>
 
           </div>
 
-          <div className="mt-6 pt-5 border-t border-slate-800">
+          <div className="mt-6 pt-5 border-t border-[#D9E1D2]">
 
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-[#68766B]">
               Current faculty-side confusion classification
               from available analytics.
             </p>
@@ -424,17 +424,17 @@ export default function StudentAnalyticsPlaceholder() {
 
       <div className="glass-panel rounded-2xl p-6">
 
-        <h3 className="font-outfit font-bold text-xs text-white uppercase tracking-wider flex items-center gap-2 mb-4">
+        <h3 className="font-outfit font-bold text-xs text-[#26332A] uppercase tracking-wider flex items-center gap-2 mb-4">
 
-          <Info className="h-4 w-4 text-primary-400" />
+          <Info className="h-4 w-4 text-[#315C46]" />
 
           Faculty Analysis
 
         </h3>
 
-        <div className="p-4 bg-brand-950/40 border border-slate-800 rounded-xl">
+        <div className="p-4 bg-[#D9E1D2]/40 border border-[#D9E1D2] rounded-xl">
 
-          <p className="text-sm text-slate-300 leading-relaxed">
+          <p className="text-sm text-[#68766B] leading-relaxed">
             {student.reason ||
               'No faculty analysis reason has been recorded for this student.'}
           </p>
@@ -453,19 +453,19 @@ export default function StudentAnalyticsPlaceholder() {
 
           <div className="flex items-center gap-3">
 
-            <div className="h-10 w-10 rounded-lg bg-primary-500/10 border border-primary-500/20 flex items-center justify-center">
+            <div className="h-10 w-10 rounded-lg bg-[#315C46]/10 border border-[#315C46]/20 flex items-center justify-center">
 
-              <BookOpen className="h-5 w-5 text-primary-400" />
+              <BookOpen className="h-5 w-5 text-[#315C46]" />
 
             </div>
 
             <div>
 
-              <p className="text-[10px] text-slate-500 uppercase font-bold">
+              <p className="text-[10px] text-[#68766B] uppercase font-bold">
                 Completed
               </p>
 
-              <p className="text-xl font-bold text-white">
+              <p className="text-xl font-bold text-[#26332A]">
                 {displayValue(student.completed_count)}
               </p>
 
@@ -487,11 +487,11 @@ export default function StudentAnalyticsPlaceholder() {
 
             <div>
 
-              <p className="text-[10px] text-slate-500 uppercase font-bold">
+              <p className="text-[10px] text-[#68766B] uppercase font-bold">
                 Quiz Average
               </p>
 
-              <p className="text-xl font-bold text-white">
+              <p className="text-xl font-bold text-[#26332A]">
                 {displayValue(student.avg_quiz_score, '%')}
               </p>
 
@@ -513,11 +513,11 @@ export default function StudentAnalyticsPlaceholder() {
 
             <div>
 
-              <p className="text-[10px] text-slate-500 uppercase font-bold">
+              <p className="text-[10px] text-[#68766B] uppercase font-bold">
                 Engagement
               </p>
 
-              <p className="text-xl font-bold text-white">
+              <p className="text-xl font-bold text-[#26332A]">
                 {displayValue(student.engagement_trend)}
               </p>
 
@@ -539,22 +539,22 @@ export default function StudentAnalyticsPlaceholder() {
 
           <div>
 
-            <h3 className="font-outfit font-bold text-xs text-white uppercase tracking-wider flex items-center gap-2">
+            <h3 className="font-outfit font-bold text-xs text-[#26332A] uppercase tracking-wider flex items-center gap-2">
 
-              <BookOpen className="h-4 w-4 text-primary-400" />
+              <BookOpen className="h-4 w-4 text-[#315C46]" />
 
               Available Course Lectures
 
             </h3>
 
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-[#68766B] mt-1">
               Lectures currently available in the Faculty
               lecture repository.
             </p>
 
           </div>
 
-          <span className="text-xs text-slate-500">
+          <span className="text-xs text-[#68766B]">
             {lectures.length} lecture
             {lectures.length === 1 ? '' : 's'}
           </span>
@@ -563,11 +563,11 @@ export default function StudentAnalyticsPlaceholder() {
 
         {lectures.length === 0 ? (
 
-          <div className="p-8 rounded-xl border border-slate-800 bg-brand-950/40 text-center">
+          <div className="p-8 rounded-xl border border-[#D9E1D2] bg-[#D9E1D2]/40 text-center">
 
-            <BookOpen className="h-8 w-8 text-slate-600 mx-auto mb-3" />
+            <BookOpen className="h-8 w-8 text-[#68766B] mx-auto mb-3" />
 
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-[#68766B]">
               No lectures are currently available.
             </p>
 
@@ -581,18 +581,18 @@ export default function StudentAnalyticsPlaceholder() {
 
               <div
                 key={lecture.id}
-                className="p-4 rounded-xl border border-slate-800 bg-brand-950/40 flex flex-col md:flex-row md:items-center justify-between gap-3"
+                className="p-4 rounded-xl border border-[#D9E1D2] bg-[#D9E1D2]/40 flex flex-col md:flex-row md:items-center justify-between gap-3"
               >
 
                 <div>
 
-                  <p className="text-sm font-semibold text-white">
+                  <p className="text-sm font-semibold text-[#26332A]">
                     {lecture.title ||
                       lecture.name ||
                       lecture.id}
                   </p>
 
-                  <p className="text-[10px] text-slate-500 mt-1">
+                  <p className="text-[10px] text-[#68766B] mt-1">
                     Lecture ID: {lecture.id}
                   </p>
 
@@ -600,16 +600,16 @@ export default function StudentAnalyticsPlaceholder() {
 
                 <div className="flex items-center gap-4 text-xs">
 
-                  <span className="text-slate-500">
+                  <span className="text-[#68766B]">
                     Views:{' '}
-                    <span className="text-slate-300 font-semibold">
+                    <span className="text-[#68766B] font-semibold">
                       {displayValue(lecture.views, '')}
                     </span>
                   </span>
 
-                  <span className="text-slate-500">
+                  <span className="text-[#68766B]">
                     Engagement:{' '}
-                    <span className="text-slate-300 font-semibold">
+                    <span className="text-[#68766B] font-semibold">
                       {displayValue(
                         lecture.engagement_score,
                         lecture.engagement_score !== undefined
@@ -635,19 +635,19 @@ export default function StudentAnalyticsPlaceholder() {
           STATUS
           ====================================================== */}
 
-      <div className="glass-panel rounded-2xl p-5 border border-primary-500/10">
+      <div className="glass-panel rounded-2xl p-5 border border-[#315C46]/20">
 
         <div className="flex items-start gap-3">
 
-          <CheckCircle className="h-5 w-5 text-primary-400 shrink-0 mt-0.5" />
+          <CheckCircle className="h-5 w-5 text-[#315C46] shrink-0 mt-0.5" />
 
           <div>
 
-            <p className="text-xs font-semibold text-white">
+            <p className="text-xs font-semibold text-[#26332A]">
               Faculty analytics source
             </p>
 
-            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+            <p className="text-xs text-[#68766B] mt-1 leading-relaxed">
               This page displays student information returned by
               the Faculty analytics backend. No placeholder
               student profile or hardcoded lecture data is used.

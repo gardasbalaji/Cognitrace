@@ -338,7 +338,7 @@ export default function Suggestions() {
 
   return (
 
-    <div className="flex-1 p-8 overflow-y-auto space-y-8 max-w-6xl mx-auto">
+    <div className="flex-1 p-8 overflow-y-auto space-y-8 max-w-6xl mx-auto bg-[#F8F8F2] text-[#26332A]">
 
 
 
@@ -346,13 +346,13 @@ export default function Suggestions() {
 
 
 
-      <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between border-b border-slate-800 pb-6">
+      <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between border-b border-[#D9E1D2] pb-6">
 
 
 
         <div className="space-y-2">
 
-          <h3 className="font-outfit font-extrabold text-2xl text-white">
+          <h3 className="font-outfit font-extrabold text-2xl text-[#26332A]">
 
             Lecture Quality &amp; AI Suggestions
 
@@ -360,7 +360,7 @@ export default function Suggestions() {
 
 
 
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-[#68766B]">
 
             Review quality analysis and actionable suggestions
 
@@ -376,7 +376,7 @@ export default function Suggestions() {
 
 
 
-          <label className="text-xs font-semibold text-slate-500">
+          <label className="text-xs font-semibold text-[#26332A]">
 
             Select Lecture:
 
@@ -400,7 +400,7 @@ export default function Suggestions() {
 
             }
 
-            className="bg-brand-900 border border-slate-800 px-3 py-2 rounded-lg text-xs font-semibold text-white focus:outline-none focus:border-accent-500 disabled:opacity-50"
+            className="bg-[#FCFCF8] border border-[#D9E1D2] px-3 py-2 rounded-lg text-xs font-semibold text-[#26332A] focus:outline-none focus:border-accent-500 disabled:opacity-50"
 
           >
 
@@ -454,7 +454,7 @@ export default function Suggestions() {
 
             }}
 
-            className="p-2 rounded-lg border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition"
+            className="p-2 rounded-lg border border-[#D9E1D2] text-[#68766B] hover:text-[#26332A] hover:border-slate-300 transition"
 
             title="Refresh"
 
@@ -490,7 +490,7 @@ export default function Suggestions() {
 
       {error && (
 
-        <div className="glass-panel rounded-2xl p-4 border border-rose-500/20 bg-rose-500/5 flex items-start gap-3">
+        <div className="glass-panel rounded-2xl p-4 border border-[#FECDD3] bg-[#FFF1F2] flex items-start gap-3">
 
 
 
@@ -508,7 +508,7 @@ export default function Suggestions() {
 
 
 
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-[#68766B] mt-1">
 
               {error}
 
@@ -536,11 +536,11 @@ export default function Suggestions() {
 
 
 
-          <RefreshCw className="h-8 w-8 animate-spin text-accent-500 mx-auto mb-4" />
+          <RefreshCw className="h-8 w-8 animate-spin text-[#315C46] mx-auto mb-4" />
 
 
 
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[#68766B]">
 
             Loading lectures...
 
@@ -564,11 +564,11 @@ export default function Suggestions() {
 
 
 
-          <Info className="h-10 w-10 text-slate-500 mx-auto mb-4" />
+          <Info className="h-10 w-10 text-[#68766B] mx-auto mb-4" />
 
 
 
-          <h4 className="text-sm font-bold text-white mb-2">
+          <h4 className="text-sm font-bold text-[#26332A] mb-2">
 
             No lectures available
 
@@ -576,7 +576,7 @@ export default function Suggestions() {
 
 
 
-          <p className="text-xs text-slate-500 max-w-md mx-auto">
+          <p className="text-xs text-[#68766B] max-w-md mx-auto">
 
             Import a lecture from the Faculty lecture section
 
@@ -612,7 +612,7 @@ export default function Suggestions() {
 
 
 
-            <div className="glass-panel rounded-2xl p-6 border-slate-850 flex flex-col justify-between text-center min-h-[300px]">
+            <div className="glass-panel rounded-2xl p-6 border-[#D9E1D2] flex flex-col justify-between text-center min-h-[300px]">
 
 
 
@@ -628,7 +628,7 @@ export default function Suggestions() {
 
 
 
-                <span className="text-[9px] text-primary-400 font-bold uppercase tracking-widest block">
+                <span className="text-[9px] text-[#315C46] font-bold uppercase tracking-widest block">
 
                   Pedagogical Index
 
@@ -644,7 +644,7 @@ export default function Suggestions() {
 
 
 
-                <span className="text-5xl font-extrabold font-outfit text-white font-mono">
+                <span className="text-5xl font-extrabold font-outfit text-black font-mono">
 
                   {displayValue(qualityScore)}
 
@@ -654,7 +654,7 @@ export default function Suggestions() {
 
                 {qualityScore !== null && (
 
-                  <span className="text-xs text-slate-500 font-semibold absolute bottom-[-15px]">
+                  <span className="text-xs text-[#26332A] font-semibold absolute bottom-[-15px]">
 
                     Score / 100
 
@@ -668,13 +668,13 @@ export default function Suggestions() {
 
 
 
-              <div className="space-y-2.5 border-t border-slate-800/45 pt-5 text-xs text-left">
+              <div className="space-y-2.5 border-t border-[#D9E1D2] pt-5 text-xs text-left">
 
 
 
                 <div className="flex justify-between items-center">
 
-                  <span className="text-slate-400">
+                  <span className="text-[#68766B]">
 
                     Completion rate
 
@@ -682,7 +682,7 @@ export default function Suggestions() {
 
 
 
-                  <span className="text-white font-bold">
+                  <span className="text-[#26332A] font-bold">
 
                     {displayValue(metrics.completion, '%')}
 
@@ -694,7 +694,7 @@ export default function Suggestions() {
 
                 <div className="flex justify-between items-center">
 
-                  <span className="text-slate-400">
+                  <span className="text-[#68766B]">
 
                     Watch Engagement
 
@@ -702,7 +702,7 @@ export default function Suggestions() {
 
 
 
-                  <span className="text-white font-bold">
+                  <span className="text-[#26332A] font-bold">
 
                     {displayValue(metrics.engagement, '%')}
 
@@ -714,7 +714,7 @@ export default function Suggestions() {
 
                 <div className="flex justify-between items-center">
 
-                  <span className="text-slate-400">
+                  <span className="text-[#68766B]">
 
                     Quiz performance
 
@@ -722,7 +722,7 @@ export default function Suggestions() {
 
 
 
-                  <span className="text-white font-bold">
+                  <span className="text-[#26332A] font-bold">
 
                     {displayValue(metrics.quiz, '%')}
 
@@ -734,7 +734,7 @@ export default function Suggestions() {
 
                 <div className="flex justify-between items-center">
 
-                  <span className="text-slate-400">
+                  <span className="text-[#68766B]">
 
                     Confusion level
 
@@ -742,7 +742,7 @@ export default function Suggestions() {
 
 
 
-                  <span className="text-white font-bold">
+                  <span className="text-[#26332A] font-bold">
 
                     {displayValue(metrics.confusion, '%')}
 
@@ -754,7 +754,7 @@ export default function Suggestions() {
 
                 <div className="flex justify-between items-center">
 
-                  <span className="text-slate-400">
+                  <span className="text-[#68766B]">
 
                     Rewatch/rewind density
 
@@ -762,7 +762,7 @@ export default function Suggestions() {
 
 
 
-                  <span className="text-white font-bold">
+                  <span className="text-[#26332A] font-bold">
 
                     {displayValue(metrics.rewatches)}
 
@@ -782,15 +782,15 @@ export default function Suggestions() {
 
 
 
-            <div className="lg:col-span-2 glass-panel rounded-2xl p-6 border-slate-850 space-y-4">
+            <div className="lg:col-span-2 glass-panel rounded-2xl p-6 border-[#D9E1D2] space-y-4">
 
 
 
-              <h4 className="font-outfit font-bold text-xs text-white uppercase tracking-wider flex items-center gap-2">
+              <h4 className="font-outfit font-bold text-xs text-[#26332A] uppercase tracking-wider flex items-center gap-2">
 
 
 
-                <BarChart2 className="h-4.5 w-4.5 text-primary-400" />
+                <BarChart2 className="h-4.5 w-4.5 text-[#315C46]" />
 
 
 
@@ -802,7 +802,7 @@ export default function Suggestions() {
 
 
 
-              <p className="text-xs text-slate-400 leading-relaxed font-sans">
+              <p className="text-xs text-[#68766B] leading-relaxed font-sans">
 
                 Quality analysis returned by the Faculty backend
 
@@ -816,11 +816,11 @@ export default function Suggestions() {
 
 
 
-                <div className="p-3.5 bg-brand-950/40 border border-slate-900 rounded-xl space-y-1">
+                <div className="p-3.5 bg-[#D9E1D2]/40 border border-[#D9E1D2] rounded-xl space-y-1">
 
 
 
-                  <span className="text-[10px] text-slate-500 font-bold uppercase block">
+                  <span className="text-[10px] text-[#26332A] font-bold uppercase block">
 
                     Watch Completion
 
@@ -840,11 +840,11 @@ export default function Suggestions() {
 
 
 
-                <div className="p-3.5 bg-brand-950/40 border border-slate-900 rounded-xl space-y-1">
+                <div className="p-3.5 bg-[#D9E1D2]/40 border border-[#D9E1D2] rounded-xl space-y-1">
 
 
 
-                  <span className="text-[10px] text-slate-500 font-bold uppercase block">
+                  <span className="text-[10px] text-[#26332A] font-bold uppercase block">
 
                     Concept Check Quiz
 
@@ -864,11 +864,11 @@ export default function Suggestions() {
 
 
 
-                <div className="p-3.5 bg-brand-950/40 border border-slate-900 rounded-xl space-y-1">
+                <div className="p-3.5 bg-[#D9E1D2]/40 border border-[#D9E1D2] rounded-xl space-y-1">
 
 
 
-                  <span className="text-[10px] text-slate-500 font-bold uppercase block">
+                  <span className="text-[10px] text-[#26332A] font-bold uppercase block">
 
                     Confusion / Rewatch
 
@@ -914,7 +914,7 @@ export default function Suggestions() {
 
 
 
-              <h5 className="font-outfit font-bold text-xs text-white uppercase tracking-wider flex items-center gap-1.5">
+              <h5 className="font-outfit font-bold text-xs text-[#26332A] uppercase tracking-wider flex items-center gap-1.5">
 
 
 
@@ -934,11 +934,11 @@ export default function Suggestions() {
 
 
 
-                <div className="p-4 bg-brand-950/40 border border-slate-900 rounded-xl">
+                <div className="p-4 bg-[#D9E1D2]/40 border border-[#D9E1D2] rounded-xl">
 
 
 
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-[#68766B]">
 
                     No strengths have been recorded for this
 
@@ -1006,7 +1006,7 @@ export default function Suggestions() {
 
 
 
-              <h5 className="font-outfit font-bold text-xs text-white uppercase tracking-wider flex items-center gap-1.5">
+              <h5 className="font-outfit font-bold text-xs text-[#26332A] uppercase tracking-wider flex items-center gap-1.5">
 
 
 
@@ -1026,11 +1026,11 @@ export default function Suggestions() {
 
 
 
-                <div className="p-4 bg-brand-950/40 border border-slate-900 rounded-xl">
+                <div className="p-4 bg-[#D9E1D2]/40 border border-[#D9E1D2] rounded-xl">
 
 
 
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-[#68766B]">
 
                     No improvement areas have been recorded for
 
@@ -1098,11 +1098,11 @@ export default function Suggestions() {
 
 
 
-          <div className="glass-panel rounded-2xl p-6 border-slate-850 space-y-6">
+          <div className="glass-panel rounded-2xl p-6 border-[#D9E1D2] space-y-6">
 
 
 
-            <h4 className="font-outfit font-bold text-xs text-white uppercase tracking-wider flex items-center gap-2">
+            <h4 className="font-outfit font-bold text-xs text-[#26332A] uppercase tracking-wider flex items-center gap-2">
 
 
 
@@ -1122,11 +1122,11 @@ export default function Suggestions() {
 
 
 
-              <div className="p-6 bg-brand-950/40 rounded-xl border border-slate-850 text-center">
+              <div className="p-6 bg-[#D9E1D2]/40 rounded-xl border border-[#D9E1D2] text-center">
 
 
 
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-[#68766B]">
 
                   No actionable suggestions are available for
 
@@ -1178,13 +1178,13 @@ export default function Suggestions() {
 
                       key={index}
 
-                      className="p-4 bg-brand-950/40 rounded-xl border border-slate-850 flex gap-3 text-xs leading-relaxed text-slate-300 font-sans"
+                      className="p-4 bg-[#D9E1D2]/40 rounded-xl border border-[#D9E1D2] flex gap-3 text-xs leading-relaxed text-[#68766B] font-sans"
 
                     >
 
 
 
-                      <span className="h-5 w-5 rounded-full bg-primary-600/10 border border-primary-500/30 flex items-center justify-center font-bold text-[10px] text-primary-400 shrink-0 select-none">
+                      <span className="h-5 w-5 rounded-full bg-black/10 border border-[#315C46]/20 flex items-center justify-center font-bold text-[10px] text-[#315C46] shrink-0 select-none">
 
                         {index + 1}
 

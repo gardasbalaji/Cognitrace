@@ -59,11 +59,11 @@ export default function Header({ title, mode }) {
     : (user?.designation || user?.department || 'Faculty');
 
   return (
-    <header className="h-16 border-b border-slate-800/80 bg-brand-950/60 backdrop-blur-md flex items-center justify-between px-8 z-10 shrink-0">
+    <header className="h-16 border-b border-[#E2E7DD] bg-[#DEE8DC]/95 backdrop-blur-md flex items-center justify-between px-8 z-10 shrink-0">
 
       {/* Page Title */}
       <div>
-        <h2 className="font-outfit font-semibold text-lg text-white tracking-tight">
+        <h2 className="font-outfit font-bold text-lg text-[#26332A] tracking-tight">
           {title}
         </h2>
       </div>
@@ -73,58 +73,54 @@ export default function Header({ title, mode }) {
         {/* API Connection Indicator */}
         <div
           onClick={checkHealth}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-900/60 border border-slate-800/80 cursor-pointer hover:bg-brand-900/90 transition-all select-none"
+          className="flex items-center cursor-pointer select-none transition-all"
           title="Click to check connection status"
         >
           {apiStatus === 'checking' && (
-            <>
-              <RefreshCw className="h-3 w-3 animate-spin text-primary-400" />
-              <span className="text-xs text-slate-400 font-medium">
+            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EFF1E7] border border-[#D9E1D2]">
+              <RefreshCw className="h-3 w-3 animate-spin text-[#879187]" />
+              <span className="text-xs text-[#68766B] font-medium">
                 Checking API...
               </span>
-            </>
+            </div>
           )}
 
           {apiStatus === 'online' && (
-            <>
-              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span className="text-xs text-emerald-400 font-medium">
-                API Connected
-              </span>
-            </>
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#DCE8DC] text-[#264B39] border border-[#D9E1D2]">
+              <span className="h-2 w-2 rounded-full bg-[#315C46] animate-pulse"></span>
+              <span>API Connected</span>
+            </div>
           )}
 
           {apiStatus === 'offline' && (
-            <>
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#EFF1E7] border border-[#D9E1D2] text-[#879187]">
               <span className="h-2 w-2 rounded-full bg-amber-500"></span>
-              <span className="text-xs text-amber-400 font-medium">
-                API Offline (Mock Mode)
-              </span>
-            </>
+              <span>API Offline (Mock Mode)</span>
+            </div>
           )}
         </div>
 
         {/* Notifications */}
-        <button className="relative p-2 text-slate-400 hover:text-white transition-colors bg-brand-900/40 rounded-full border border-slate-800/60" aria-label="Notifications">
-          <Bell className="h-4.5 w-4.5" />
-          <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-primary-500"></span>
+        <button className="relative p-2 text-[#68766B] hover:text-[#26332A] transition-colors bg-[#E2E8D8] hover:bg-[#E8EDE1] rounded-full border border-[#D9E1D2] cursor-pointer" aria-label="Notifications">
+          <Bell className="h-4 w-4" />
+          <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-[#315C46]"></span>
         </button>
 
         {/* User Card */}
-        <div className="flex items-center gap-3 pl-4 border-l border-slate-800/60">
+        <div className="flex items-center gap-3 pl-4 border-l border-[#E2E7DD]">
 
           {/* User Initials */}
-          <div className="h-8 w-8 rounded-full bg-primary-600/30 border border-primary-500/40 flex items-center justify-center font-bold text-sm text-primary-400 select-none">
+          <div className="h-8 w-8 rounded-full bg-[#315C46] border border-[#264B39] flex items-center justify-center font-bold text-xs text-white select-none">
             {getInitials(displayName)}
           </div>
 
           {/* User Information */}
           <div className="hidden md:block">
-            <p className="text-xs font-semibold text-slate-200">
+            <p className="text-xs font-bold text-[#26332A]">
               {displayName}
             </p>
 
-            <p className="text-[10px] text-slate-400">
+            <p className="text-[10px] text-[#68766B] font-medium">
               {displayRoleSubtitle}
             </p>
           </div>

@@ -66,36 +66,36 @@ export default function StudentRiskList() {
     const value = String(risk || '').toLowerCase();
 
     if (value === 'high') {
-      return 'bg-rose-500/10 text-rose-400 border-rose-500/20';
+      return 'bg-rose-50 text-rose-700 border-rose-200';
     }
 
     if (value === 'medium') {
-      return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+      return 'bg-amber-50 text-amber-800 border-amber-200';
     }
 
     if (value === 'low') {
-      return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+      return 'bg-emerald-50 text-emerald-800 border-emerald-200';
     }
 
-    return 'bg-slate-500/10 text-slate-400 border-slate-500/20';
+    return 'bg-[#FCFCF8] text-[#68766B] border-slate-200';
   };
 
   const getConfusionClass = (level) => {
     const value = String(level || '').toLowerCase();
 
     if (value === 'high') {
-      return 'bg-rose-500/10 text-rose-400';
+      return 'bg-rose-50 text-rose-700';
     }
 
     if (value === 'medium') {
-      return 'bg-amber-500/10 text-amber-400';
+      return 'bg-amber-50 text-amber-800';
     }
 
     if (value === 'low') {
-      return 'bg-emerald-500/10 text-emerald-400';
+      return 'bg-emerald-50 text-emerald-800';
     }
 
-    return 'bg-slate-500/10 text-slate-400';
+    return 'bg-[#FCFCF8] text-[#68766B]';
   };
 
   const getTrendIcon = (trend) => {
@@ -151,9 +151,9 @@ export default function StudentRiskList() {
 
         <div className="flex flex-col items-center gap-4">
 
-          <div className="h-9 w-9 rounded-full border-2 border-slate-800 border-t-primary-500 animate-spin" />
+          <div className="h-9 w-9 rounded-full border-2 border-[#D9E1D2] border-t-primary-500 animate-spin" />
 
-          <span className="text-slate-400 text-sm">
+          <span className="text-[#68766B] text-sm">
             Loading student risk analytics...
           </span>
 
@@ -168,31 +168,31 @@ export default function StudentRiskList() {
   // ============================================================
 
   return (
-    <div className="flex-1 p-8 overflow-y-auto space-y-8 max-w-6xl mx-auto">
+    <div className="flex-1 p-8 overflow-y-auto space-y-8 max-w-6xl mx-auto bg-[#F8F8F2] text-[#26332A]">
 
       {/* ======================================================
           HEADER
           ====================================================== */}
 
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#D9E1D2] pb-6">
 
         <div className="space-y-2">
 
           <div className="flex items-center gap-2">
 
-            <Users className="h-5 w-5 text-primary-400" />
+            <Users className="h-5 w-5 text-[#315C46]" />
 
-            <span className="text-[10px] font-bold text-primary-400 uppercase tracking-widest">
+            <span className="text-[10px] font-bold text-[#315C46] uppercase tracking-widest">
               Faculty Analytics
             </span>
 
           </div>
 
-          <h1 className="font-outfit font-extrabold text-2xl text-white">
+          <h1 className="font-outfit font-extrabold text-2xl text-[#26332A]">
             Student Risk List
           </h1>
 
-          <p className="text-sm text-slate-400 max-w-2xl">
+          <p className="text-sm text-[#68766B] max-w-2xl">
             Identifies students who may be struggling based on
             the student analytics currently available to the
             Faculty backend.
@@ -203,7 +203,7 @@ export default function StudentRiskList() {
         <button
           type="button"
           onClick={loadStudents}
-          className="self-start sm:self-auto inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-slate-800 text-xs font-bold text-slate-300 hover:text-white hover:border-slate-700 transition"
+          className="self-start sm:self-auto inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-[#D9E1D2] text-xs font-bold text-[#68766B] hover:text-[#26332A] hover:border-slate-300 transition"
         >
           <RefreshCw className="h-3.5 w-3.5" />
           Refresh
@@ -216,7 +216,7 @@ export default function StudentRiskList() {
           ====================================================== */}
 
       {error && (
-        <div className="glass-panel rounded-2xl p-4 border border-rose-500/20 bg-rose-500/5 flex items-start gap-3">
+        <div className="glass-panel rounded-2xl p-4 border border-[#FECDD3] bg-[#FFF1F2] flex items-start gap-3">
 
           <AlertTriangle className="h-5 w-5 text-rose-400 shrink-0" />
 
@@ -226,7 +226,7 @@ export default function StudentRiskList() {
               Unable to load analytics
             </p>
 
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-[#68766B] mt-1">
               {error}
             </p>
 
@@ -243,27 +243,27 @@ export default function StudentRiskList() {
 
         <div className="glass-panel rounded-2xl p-14 text-center">
 
-          <div className="mx-auto h-14 w-14 rounded-2xl bg-slate-800/50 flex items-center justify-center mb-5">
+          <div className="mx-auto h-14 w-14 rounded-2xl bg-[#FCFCF8] flex items-center justify-center mb-5">
 
-            <Users className="h-7 w-7 text-slate-500" />
+            <Users className="h-7 w-7 text-[#68766B]" />
 
           </div>
 
-          <h2 className="text-base font-bold text-white mb-2">
+          <h2 className="text-base font-bold text-[#26332A] mb-2">
             No student analytics available
           </h2>
 
-          <p className="text-xs text-slate-500 max-w-lg mx-auto leading-relaxed">
+          <p className="text-xs text-[#68766B] max-w-lg mx-auto leading-relaxed">
             Student risk information will appear here after
             real student learning activity and analytics are
             connected to the Faculty backend.
           </p>
 
-          <div className="mt-6 inline-flex items-start gap-2 text-left px-4 py-3 rounded-xl bg-primary-500/5 border border-primary-500/10 max-w-lg">
+          <div className="mt-6 inline-flex items-start gap-2 text-left px-4 py-3 rounded-xl bg-[#315C46]/10 border border-[#315C46]/20 max-w-lg">
 
-            <Info className="h-4 w-4 text-primary-400 shrink-0 mt-0.5" />
+            <Info className="h-4 w-4 text-[#315C46] shrink-0 mt-0.5" />
 
-            <p className="text-[11px] text-slate-500 leading-relaxed">
+            <p className="text-[11px] text-[#68766B] leading-relaxed">
               No placeholder students are displayed. This keeps
               the Faculty dashboard synchronized with actual
               backend data.
@@ -281,19 +281,19 @@ export default function StudentRiskList() {
 
         <div className="glass-panel rounded-2xl overflow-hidden">
 
-          <div className="p-5 bg-brand-950/40 border-b border-slate-800 flex items-center justify-between">
+          <div className="p-5 bg-[#D9E1D2]/40 border-b border-[#D9E1D2] flex items-center justify-between">
 
             <div className="flex items-center gap-2">
 
               <AlertTriangle className="h-4 w-4 text-rose-400" />
 
-              <h2 className="font-outfit font-bold text-xs text-white uppercase tracking-wider">
+              <h2 className="font-outfit font-bold text-xs text-[#26332A] uppercase tracking-wider">
                 Student Risk Directory
               </h2>
 
             </div>
 
-            <span className="text-[10px] text-slate-500 font-semibold">
+            <span className="text-[10px] text-[#26332A] font-semibold">
               {students.length} student
               {students.length !== 1 ? 's' : ''}
             </span>
@@ -306,7 +306,7 @@ export default function StudentRiskList() {
 
               <thead>
 
-                <tr className="border-b border-slate-800 text-[9px] uppercase tracking-wider text-slate-500 font-bold">
+                <tr className="border-b border-[#D9E1D2] text-[9px] uppercase tracking-wider text-[#26332A] font-bold">
 
                   <th className="text-left px-5 py-4">
                     Student
@@ -346,7 +346,7 @@ export default function StudentRiskList() {
 
                   <tr
                     key={student.student_id}
-                    className="border-b border-slate-800/70 last:border-b-0 hover:bg-white/[0.015] transition"
+                    className="border-b border-[#D9E1D2] last:border-b-0 hover:bg-[#E8EDE1]/60 transition"
                   >
 
                     {/* STUDENT */}
@@ -355,19 +355,19 @@ export default function StudentRiskList() {
 
                       <div className="flex items-center gap-3">
 
-                        <div className="h-9 w-9 rounded-full bg-primary-500/10 border border-primary-500/20 flex items-center justify-center text-[10px] font-bold text-primary-400">
+                        <div className="h-9 w-9 rounded-full bg-[#315C46]/10 border border-[#315C46]/20 flex items-center justify-center text-[10px] font-bold text-[#315C46]">
                           {getAvatar(student)}
                         </div>
 
                         <div>
 
-                          <p className="text-xs font-bold text-white">
+                          <p className="text-xs font-bold text-[#26332A]">
                             {student.name ||
                               student.student_id ||
                               'Unknown Student'}
                           </p>
 
-                          <p className="text-[10px] text-slate-600 mt-0.5">
+                          <p className="text-[10px] text-[#68766B] mt-0.5">
                             {student.student_id}
                           </p>
 
@@ -383,11 +383,11 @@ export default function StudentRiskList() {
 
                       {student.risk_score !== undefined &&
                       student.risk_score !== null ? (
-                        <span className="text-sm font-extrabold text-white">
+                        <span className="text-sm font-extrabold text-black">
                           {student.risk_score}
                         </span>
                       ) : (
-                        <span className="text-slate-600">
+                        <span className="text-[#68766B]">
                           —
                         </span>
                       )}
@@ -432,7 +432,7 @@ export default function StudentRiskList() {
                           student.engagement_trend
                         )}
 
-                        <span className="text-[10px] font-semibold text-slate-400">
+                        <span className="text-[10px] font-semibold text-[#68766B]">
                           {student.engagement_trend ||
                             'No Data'}
                         </span>
@@ -445,7 +445,7 @@ export default function StudentRiskList() {
 
                     <td className="px-4 py-4 max-w-[320px]">
 
-                      <p className="text-[10px] leading-relaxed text-slate-500">
+                      <p className="text-[10px] leading-relaxed text-[#68766B]">
                         {student.reason ||
                           'No risk explanation available.'}
                       </p>
@@ -464,13 +464,13 @@ export default function StudentRiskList() {
                               `/faculty/student/${student.student_id}`
                             )
                           }
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-500/10 border border-primary-500/20 text-primary-400 hover:bg-primary-500 hover:text-white transition text-[10px] font-bold"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#315C46]/10 border border-[#315C46]/20 text-[#315C46] hover:bg-slate-800 hover:text-[#26332A] transition text-[10px] font-bold"
                         >
                           Profile
                           <ArrowRight className="h-3 w-3" />
                         </button>
                       ) : (
-                        <span className="text-[10px] text-slate-700">
+                        <span className="text-[10px] text-[#68766B]">
                           —
                         </span>
                       )}

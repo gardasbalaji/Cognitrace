@@ -81,7 +81,7 @@ export default function LectureComparison() {
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center p-8">
-        <div className="h-8 w-8 rounded-full border-2 border-t-primary-500 border-slate-800 animate-spin"></div>
+        <div className="h-8 w-8 rounded-full border-2 border-t-primary-500 border-[#D9E1D2] animate-spin"></div>
       </div>
     );
   }
@@ -97,19 +97,19 @@ export default function LectureComparison() {
 
   if (!hasLectures) {
     return (
-      <div className="flex-1 p-8 overflow-y-auto">
+      <div className="flex-1 p-8 overflow-y-auto bg-[#F8F8F2] text-[#26332A]">
         <div className="max-w-5xl mx-auto space-y-8">
 
           {/* Header */}
-          <div className="space-y-2 border-b border-slate-800 pb-6">
+          <div className="space-y-2 border-b border-[#D9E1D2] pb-6">
             <div className="flex items-start justify-between gap-4">
 
               <div>
-                <h3 className="font-outfit font-extrabold text-2xl text-white">
+                <h3 className="font-outfit font-extrabold text-2xl text-[#26332A]">
                   Lecture Comparison
                 </h3>
 
-                <p className="text-sm text-slate-400 mt-2">
+                <p className="text-sm text-[#68766B] mt-2">
                   Compare student engagement and lecture
                   analytics using data from your imported
                   lectures.
@@ -118,7 +118,7 @@ export default function LectureComparison() {
 
               <button
                 onClick={fetchComparison}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary-600/10 border border-primary-500/20 text-primary-400 hover:bg-primary-600 hover:text-white transition-all text-xs font-bold shrink-0"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-black/10 border border-[#315C46]/20 text-[#315C46] hover:bg-black hover:text-[#26332A] transition-all text-xs font-bold shrink-0"
               >
                 <RefreshCw className="h-4 w-4" />
                 Refresh
@@ -131,14 +131,14 @@ export default function LectureComparison() {
           <div className="glass-panel rounded-2xl p-10 text-center">
 
             <div className="mx-auto mb-5 h-14 w-14 rounded-full bg-slate-800/70 flex items-center justify-center">
-              <Info className="h-7 w-7 text-slate-500" />
+              <Info className="h-7 w-7 text-[#68766B]" />
             </div>
 
-            <h4 className="font-outfit font-bold text-lg text-white">
+            <h4 className="font-outfit font-bold text-lg text-[#26332A]">
               No Lecture Comparison Data
             </h4>
 
-            <p className="text-sm text-slate-400 mt-2 max-w-md mx-auto">
+            <p className="text-sm text-[#68766B] mt-2 max-w-md mx-auto">
               Import a lecture from the Faculty lecture
               section first. Comparison data will appear
               here from the lectures currently stored in
@@ -181,19 +181,19 @@ export default function LectureComparison() {
   // --------------------------------------------------
 
   return (
-    <div className="flex-1 p-8 overflow-y-auto space-y-8 max-w-5xl mx-auto">
+    <div className="flex-1 p-8 overflow-y-auto space-y-8 max-w-5xl mx-auto bg-[#F8F8F2] text-[#26332A]">
 
       {/* Header */}
-      <div className="space-y-2 border-b border-slate-800 pb-6">
+      <div className="space-y-2 border-b border-[#D9E1D2] pb-6">
 
         <div className="flex items-start justify-between gap-4">
 
           <div>
-            <h3 className="font-outfit font-extrabold text-2xl text-white">
+            <h3 className="font-outfit font-extrabold text-2xl text-[#26332A]">
               Lecture Comparison
             </h3>
 
-            <p className="text-sm text-slate-400 mt-2">
+            <p className="text-sm text-[#68766B] mt-2">
               Compare student engagement and lecture
               analytics across the lectures currently
               stored in CogniTrace.
@@ -202,7 +202,7 @@ export default function LectureComparison() {
 
           <button
             onClick={fetchComparison}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary-600/10 border border-primary-500/20 text-primary-400 hover:bg-primary-600 hover:text-white transition-all text-xs font-bold shrink-0"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-black/10 border border-[#315C46]/20 text-[#315C46] hover:bg-black hover:text-[#26332A] transition-all text-xs font-bold shrink-0"
           >
             <RefreshCw className="h-4 w-4" />
             Refresh
@@ -216,10 +216,10 @@ export default function LectureComparison() {
           MAIN STATS COMPARISON TABLE
       ------------------------------------------------ */}
 
-      <div className="glass-panel rounded-2xl overflow-hidden border-slate-850">
+      <div className="glass-panel rounded-2xl overflow-hidden border-[#D9E1D2]">
 
-        <div className="p-5 bg-brand-950/40 border-b border-slate-800">
-          <h4 className="font-outfit font-bold text-xs text-white uppercase tracking-wider">
+        <div className="p-5 bg-[#D9E1D2]/40 border-b border-[#D9E1D2]">
+          <h4 className="font-outfit font-bold text-xs text-[#26332A] uppercase tracking-wider">
             Metrics Table
           </h4>
         </div>
@@ -229,7 +229,7 @@ export default function LectureComparison() {
           <table className="w-full text-left text-xs">
 
             <thead>
-              <tr className="border-b border-slate-800 text-slate-500 uppercase tracking-wider font-semibold bg-brand-950/20">
+              <tr className="border-b border-[#D9E1D2] text-[#68766B] uppercase tracking-wider font-semibold bg-[#D9E1D2]/40">
 
                 <th className="py-4 px-6">
                   Lecture
@@ -290,10 +290,10 @@ export default function LectureComparison() {
                 return (
                   <tr
                     key={`${label}-${index}`}
-                    className="text-slate-300"
+                    className="text-[#68766B]"
                   >
 
-                    <td className="py-5 px-6 font-semibold text-slate-200">
+                    <td className="py-5 px-6 font-semibold text-[#26332A]">
                       {label}
                     </td>
 
@@ -301,11 +301,11 @@ export default function LectureComparison() {
                       {views}
                     </td>
 
-                    <td className="py-5 px-6 text-center font-bold text-slate-200">
+                    <td className="py-5 px-6 text-center font-bold text-[#26332A]">
                       {watchPercentage}%
                     </td>
 
-                    <td className="py-5 px-6 text-center font-semibold text-primary-400">
+                    <td className="py-5 px-6 text-center font-semibold text-[#315C46]">
                       {engagementScore}%
                     </td>
 
@@ -338,7 +338,7 @@ export default function LectureComparison() {
         {/* Lecture Quality Score */}
         <div className="glass-panel p-6 rounded-2xl">
 
-          <h5 className="font-outfit font-bold text-xs text-white uppercase tracking-wider mb-6">
+          <h5 className="font-outfit font-bold text-xs text-[#26332A] uppercase tracking-wider mb-6">
             Lecture Quality Score Comparison
           </h5>
 
@@ -397,7 +397,7 @@ export default function LectureComparison() {
         {/* Student Risk */}
         <div className="glass-panel p-6 rounded-2xl">
 
-          <h5 className="font-outfit font-bold text-xs text-white uppercase tracking-wider mb-6">
+          <h5 className="font-outfit font-bold text-xs text-[#26332A] uppercase tracking-wider mb-6">
             Student Risk Rates (%)
           </h5>
 
@@ -459,13 +459,13 @@ export default function LectureComparison() {
           INFORMATION
       ------------------------------------------------ */}
 
-      <div className="p-4 bg-brand-900/20 border border-slate-850 rounded-xl flex gap-3 text-xs text-slate-400 leading-relaxed">
+      <div className="p-4 bg-[#FCFCF8] border border-[#D9E1D2] rounded-xl flex gap-3 text-xs text-[#68766B] leading-relaxed">
 
-        <Info className="h-5 w-5 text-primary-400 shrink-0 mt-0.5" />
+        <Info className="h-5 w-5 text-[#315C46] shrink-0 mt-0.5" />
 
         <div>
 
-          <p className="font-bold text-white mb-0.5">
+          <p className="font-bold text-[#26332A] mb-0.5">
             Lecture Analytics
           </p>
 

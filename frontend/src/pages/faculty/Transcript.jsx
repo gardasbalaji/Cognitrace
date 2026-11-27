@@ -292,25 +292,25 @@ export default function Transcript() {
           HEADER
           ====================================================== */}
 
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 border-b border-slate-800 pb-6">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 border-b border-[#D9E1D2] pb-6">
 
         <div className="space-y-2">
 
           <div className="flex items-center gap-2">
 
-            <FileText className="h-5 w-5 text-primary-400" />
+            <FileText className="h-5 w-5 text-[#315C46]" />
 
-            <span className="text-[10px] font-bold text-primary-400 uppercase tracking-widest">
+            <span className="text-[10px] font-bold text-[#315C46] uppercase tracking-widest">
               Faculty Transcript
             </span>
 
           </div>
 
-          <h1 className="font-outfit font-extrabold text-2xl text-white">
+          <h1 className="font-outfit font-extrabold text-2xl text-[#26332A]">
             Automatic Lecture Transcript
           </h1>
 
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-[#68766B]">
             View the transcript stored for an imported Faculty
             lecture.
           </p>
@@ -331,7 +331,7 @@ export default function Transcript() {
             disabled={
               lecturesLoading || lectures.length === 0
             }
-            className="min-w-[260px] bg-brand-900 border border-slate-800 px-3 py-2.5 rounded-lg text-xs font-semibold text-white focus:outline-none focus:border-primary-500 disabled:opacity-50"
+            className="min-w-[260px] bg-[#FCFCF8] border border-[#D9E1D2] px-3.5 py-2.5 rounded-xl text-xs font-semibold text-[#26332A] focus:outline-none focus:border-[#315C46] focus:ring-1 focus:ring-[#315C46] disabled:opacity-60 shadow-xs"
           >
 
             {lectures.length === 0 ? (
@@ -354,7 +354,7 @@ export default function Transcript() {
           <button
             type="button"
             onClick={handleRefresh}
-            className="p-2.5 rounded-lg border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition"
+            className="p-2.5 rounded-xl border border-[#D9E1D2] bg-[#E2E8D8] text-[#315C46] hover:bg-[#E8EDE1] transition-colors cursor-pointer shadow-xs"
             title="Refresh transcript"
           >
             <RefreshCw
@@ -375,7 +375,7 @@ export default function Transcript() {
           ====================================================== */}
 
       {error && (
-        <div className="glass-panel rounded-2xl p-4 border border-rose-500/20 bg-rose-500/5 flex items-start gap-3">
+        <div className="glass-panel rounded-2xl p-4 border border-[#FECDD3] bg-[#FFF1F2] flex items-start gap-3">
 
           <AlertCircle className="h-5 w-5 text-rose-400 shrink-0" />
 
@@ -385,7 +385,7 @@ export default function Transcript() {
               Transcript error
             </p>
 
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-[#879187] mt-1">
               {error}
             </p>
 
@@ -402,9 +402,9 @@ export default function Transcript() {
 
         <div className="glass-panel rounded-2xl p-16 text-center">
 
-          <RefreshCw className="h-8 w-8 text-primary-400 animate-spin mx-auto mb-4" />
+          <RefreshCw className="h-8 w-8 text-[#315C46] animate-spin mx-auto mb-4" />
 
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[#879187]">
             Loading lectures...
           </p>
 
@@ -418,13 +418,13 @@ export default function Transcript() {
 
         <div className="glass-panel rounded-2xl p-16 text-center">
 
-          <BookOpen className="h-10 w-10 text-slate-600 mx-auto mb-4" />
+          <BookOpen className="h-10 w-10 text-[#68766B] mx-auto mb-4" />
 
-          <h2 className="text-sm font-bold text-white mb-2">
+          <h2 className="text-sm font-bold text-[#26332A] mb-2">
             No lectures available
           </h2>
 
-          <p className="text-xs text-slate-500 max-w-md mx-auto">
+          <p className="text-xs text-[#68766B] max-w-md mx-auto">
             Import a lecture from the Faculty lecture section
             to generate and view its transcript.
           </p>
@@ -445,32 +445,32 @@ export default function Transcript() {
 
               <div>
 
-                <p className="text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-2">
+                <p className="text-[10px] text-[#68766B] uppercase font-bold tracking-wider mb-2">
                   Selected Lecture
                 </p>
 
-                <h2 className="font-outfit font-bold text-xl text-white">
+                <h2 className="font-outfit font-bold text-xl text-[#26332A]">
                   {lectureTitle}
                 </h2>
 
                 <div className="flex flex-wrap items-center gap-4 mt-3">
 
-                  <span className="text-xs text-slate-500">
+                  <span className="text-xs text-[#68766B]">
                     Lecture ID:{' '}
-                    <span className="text-slate-300 font-semibold">
+                    <span className="text-[#879187] font-semibold">
                       {selectedId}
                     </span>
                   </span>
 
                   {selectedLecture?.duration && (
-                    <span className="flex items-center gap-1.5 text-xs text-slate-500">
+                    <span className="flex items-center gap-1.5 text-xs text-[#68766B]">
                       <Clock className="h-3.5 w-3.5" />
                       {selectedLecture.duration}
                     </span>
                   )}
 
                   {selectedLecture?.source_type && (
-                    <span className="px-2 py-1 rounded-full bg-primary-500/10 border border-primary-500/20 text-[10px] text-primary-400 font-bold uppercase">
+                    <span className="px-2 py-1 rounded-full bg-[#315C46]/10 border border-[#315C46]/20 text-[10px] text-[#315C46] font-bold uppercase">
                       {selectedLecture.source_type}
                     </span>
                   )}
@@ -483,25 +483,25 @@ export default function Transcript() {
 
                 <div className="text-right">
 
-                  <p className="text-[10px] text-slate-500 uppercase font-bold">
+                  <p className="text-[10px] text-[#68766B] uppercase font-bold">
                     Transcript Entries
                   </p>
 
-                  <p className="text-2xl font-extrabold text-white">
+                  <p className="text-2xl font-extrabold text-[#26332A]">
                     {transcript.length}
                   </p>
 
                 </div>
 
-                <div className="h-10 w-px bg-slate-800" />
+                <div className="h-10 w-px bg-[#E2E7DD]" />
 
                 <div className="text-right">
 
-                  <p className="text-[10px] text-slate-500 uppercase font-bold">
+                  <p className="text-[10px] text-[#68766B] uppercase font-bold">
                     Visible
                   </p>
 
-                  <p className="text-2xl font-extrabold text-white">
+                  <p className="text-2xl font-extrabold text-[#26332A]">
                     {filteredTranscript.length}
                   </p>
 
@@ -521,7 +521,7 @@ export default function Transcript() {
 
             <div className="relative">
 
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#68766B]" />
 
               <input
                 type="text"
@@ -530,7 +530,7 @@ export default function Transcript() {
                   setSearchTerm(event.target.value)
                 }
                 placeholder="Search transcript..."
-                className="w-full bg-brand-950/50 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-primary-500"
+                className="w-full bg-[#FCFCF8] border border-[#D9E1D2] rounded-xl pl-10 pr-4 py-3 text-sm text-[#26332A] placeholder:text-[#879187] focus:outline-none focus:border-[#315C46] focus:ring-1 focus:ring-[#315C46] shadow-xs"
               />
 
             </div>
@@ -545,9 +545,9 @@ export default function Transcript() {
 
             <div className="glass-panel rounded-2xl p-16 text-center">
 
-              <RefreshCw className="h-8 w-8 text-primary-400 animate-spin mx-auto mb-4" />
+              <RefreshCw className="h-8 w-8 text-[#315C46] animate-spin mx-auto mb-4" />
 
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-[#879187]">
                 Loading transcript...
               </p>
 
@@ -557,13 +557,13 @@ export default function Transcript() {
 
             <div className="glass-panel rounded-2xl p-16 text-center">
 
-              <FileText className="h-10 w-10 text-slate-600 mx-auto mb-4" />
+              <FileText className="h-10 w-10 text-[#68766B] mx-auto mb-4" />
 
-              <h3 className="text-sm font-bold text-white mb-2">
+              <h3 className="text-sm font-bold text-[#26332A] mb-2">
                 No transcript available
               </h3>
 
-              <p className="text-xs text-slate-500 max-w-md mx-auto">
+              <p className="text-xs text-[#68766B] max-w-md mx-auto">
                 This lecture does not currently have a stored
                 transcript.
               </p>
@@ -574,9 +574,9 @@ export default function Transcript() {
 
             <div className="glass-panel rounded-2xl p-12 text-center">
 
-              <Search className="h-8 w-8 text-slate-600 mx-auto mb-3" />
+              <Search className="h-8 w-8 text-[#68766B] mx-auto mb-3" />
 
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-[#68766B]">
                 No transcript entries match your search.
               </p>
 
@@ -595,7 +595,7 @@ export default function Transcript() {
                 return (
                   <div
                     key={`${selectedId}-${index}`}
-                    className="glass-panel rounded-2xl p-5 border border-slate-850 hover:border-slate-700 transition"
+                    className="glass-panel rounded-2xl p-5 border border-[#D9E1D2] hover:border-slate-300 transition"
                   >
 
                     <div className="flex flex-col md:flex-row gap-4">
@@ -604,11 +604,11 @@ export default function Transcript() {
 
                       <div className="md:w-24 shrink-0">
 
-                        <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-primary-500/10 border border-primary-500/20">
+                        <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#315C46]/10 border border-[#315C46]/20">
 
-                          <Clock className="h-3.5 w-3.5 text-primary-400" />
+                          <Clock className="h-3.5 w-3.5 text-[#315C46]" />
 
-                          <span className="text-[11px] font-mono font-bold text-primary-400">
+                          <span className="text-[11px] font-mono font-bold text-[#315C46]">
                             {timestamp}
                           </span>
 
@@ -622,15 +622,15 @@ export default function Transcript() {
 
                         <div className="flex items-center gap-2 mb-2">
 
-                          <span className="text-[10px] uppercase tracking-wider font-bold text-slate-500">
+                          <span className="text-[10px] uppercase tracking-wider font-bold text-[#68766B]">
                             {speaker}
                           </span>
 
                         </div>
 
-                        <p className="text-sm text-slate-300 leading-7 whitespace-pre-wrap">
+                        <p className="text-sm text-[#26332A] leading-7 whitespace-pre-wrap">
                           {text || (
-                            <span className="text-slate-600 italic">
+                            <span className="text-[#68766B] italic">
                               Empty transcript entry
                             </span>
                           )}
@@ -652,19 +652,19 @@ export default function Transcript() {
               SOURCE INFORMATION
               ================================================== */}
 
-          <div className="glass-panel rounded-2xl p-5 border border-primary-500/10">
+          <div className="glass-panel rounded-2xl p-5 border border-[#315C46]/20">
 
             <div className="flex items-start gap-3">
 
-              <Info className="h-5 w-5 text-primary-400 shrink-0 mt-0.5" />
+              <Info className="h-5 w-5 text-[#315C46] shrink-0 mt-0.5" />
 
               <div>
 
-                <p className="text-xs font-semibold text-white">
+                <p className="text-xs font-semibold text-[#26332A]">
                   Transcript source
                 </p>
 
-                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                <p className="text-xs text-[#68766B] mt-1 leading-relaxed">
                   This page displays transcript data returned by
                   the Faculty backend from the selected lecture's
                   persistent storage. No placeholder transcript

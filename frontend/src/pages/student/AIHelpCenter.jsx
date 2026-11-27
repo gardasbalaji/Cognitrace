@@ -883,7 +883,7 @@ Requirements:
 
   function renderSummary(passed) {
     return (
-      <div className="mt-8 pt-6 border-t border-slate-800/60 space-y-4 text-left">
+      <div className="mt-8 pt-6 border-t border-[#D9E1D2] space-y-4 text-left">
 
         <h5 className="font-outfit font-bold text-xs text-primary-400 uppercase tracking-widest">
           Learning Summary
@@ -891,18 +891,18 @@ Requirements:
 
         <div className="grid grid-cols-2 gap-4">
 
-          <div className="p-4 bg-brand-900/20 border border-slate-800 rounded-xl">
-            <span className="text-[10px] text-slate-500 block">
+          <div className="p-4 bg-[#FCFCF8] border border-[#D9E1D2] rounded-2xl shadow-xs">
+            <span className="text-[10px] text-[#68766B] block">
               Topic
             </span>
 
-            <span className="text-xs font-bold text-white">
+            <span className="text-xs font-bold text-[#26332A]">
               {topic}
             </span>
           </div>
 
-          <div className="p-4 bg-brand-900/20 border border-slate-800 rounded-xl">
-            <span className="text-[10px] text-slate-500 block">
+          <div className="p-4 bg-[#FCFCF8] border border-[#D9E1D2] rounded-2xl shadow-xs">
+            <span className="text-[10px] text-[#68766B] block">
               Quiz Score
             </span>
 
@@ -916,18 +916,18 @@ Requirements:
             </span>
           </div>
 
-          <div className="p-4 bg-brand-900/20 border border-slate-800 rounded-xl">
-            <span className="text-[10px] text-slate-500 block">
+          <div className="p-4 bg-[#FCFCF8] border border-[#D9E1D2] rounded-2xl shadow-xs">
+            <span className="text-[10px] text-[#68766B] block">
               Required Threshold
             </span>
 
-            <span className="text-xs font-bold text-white">
+            <span className="text-xs font-bold text-[#26332A]">
               {QUIZ_PASS_THRESHOLD}%
             </span>
           </div>
 
-          <div className="p-4 bg-brand-900/20 border border-slate-800 rounded-xl">
-            <span className="text-[10px] text-slate-500 block">
+          <div className="p-4 bg-[#FCFCF8] border border-[#D9E1D2] rounded-2xl shadow-xs">
+            <span className="text-[10px] text-[#68766B] block">
               Status
             </span>
 
@@ -957,18 +957,18 @@ Requirements:
 
         {/* HEADER */}
 
-        <div className="flex items-center gap-3 mb-8 pb-4 border-b border-slate-800/60">
+        <div className="flex items-center gap-3 mb-8 pb-4 border-b border-[#D9E1D2]">
 
           <div className="p-2.5 bg-primary-600/10 border border-primary-500/30 rounded-xl">
             <Sparkles className="h-5 w-5 text-primary-400" />
           </div>
 
           <div>
-            <h4 className="font-outfit font-bold text-base text-white">
+            <h4 className="font-outfit font-bold text-base text-[#26332A]">
               AI Help Center
             </h4>
 
-            <p className="text-[10px] text-slate-400 font-semibold tracking-wider uppercase">
+            <p className="text-[10px] text-[#879187] font-semibold tracking-wider uppercase">
               Interactive Concept Remediation
             </p>
           </div>
@@ -982,7 +982,7 @@ Requirements:
 
             <RefreshCw className="h-8 w-8 animate-spin text-primary-500 mx-auto" />
 
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-[#879187]">
               CogniTrace AI is processing your request...
             </p>
 
@@ -994,8 +994,8 @@ Requirements:
         {step === "error" && (
           <div className="text-center py-12 space-y-4">
             <AlertCircle className="h-10 w-10 text-rose-400 mx-auto" />
-            <h4 className="font-outfit font-bold text-base text-white">Lecture Selection Notice</h4>
-            <p className="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">{message}</p>
+            <h4 className="font-outfit font-bold text-base text-[#26332A]">Lecture Selection Notice</h4>
+            <p className="text-xs text-[#879187] max-w-md mx-auto leading-relaxed">{message}</p>
             <button
               onClick={() => navigate('/student/lectures')}
               className="mt-4 px-6 py-2.5 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-xl text-xs uppercase tracking-wider inline-flex items-center gap-2 transition-all"
@@ -1012,17 +1012,17 @@ Requirements:
         {step === "check_prereq" && (
           <div className="space-y-6">
 
-            <div className="p-4 bg-brand-950/60 rounded-xl border border-slate-800 flex gap-3">
+            <div className="p-4 bg-[#FCFCF8] rounded-2xl border border-[#D9E1D2] flex gap-3 shadow-xs">
 
               <AlertCircle className="h-5 w-5 text-primary-400 shrink-0" />
 
               <div>
 
-                <span className="font-bold text-white block mb-1">
+                <span className="font-bold text-[#26332A] block mb-1">
                   Prerequisite Check
                 </span>
 
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-[#879187]">
                   {message}
                 </p>
 
@@ -1041,7 +1041,7 @@ Requirements:
 
               <button
                 onClick={handlePrerequisiteNo}
-                className="flex-1 py-3 bg-brand-900/60 border border-slate-800 hover:bg-brand-900 text-slate-300 font-bold rounded-xl text-xs uppercase tracking-wider"
+                className="flex-1 py-3 bg-[#E2E8D8] border border-[#D9E1D2] hover:bg-[#E8EDE1] text-[#315C46] font-bold rounded-full text-xs uppercase tracking-wider"
               >
                 No, I need a refresher
               </button>
@@ -1064,15 +1064,15 @@ Requirements:
 
             </div>
 
-            <h4 className="font-outfit font-bold text-lg text-white">
+            <h4 className="font-outfit font-bold text-lg text-[#26332A]">
               Recommended Prerequisite Lecture
             </h4>
 
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <p className="text-xs text-[#879187] leading-relaxed">
               {message}
             </p>
 
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-[#68766B]">
               Recommended: {prerequisiteName}
             </p>
 
@@ -1152,11 +1152,11 @@ Requirements:
                     <span className="text-[10px] text-amber-400 font-bold uppercase tracking-wider">
                       Prerequisite Video
                     </span>
-                    <h3 className="font-outfit font-bold text-base text-white line-clamp-1">
+                    <h3 className="font-outfit font-bold text-base text-[#26332A] line-clamp-1">
                       {activePrereq?.title || prerequisiteName}
                     </h3>
                     {activePrereq?.duration && (
-                      <span className="text-[11px] text-slate-400">
+                      <span className="text-[11px] text-[#879187]">
                         Duration: {activePrereq.duration}
                       </span>
                     )}
@@ -1165,14 +1165,14 @@ Requirements:
 
                 <button
                   onClick={() => setStep("recommend_previous")}
-                  className="text-xs text-slate-400 hover:text-white px-3 py-1.5 rounded-lg bg-slate-800/60 hover:bg-slate-800 transition-colors shrink-0"
+                  className="text-xs text-[#879187] hover:text-[#26332A] px-3 py-1.5 rounded-lg bg-slate-800/60 hover:bg-slate-800 transition-colors shrink-0"
                 >
                   Back
                 </button>
               </div>
 
               {/* Video Player Embed */}
-              <div className="relative aspect-video w-full rounded-2xl overflow-hidden bg-black border border-slate-800 shadow-2xl">
+              <div className="relative aspect-video w-full rounded-2xl overflow-hidden bg-black border border-[#D9E1D2] shadow-2xl">
                 {isPrereqYoutube && prereqYoutubeId ? (
                   <iframe
                     src={`https://www.youtube.com/embed/${prereqYoutubeId}?autoplay=1`}
@@ -1195,7 +1195,7 @@ Requirements:
               </div>
 
               {/* Action buttons after watching */}
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-800/60">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-[#D9E1D2]">
                 <button
                   onClick={handlePrerequisiteYes}
                   className="w-full sm:w-auto px-6 py-3 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-lg shadow-primary-900/30"
@@ -1209,7 +1209,7 @@ Requirements:
                     onClick={() =>
                       navigate(`/student/session?play=${activePrereq.id}`)
                     }
-                    className="text-xs text-slate-400 hover:text-slate-200 underline underline-offset-4 py-1"
+                    className="text-xs text-[#879187] hover:text-[#26332A] underline underline-offset-4 py-1"
                   >
                     Open in full session player
                   </button>
@@ -1226,55 +1226,55 @@ Requirements:
 
 {step === "select_method" && (
           <div className="space-y-6">
-            <p className="text-sm text-slate-200 font-medium">
+            <p className="text-sm text-[#26332A] font-medium">
               {message}
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <button
                 onClick={() => handleMethodSelect("direct")}
-                className="p-4 bg-brand-900/40 hover:bg-brand-900 border border-slate-800 rounded-xl text-left"
+                className="p-4 bg-[#FCFCF8] hover:bg-[#E8EDE1] border border-[#D9E1D2] hover:border-[#315C46] rounded-2xl text-left transition-all"
               >
-                <span className="text-white font-bold text-sm">
+                <span className="text-[#26332A] font-bold text-sm">
                   Direct Explanation
                 </span>
-                <span className="block text-[11px] text-slate-500 mt-1">
+                <span className="block text-[11px] text-[#68766B] mt-1">
                   Understand the concept clearly, step by step.
                 </span>
               </button>
 
               <button
                 onClick={() => handleMethodSelect("real_life")}
-                className="p-4 bg-brand-900/40 hover:bg-brand-900 border border-slate-800 rounded-xl text-left"
+                className="p-4 bg-[#FCFCF8] hover:bg-[#E8EDE1] border border-[#D9E1D2] hover:border-[#315C46] rounded-2xl text-left transition-all"
               >
-                <span className="text-white font-bold text-sm">
+                <span className="text-[#26332A] font-bold text-sm">
                   Real-Life Examples
                 </span>
-                <span className="block text-[11px] text-slate-500 mt-1">
+                <span className="block text-[11px] text-[#68766B] mt-1">
                   Learn through practical examples and applications.
                 </span>
               </button>
 
               <button
                 onClick={() => handleMethodSelect("misconception")}
-                className="p-4 bg-brand-900/40 hover:bg-brand-900 border border-slate-800 rounded-xl text-left"
+                className="p-4 bg-[#FCFCF8] hover:bg-[#E8EDE1] border border-[#D9E1D2] hover:border-[#315C46] rounded-2xl text-left transition-all"
               >
-                <span className="text-white font-bold text-sm">
+                <span className="text-[#26332A] font-bold text-sm">
                   Misconception Clearing
                 </span>
-                <span className="block text-[11px] text-slate-500 mt-1">
+                <span className="block text-[11px] text-[#68766B] mt-1">
                   Identify mistakes and correct misunderstandings.
                 </span>
               </button>
 
               <button
                 onClick={() => handleMethodSelect("workflow")}
-                className="p-4 bg-brand-900/40 hover:bg-brand-900 border border-slate-800 rounded-xl text-left"
+                className="p-4 bg-[#FCFCF8] hover:bg-[#E8EDE1] border border-[#D9E1D2] hover:border-[#315C46] rounded-2xl text-left transition-all"
               >
-                <span className="text-white font-bold text-sm">
+                <span className="text-[#26332A] font-bold text-sm">
                   Workflow / How to Solve
                 </span>
-                <span className="block text-[11px] text-slate-500 mt-1">
+                <span className="block text-[11px] text-[#68766B] mt-1">
                   Practice solution steps, code dry runs, and approaches.
                 </span>
               </button>
@@ -1295,13 +1295,13 @@ Requirements:
   <div className="flex flex-col h-[65vh] min-h-[460px] max-h-[680px] -mx-2">
 
     {/* Chat header */}
-    <div className="flex items-center justify-between gap-3 px-3 pb-4 border-b border-slate-800">
+    <div className="flex items-center justify-between gap-3 px-3 pb-4 border-b border-[#D9E1D2]">
       <div className="min-w-0">
-        <h3 className="text-white font-bold text-base truncate">
+        <h3 className="text-[#26332A] font-bold text-base truncate">
           🤖 {topic}
         </h3>
 
-        <p className="text-xs text-slate-400 mt-1">
+        <p className="text-xs text-[#879187] mt-1">
           {activeTeachingMode === "direct" && "Direct Explanation"}
           {activeTeachingMode === "real_life" && "Real-Life Examples"}
           {activeTeachingMode === "misconception" && "Misconception Clearing"}
@@ -1315,7 +1315,7 @@ Requirements:
         type="button"
         onClick={() => setShowFinishConfirmation(true)}
         disabled={chatLoading || quizLoading}
-        className="shrink-0 px-4 py-2 rounded-lg bg-primary-600 hover:bg-primary-500 disabled:opacity-50 text-white text-xs font-bold transition-colors"
+        className="shrink-0 px-4 py-2 rounded-lg bg-primary-600 hover:bg-primary-500 disabled:opacity-50 text-[#26332A] text-xs font-bold transition-colors"
       >
         Done
       </button>
@@ -1325,7 +1325,7 @@ Requirements:
     <div className="flex-1 min-h-0 overflow-y-auto px-3 py-4 space-y-4">
 
       {chatMessages.length === 0 && !chatLoading && (
-        <div className="text-center text-sm text-slate-400 py-8">
+        <div className="text-center text-sm text-[#879187] py-8">
           Start learning by asking a question about {topic}.
         </div>
       )}
@@ -1347,7 +1347,7 @@ Requirements:
             className={`max-w-[85%] whitespace-pre-wrap break-words rounded-2xl px-4 py-3 text-sm leading-relaxed ${
               item.role === "user"
                 ? "rounded-br-sm bg-primary-600 text-white"
-                : "rounded-bl-sm border border-slate-700 bg-slate-900 text-slate-100"
+                : "rounded-bl-sm border border-[#D9E1D2] bg-[#EFF1E7] text-[#26332A]"
             }`}
           >
            <ReactMarkdown
@@ -1357,7 +1357,7 @@ Requirements:
       <p className="mb-2 last:mb-0">{children}</p>
     ),
     strong: ({ children }) => (
-      <strong className="font-bold text-white">{children}</strong>
+      <strong className="font-bold text-[#26332A]">{children}</strong>
     ),
     ul: ({ children }) => (
       <ul className="list-disc pl-5 mb-2 space-y-1">{children}</ul>
@@ -1372,7 +1372,7 @@ Requirements:
       </code>
     ),
     pre: ({ children }) => (
-      <pre className="overflow-x-auto rounded-lg bg-slate-950 p-3 my-2 text-xs">
+      <pre className="overflow-x-auto rounded-lg bg-[#EFF1E7] border border-[#D9E1D2] text-[#26332A] p-3 my-2 text-xs">
         {children}
       </pre>
     ),
@@ -1398,7 +1398,7 @@ Requirements:
             🤖
           </div>
 
-          <div className="flex items-center gap-2 rounded-2xl rounded-bl-sm border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-slate-300">
+          <div className="flex items-center gap-2 rounded-2xl rounded-bl-sm border border-[#D9E1D2] bg-[#EFF1E7] px-4 py-3 text-sm text-[#68766B]">
             <RefreshCw className="h-4 w-4 animate-spin text-primary-400" />
             AI Tutor is thinking...
           </div>
@@ -1411,9 +1411,9 @@ Requirements:
     {/* Message input */}
     <form
       onSubmit={handleChatSend}
-      className="shrink-0 border-t border-slate-800 pt-3 px-3"
+      className="shrink-0 border-t border-[#D9E1D2] pt-3 px-3"
     >
-      <div className="flex items-end gap-2 rounded-2xl border border-slate-700 bg-brand-950/80 p-2 focus-within:border-primary-500 transition-colors">
+      <div className="flex items-end gap-2 rounded-2xl border border-[#D9E1D2] bg-[#FCFCF8] p-2 focus-within:border-[#315C46] transition-colors">
         <textarea
           ref={chatInputRef}
           value={chatInput}
@@ -1431,7 +1431,7 @@ Requirements:
           placeholder="Ask a follow-up question..."
           rows={1}
           disabled={chatLoading || quizLoading}
-          className="flex-1 min-w-0 resize-none bg-transparent px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:outline-none disabled:opacity-50"
+          className="flex-1 min-w-0 resize-none bg-transparent px-3 py-2 text-sm text-black font-medium placeholder:text-black/50 focus:outline-none disabled:opacity-50"
         />
 
         <button
@@ -1444,7 +1444,7 @@ Requirements:
         </button>
       </div>
 
-      <p className="text-[10px] text-slate-500 text-center mt-2">
+      <p className="text-[10px] text-[#68766B] text-center mt-2">
         Enter to send · Shift + Enter for a new line
       </p>
     </form>
@@ -1464,7 +1464,7 @@ Requirements:
 
               <div className="flex justify-between items-center">
 
-                <h5 className="font-outfit font-bold text-sm text-white flex items-center gap-2">
+                <h5 className="font-outfit font-bold text-sm text-[#26332A] flex items-center gap-2">
 
                   <BookOpen className="h-4 w-4 text-primary-400" />
 
@@ -1472,14 +1472,14 @@ Requirements:
 
                 </h5>
 
-                <span className="text-[10px] text-slate-500 font-bold">
+                <span className="text-[10px] text-[#68766B] font-bold">
                   Question {currentQuestion + 1} of{" "}
                   {quiz.length}
                 </span>
 
               </div>
 
-              <p className="text-sm text-slate-200 font-semibold leading-relaxed">
+              <p className="text-sm text-[#26332A] font-semibold leading-relaxed">
                 {quiz[currentQuestion].question}
               </p>
 
@@ -1499,11 +1499,11 @@ Requirements:
                       selectedAnswer === index;
 
                     let style =
-                      "border-slate-800 bg-brand-900/20 text-slate-400";
+                      "border-[#D9E1D2] bg-[#FCFCF8] text-[#68766B] hover:bg-[#E8EDE1]";
 
                     if (!answerChecked && selected) {
                       style =
-                        "border-primary-500 bg-primary-600/10 text-white";
+                        "border-black bg-black text-white";
                     }
 
                     if (answerChecked && correct) {
@@ -1544,7 +1544,7 @@ Requirements:
               </div>
 
               {answerChecked && (
-                <div className="p-4 bg-brand-950/60 rounded-xl border border-slate-800">
+                <div className="p-4 bg-[#FCFCF8] rounded-2xl border border-[#D9E1D2] shadow-xs">
 
                   <p
                     className={`font-bold text-xs mb-2 ${Number(selectedAnswer) ===
@@ -1565,7 +1565,7 @@ Requirements:
                       : "✗ Incorrect"}
                   </p>
 
-                  <p className="text-xs text-slate-400 leading-relaxed">
+                  <p className="text-xs text-[#879187] leading-relaxed">
                     {quiz[currentQuestion].explanation ||
                       "Review the explanation and transcript segments above."}
                   </p>
@@ -1597,16 +1597,16 @@ Requirements:
   <div className="space-y-6 text-center py-8">
     <XCircle className="h-12 w-12 text-rose-400 mx-auto" />
 
-    <h4 className="text-lg font-bold text-white">
+    <h4 className="text-lg font-bold text-[#26332A]">
       Quiz Could Not Be Generated
     </h4>
 
-    <p className="text-xs text-slate-400 max-w-md mx-auto">
+    <p className="text-xs text-[#879187] max-w-md mx-auto">
       We couldn't generate valid questions for this lecture topic.
       Your learning conversation is still available.
     </p>
 
-    <p className="text-xs text-slate-500">
+    <p className="text-xs text-[#68766B]">
       Please check that Groq is configured correctly and that
       transcript chunks are available for this lecture.
     </p>
@@ -1635,11 +1635,11 @@ Requirements:
 
             </div>
 
-            <h4 className="font-outfit font-bold text-xl text-white">
+            <h4 className="font-outfit font-bold text-xl text-[#26332A]">
               Topic Quiz Passed!
             </h4>
 
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-[#879187]">
               You scored{" "}
               <strong className="text-emerald-400">
                 {quizScore}%
@@ -1647,12 +1647,12 @@ Requirements:
               on {topic}.
             </p>
 
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-[#68766B]">
               Required threshold: {QUIZ_PASS_THRESHOLD}%
             </p>
 
             {quizPersisting && (
-              <p className="text-xs text-slate-500">Saving attempt…</p>
+              <p className="text-xs text-[#68766B]">Saving attempt…</p>
             )}
 
             {quizPersistError && (
@@ -1684,11 +1684,11 @@ Requirements:
 
             </div>
 
-            <h4 className="font-outfit font-bold text-xl text-white">
+            <h4 className="font-outfit font-bold text-xl text-[#26332A]">
               Needs More Review
             </h4>
 
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-[#879187]">
               You scored{" "}
               <strong className="text-rose-400">
                 {quizScore}%
@@ -1696,13 +1696,13 @@ Requirements:
               on {topic}.
             </p>
 
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-[#68766B]">
               You need at least{" "}
               {QUIZ_PASS_THRESHOLD}% to pass.
             </p>
 
             {quizPersisting && (
-              <p className="text-xs text-slate-500">Saving attempt…</p>
+              <p className="text-xs text-[#68766B]">Saving attempt…</p>
             )}
 
             {quizPersistError && (
@@ -1715,7 +1715,7 @@ Requirements:
 
               <button
                 onClick={retryExplanation}
-                className="px-5 py-3 bg-brand-900/60 border border-slate-800 text-slate-300 font-bold rounded-xl text-xs uppercase flex items-center gap-2"
+                className="px-5 py-3 bg-[#E2E8D8] border border-[#D9E1D2] text-[#315C46] hover:bg-[#E8EDE1] font-bold rounded-full text-xs uppercase flex items-center gap-2"
               >
 
                 <RotateCcw className="h-3.5 w-3.5" />
@@ -1741,9 +1741,9 @@ Requirements:
 
 {showFinishConfirmation && step === "chat" && (
   <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-    <div className="w-full max-w-md rounded-2xl border border-slate-700 bg-brand-950 p-6 shadow-2xl">
+    <div className="w-full max-w-md rounded-2xl border border-[#D9E1D2] bg-[#DEE8DC] p-6 shadow-2xl">
 
-      <h3 className="text-lg font-bold text-white">
+      <h3 className="text-lg font-bold text-[#26332A]">
         Finish Learning?
       </h3>
 
@@ -1766,7 +1766,7 @@ Requirements:
             setShowFinishConfirmation(false);
             handleGenerateQuiz();
           }}
-          className="rounded-lg bg-primary-600 px-4 py-2 text-sm font-bold text-white hover:bg-primary-500"
+          className="rounded-lg bg-primary-600 px-4 py-2 text-sm font-bold text-[#26332A] hover:bg-primary-500"
         >
           Yes, Take Quiz
         </button>

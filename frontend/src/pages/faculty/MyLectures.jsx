@@ -158,16 +158,16 @@ export default function MyLectures() {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-screen overflow-hidden bg-brand-950">
+    <div className="flex-1 flex flex-col h-screen overflow-hidden bg-[#F8F8F2] text-[#26332A]">
       
       {/* HEADER */}
-      <header className="shrink-0 h-16 border-b border-slate-800/50 bg-brand-900/20 backdrop-blur-md flex items-center justify-between px-6 z-20">
+      <header className="shrink-0 h-16 border-b border-[#D9E1D2] bg-[#E2E8D8] backdrop-blur-md flex items-center justify-between px-6 z-20">
         <div className="flex items-center gap-4">
-          <h1 className="text-lg font-outfit font-bold text-white tracking-wide">
+          <h1 className="text-lg font-outfit font-bold text-[#26332A] tracking-wide">
             My Lectures
           </h1>
           <div className="h-4 w-px bg-slate-800"></div>
-          <span className="text-xs text-slate-400 font-medium tracking-wide">
+          <span className="text-xs text-[#68766B] font-medium tracking-wide">
             Lectures uploaded by you
           </span>
         </div>
@@ -179,19 +179,19 @@ export default function MyLectures() {
         
         {/* VIDEO PREVIEW MODAL */}
         {selectedLecture && (
-          <section className="bg-brand-900/40 rounded-2xl border border-slate-800 p-6 space-y-5 animate-fade-in-up">
+          <section className="bg-[#E2E8D8] rounded-2xl border border-[#D9E1D2] p-6 space-y-5 animate-fade-in-up">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <span className="text-[10px] text-primary-400 font-bold uppercase tracking-widest">
+                <span className="text-[10px] text-[#315C46] font-bold uppercase tracking-widest">
                   Lecture Preview
                 </span>
-                <h2 className="text-xl font-outfit font-bold text-white mt-1">
+                <h2 className="text-xl font-outfit font-bold text-[#26332A] mt-1">
                   {selectedLecture.title}
                 </h2>
               </div>
               <button
                 onClick={() => setSelectedLecture(null)}
-                className="text-xs text-slate-500 hover:text-white flex flex-col items-center"
+                className="text-xs text-[#68766B] hover:text-[#26332A] flex flex-col items-center"
               >
                 <X className="w-5 h-5" />
                 Close
@@ -199,7 +199,7 @@ export default function MyLectures() {
             </div>
 
             {selectedLecture.source_type === 'youtube' && selectedLecture.youtube_id ? (
-              <div className="relative aspect-video max-w-4xl mx-auto rounded-xl overflow-hidden bg-black border border-slate-800">
+              <div className="relative aspect-video max-w-4xl mx-auto rounded-xl overflow-hidden bg-black border border-[#D9E1D2]">
                 <iframe
                   src={getYoutubeEmbedUrl(selectedLecture)}
                   title={selectedLecture.title}
@@ -209,7 +209,7 @@ export default function MyLectures() {
                 />
               </div>
             ) : (
-              <div className="relative aspect-video max-w-4xl mx-auto rounded-xl overflow-hidden bg-black border border-slate-800">
+              <div className="relative aspect-video max-w-4xl mx-auto rounded-xl overflow-hidden bg-black border border-[#D9E1D2]">
                 <video
                   src={`/api/faculty/lectures/${selectedLecture.id}/video`}
                   controls
@@ -224,18 +224,18 @@ export default function MyLectures() {
         )}
 
         {/* FILTERS & SEARCH */}
-        <div className="bg-brand-900/40 border border-slate-800/50 rounded-2xl p-4 md:p-6 space-y-4">
+        <div className="bg-[#FCFCF8] border border-[#D9E1D2] rounded-2xl p-4 md:p-6 space-y-4">
           <div className="flex flex-col md:flex-row gap-4">
             
             {/* Search */}
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#68766B]" />
               <input
                 type="text"
                 placeholder="Search by title or description..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 bg-brand-950 border border-slate-800 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-primary-500 transition-colors"
+                className="w-full pl-9 pr-4 py-2 bg-[#FCFCF8] border border-[#D9E1D2] rounded-xl text-sm text-[#26332A] placeholder-slate-400 focus:outline-none focus:border-[#315C46] transition-colors"
               />
             </div>
 
@@ -243,7 +243,7 @@ export default function MyLectures() {
             <select
               value={selectedSubject}
               onChange={(e) => setSelectedSubject(e.target.value)}
-              className="px-4 py-2 bg-brand-950 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:border-primary-500 transition-colors"
+              className="px-4 py-2 bg-[#FCFCF8] border border-[#D9E1D2] rounded-xl text-sm text-[#26332A] focus:outline-none focus:border-[#315C46] transition-colors"
             >
               <option value="">All Subjects</option>
               {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
@@ -254,7 +254,7 @@ export default function MyLectures() {
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
               disabled={!selectedSubject}
-              className="px-4 py-2 bg-brand-950 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:border-primary-500 transition-colors disabled:opacity-50"
+              className="px-4 py-2 bg-[#FCFCF8] border border-[#D9E1D2] rounded-xl text-sm text-[#26332A] focus:outline-none focus:border-[#315C46] transition-colors disabled:opacity-50"
             >
               <option value="">All Categories</option>
               {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -265,7 +265,7 @@ export default function MyLectures() {
               value={selectedSubcategory}
               onChange={(e) => setSelectedSubcategory(e.target.value)}
               disabled={!selectedCategory}
-              className="px-4 py-2 bg-brand-950 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:border-primary-500 transition-colors disabled:opacity-50"
+              className="px-4 py-2 bg-[#FCFCF8] border border-[#D9E1D2] rounded-xl text-sm text-[#26332A] focus:outline-none focus:border-[#315C46] transition-colors disabled:opacity-50"
             >
               <option value="">All Subcategories</option>
               {subcategories.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
@@ -273,18 +273,18 @@ export default function MyLectures() {
             
           </div>
           
-          <div className="text-xs text-slate-400 font-medium">
+          <div className="text-xs text-[#68766B] font-medium">
             Showing {filteredLectures.length} Lecture{filteredLectures.length !== 1 ? 's' : ''}
           </div>
         </div>
 
         {/* LECTURES GRID */}
         {loading ? (
-          <div className="text-center text-slate-400 py-10 text-sm">Loading your lectures...</div>
+          <div className="text-center text-[#68766B] py-10 text-sm">Loading your lectures...</div>
         ) : error ? (
           <div className="text-center text-rose-400 py-10 text-sm">{error}</div>
         ) : filteredLectures.length === 0 ? (
-          <div className="text-center text-slate-500 py-10 text-sm">
+          <div className="text-center text-[#68766B] py-10 text-sm">
             {lectures.length === 0 
               ? "You haven't uploaded any lectures yet." 
               : "No lectures match your current filters."}
@@ -294,42 +294,42 @@ export default function MyLectures() {
             {filteredLectures.map((lecture) => (
               <div 
                 key={lecture.id} 
-                className="bg-brand-900/40 border border-slate-800/50 rounded-2xl overflow-hidden flex flex-col hover:border-primary-500/50 transition-colors"
+                className="bg-[#FCFCF8] border border-[#D9E1D2] rounded-2xl overflow-hidden flex flex-col hover:border-[#315C46]/20 transition-colors"
               >
                 {/* Card Body */}
                 <div className="p-5 flex-1">
                   
                   {/* Taxonomy */}
                   {(lecture.subject || lecture.category) ? (
-                    <div className="text-[10px] text-primary-400 font-bold mb-2 uppercase tracking-wider line-clamp-1">
+                    <div className="text-[10px] text-[#315C46] font-bold mb-2 uppercase tracking-wider line-clamp-1">
                       {lecture.subject}
                       {lecture.category && ` › ${lecture.category}`}
                       {lecture.subcategory && ` › ${lecture.subcategory}`}
                     </div>
                   ) : (
-                    <div className="text-[10px] text-slate-500 font-bold mb-2 uppercase tracking-wider">
+                    <div className="text-[10px] text-[#26332A] font-bold mb-2 uppercase tracking-wider">
                       Uncategorized
                     </div>
                   )}
 
-                  <h3 className="text-base font-outfit font-bold text-white leading-tight mb-2 line-clamp-2">
+                  <h3 className="text-base font-outfit font-bold text-[#26332A] leading-tight mb-2 line-clamp-2">
                     {lecture.title || 'Untitled Lecture'}
                   </h3>
 
-                  <div className="text-xs text-slate-400 mb-4 line-clamp-2">
+                  <div className="text-xs text-[#68766B] mb-4 line-clamp-2">
                     {lecture.description || 'No description provided.'}
                   </div>
 
                   {/* Meta */}
                   <div className="space-y-1 mt-auto">
-                    <p className="text-xs text-slate-500">
-                      <span className="font-semibold text-slate-400">Source:</span> {lecture.source_type === 'youtube' ? 'YouTube' : 'Local Video'}
+                    <p className="text-xs text-[#68766B]">
+                      <span className="font-semibold text-[#68766B]">Source:</span> {lecture.source_type === 'youtube' ? 'YouTube' : 'Local Video'}
                     </p>
-                    <p className="text-xs text-slate-500">
-                      <span className="font-semibold text-slate-400">Duration:</span> {lecture.duration || 'Unknown'}
+                    <p className="text-xs text-[#68766B]">
+                      <span className="font-semibold text-[#68766B]">Duration:</span> {lecture.duration || 'Unknown'}
                     </p>
                     {(lecture.prerequisite_lecture_title || lecture.prerequisite_topic || (lecture.prerequisites && lecture.prerequisites[0])) && (
-                      <p className="text-xs text-slate-500 line-clamp-1">
+                      <p className="text-xs text-[#68766B] line-clamp-1">
                         <span className="font-semibold text-amber-400">Prerequisite Video:</span> {lecture.prerequisite_lecture_title || lecture.prerequisite_topic || lecture.prerequisites[0]}
                       </p>
                     )}
@@ -337,17 +337,17 @@ export default function MyLectures() {
                 </div>
                 
                 {/* Actions */}
-                <div className="bg-brand-950/50 p-4 border-t border-slate-800/50 flex items-center justify-between gap-3">
+                <div className="bg-[#D9E1D2]/40 p-4 border-t border-[#D9E1D2] flex items-center justify-between gap-3">
                   <button 
                     onClick={() => setSelectedLecture(lecture)}
-                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-brand-800 hover:bg-brand-700 text-white rounded-lg text-xs font-semibold transition-colors"
+                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-[#315C46] hover:bg-[#264B39] text-[#26332A] rounded-lg text-xs font-semibold transition-colors"
                   >
                     <Play className="w-3 h-3" />
                     View Lecture
                   </button>
                   <button 
                     onClick={() => navigate(`/faculty/lecture/${lecture.id}`)}
-                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-primary-600/20 hover:bg-primary-600/30 text-primary-400 rounded-lg text-xs font-semibold transition-colors"
+                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-[#315C46]/10 hover:bg-[#315C46]/20 text-[#315C46] rounded-lg text-xs font-semibold transition-colors"
                   >
                     <BarChart2 className="w-3 h-3" />
                     Analytics

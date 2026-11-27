@@ -181,11 +181,11 @@ export default function FacultyDashboard() {
 
   if (loading) {
     return (
-      <div className="flex-1 flex items-center justify-center p-8 min-h-screen bg-brand-950">
+      <div className="flex-1 flex items-center justify-center p-8 min-h-screen bg-[#F8F8F2]">
         <div className="flex flex-col items-center gap-4">
-          <div className="h-10 w-10 rounded-full border-4 border-t-primary-500 border-slate-800 animate-spin" />
+          <div className="h-10 w-10 rounded-full border-4 border-t-primary-500 border-[#D9E1D2] animate-spin" />
 
-          <span className="text-slate-400 text-sm font-medium">
+          <span className="text-[#68766B] text-sm font-medium">
             Loading Faculty Dashboard...
           </span>
         </div>
@@ -194,30 +194,30 @@ export default function FacultyDashboard() {
   }
 
   return (
-    <div className="flex-1 p-8 overflow-y-auto space-y-8 max-w-6xl mx-auto bg-brand-950 text-slate-100 min-h-screen">
+    <div className="flex-1 p-8 overflow-y-auto space-y-8 max-w-6xl mx-auto bg-[#F8F8F2] text-[#26332A] min-h-screen">
 
       {/* =========================================================
           COURSE OVERVIEW
       ========================================================= */}
 
-      <div className="glass-panel rounded-2xl p-6 relative overflow-hidden border border-primary-500/20 bg-brand-900/40">
+      <div className="glass-panel rounded-2xl p-6 relative overflow-hidden border border-[#315C46]/20 bg-[#E2E8D8]">
         <div className="absolute top-0 right-0 w-48 h-full bg-gradient-to-l from-primary-500/10 to-transparent pointer-events-none" />
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
 
           <div>
-            <span className="px-2.5 py-0.5 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-[10px] font-bold uppercase tracking-wider">
+            <span className="px-2.5 py-0.5 rounded-full bg-[#315C46]/10 border border-[#315C46]/20 text-[#315C46] text-[10px] font-bold uppercase tracking-wider">
               Faculty Analytics Portal
             </span>
 
-            <h1 className="font-outfit font-bold text-xl text-white mt-2">
+            <h1 className="font-outfit font-bold text-xl text-[#26332A] mt-2">
               Course Overview:{' '}
               {dashboardData.course_name || 'No course data available'}
             </h1>
 
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-[#68766B] mt-1">
               Instructor:{' '}
-              <span className="text-slate-200 font-semibold">
+              <span className="text-[#26332A] font-semibold">
                 {dashboardData.faculty_name || 'Faculty'}
               </span>
             </p>
@@ -243,7 +243,7 @@ export default function FacultyDashboard() {
       ========================================================= */}
 
       {error && (
-        <div className="rounded-xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-300">
+        <div className="rounded-xl border border-[#FECDD3] bg-[#FFF1F2] px-4 py-3 text-sm text-[#BE123C]">
           {error}
         </div>
       )}
@@ -254,65 +254,65 @@ export default function FacultyDashboard() {
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
 
-        <div className="glass-panel rounded-xl p-4 border border-slate-800 bg-brand-900/30">
-          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
+        <div className="glass-panel rounded-xl p-4 border border-[#D9E1D2] bg-[#E2E8D8]">
+          <span className="text-[10px] font-extrabold text-black uppercase tracking-wider block">
             Total Enrolled
           </span>
 
-          <p className="text-2xl font-bold text-white mt-1">
+          <p className="text-2xl font-extrabold text-black mt-1">
             {dashboardData.total_students || 0}
           </p>
         </div>
 
-        <div className="glass-panel rounded-xl p-4 border border-slate-800 bg-brand-900/30">
-          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
+        <div className="glass-panel rounded-xl p-4 border border-[#D9E1D2] bg-[#E2E8D8]">
+          <span className="text-[10px] font-extrabold text-black uppercase tracking-wider block">
             Active Watchers
           </span>
 
-          <p className="text-2xl font-bold text-emerald-400 mt-1">
+          <p className="text-2xl font-extrabold text-emerald-800 mt-1">
             {dashboardData.active_students || 0}
           </p>
         </div>
 
-        <div className="glass-panel rounded-xl p-4 border border-slate-800 bg-brand-900/30">
-          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
+        <div className="glass-panel rounded-xl p-4 border border-[#D9E1D2] bg-[#E2E8D8]">
+          <span className="text-[10px] font-extrabold text-black uppercase tracking-wider block">
             Lectures
           </span>
 
-          <p className="text-2xl font-bold text-white mt-1">
+          <p className="text-2xl font-extrabold text-black mt-1">
             {lectures.length}
           </p>
         </div>
 
-        <div className="glass-panel rounded-xl p-4 border border-slate-800 bg-brand-900/30">
-          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
+        <div className="glass-panel rounded-xl p-4 border border-[#D9E1D2] bg-[#E2E8D8]">
+          <span className="text-[10px] font-extrabold text-black uppercase tracking-wider block">
             Avg Completion
           </span>
 
-          <p className="text-2xl font-bold text-primary-400 mt-1">
+          <p className="text-2xl font-extrabold text-[#315C46] mt-1">
             {Math.round(dashboardData.avg_engagement || 0)}%
           </p>
         </div>
 
-        <div className="glass-panel rounded-xl p-4 border border-slate-800 bg-brand-900/30">
-          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
+        <div className="glass-panel rounded-xl p-4 border border-[#D9E1D2] bg-[#E2E8D8]">
+          <span className="text-[10px] font-extrabold text-black uppercase tracking-wider block">
             Avg Quiz Score
           </span>
 
-          <p className="text-2xl font-bold text-white mt-1">
+          <p className="text-2xl font-extrabold text-black mt-1">
             {dashboardData.avg_quiz_score || 0}%
           </p>
         </div>
 
         <div
           onClick={() => navigate('/faculty/risk')}
-          className="glass-panel rounded-xl p-4 border-l-2 border-l-rose-500 border border-slate-800 bg-brand-900/30 cursor-pointer hover:bg-brand-900/50 transition-colors"
+          className="glass-panel rounded-xl p-4 border-l-2 border-l-rose-500 border border-[#D9E1D2] bg-[#E2E8D8] cursor-pointer hover:bg-[#E8EDE1] transition-colors"
         >
-          <span className="text-[10px] font-bold text-rose-400 uppercase tracking-wider block">
+          <span className="text-[10px] font-extrabold text-rose-700 uppercase tracking-wider block">
             At Risk
           </span>
 
-          <p className="text-2xl font-bold text-rose-400 mt-1">
+          <p className="text-2xl font-extrabold text-rose-700 mt-1">
             {dashboardData.students_at_risk || 0}
           </p>
         </div>
@@ -323,20 +323,20 @@ export default function FacultyDashboard() {
           CONFUSION HEATMAP
       ========================================================= */}
 
-      <div className="glass-panel rounded-2xl p-6 border border-slate-800 bg-brand-900/40 space-y-5">
+      <div className="glass-panel rounded-2xl p-6 border border-[#D9E1D2] bg-[#E2E8D8] space-y-5">
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
 
           <div>
             <div className="flex items-center gap-2">
-              <Activity className="h-5 w-5 text-primary-400" />
+              <Activity className="h-5 w-5 text-[#315C46]" />
 
-              <h3 className="font-outfit font-bold text-base text-white">
+              <h3 className="font-outfit font-bold text-base text-[#26332A]">
                 Cohort Confusion Heatmap
               </h3>
             </div>
 
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-[#68766B] mt-1">
               Aggregated student interaction data for the lectures you created.
             </p>
           </div>
@@ -347,7 +347,7 @@ export default function FacultyDashboard() {
               onChange={(event) =>
                 setSelectedLectureHeatmap(event.target.value)
               }
-              className="bg-brand-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-primary-500 max-w-xs"
+              className="bg-[#FCFCF8] border border-[#D9E1D2] rounded-xl px-3 py-2 text-xs text-[#26332A] focus:outline-none focus:border-[#315C46] max-w-xs"
             >
               {lectures.map((lecture) => (
                 <option
@@ -364,38 +364,38 @@ export default function FacultyDashboard() {
 
         {lectures.length === 0 ? (
 
-          <div className="rounded-xl border border-slate-800 bg-brand-950 p-8 text-center">
-            <Activity className="h-8 w-8 text-slate-600 mx-auto mb-3" />
+          <div className="rounded-xl border border-[#D9E1D2] bg-[#E2E8D8] p-8 text-center">
+            <Activity className="h-8 w-8 text-[#68766B] mx-auto mb-3" />
 
-            <p className="text-sm font-semibold text-slate-300">
+            <p className="text-sm font-semibold text-[#68766B]">
               No lecture data available
             </p>
 
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-[#68766B] mt-1">
               Import a lecture to start viewing confusion analytics.
             </p>
           </div>
 
         ) : activeHeatmapLecture ? (
 
-          <div className="p-5 rounded-2xl bg-brand-950 border border-slate-800/80 space-y-4">
+          <div className="p-5 rounded-2xl bg-[#FCFCF8] border border-[#D9E1D2] space-y-4">
 
-            <div className="flex items-center justify-between text-xs font-bold text-slate-300">
+            <div className="flex items-center justify-between text-xs font-bold text-[#68766B]">
               <span>
                 {activeHeatmapLecture.title || 'Untitled Lecture'}
               </span>
 
-              <span className="text-slate-500">
+              <span className="text-[#68766B]">
                 Duration: {activeHeatmapLecture.duration || 'N/A'}
               </span>
             </div>
 
             {heatmapLoading ? (
 
-              <div className="rounded-xl border border-slate-800 p-8 text-center">
-                <div className="h-7 w-7 rounded-full border-4 border-t-primary-500 border-slate-800 animate-spin mx-auto mb-3" />
+              <div className="rounded-xl border border-[#D9E1D2] p-8 text-center">
+                <div className="h-7 w-7 rounded-full border-4 border-t-primary-500 border-[#D9E1D2] animate-spin mx-auto mb-3" />
 
-                <p className="text-sm text-slate-400">
+                <p className="text-sm text-[#68766B]">
                   Loading confusion analytics...
                 </p>
               </div>
@@ -405,12 +405,12 @@ export default function FacultyDashboard() {
               <>
                 <div className="space-y-2">
 
-                  <div className="h-6 w-full rounded-xl bg-slate-900 flex overflow-hidden p-1 gap-1 border border-slate-800">
+                  <div className="h-6 w-full rounded-xl bg-slate-100 flex overflow-hidden p-1 gap-1 border border-[#D9E1D2]">
 
                     {heatmapBins.map((bin, index) => {
 
                       let statusBg =
-                        'bg-emerald-500/30 border-emerald-500/50 text-emerald-300';
+                        'bg-emerald-100 border-emerald-400 text-emerald-950 font-bold';
 
                       if (
                         bin.status === 'yellow' ||
@@ -418,7 +418,7 @@ export default function FacultyDashboard() {
                         bin.status === 'amber'
                       ) {
                         statusBg =
-                          'bg-amber-500/40 border-amber-500/60 text-amber-300';
+                          'bg-amber-100 border-amber-400 text-amber-950 font-bold';
                       }
 
                       if (
@@ -426,7 +426,7 @@ export default function FacultyDashboard() {
                         bin.status === 'high'
                       ) {
                         statusBg =
-                          'bg-rose-500/60 border-rose-500 text-white font-bold';
+                          'bg-rose-600 border-rose-700 text-white font-bold';
                       }
 
                       return (
@@ -442,7 +442,7 @@ export default function FacultyDashboard() {
 
                   </div>
 
-                  <div className="flex items-center justify-between text-[10px] text-slate-500 px-1 pt-1">
+                  <div className="flex items-center justify-between text-[10px] text-[#68766B] px-1 pt-1">
 
                     <div className="flex items-center gap-4">
 
@@ -468,15 +468,15 @@ export default function FacultyDashboard() {
                 </div>
 
                 {heatmapAdvice && (
-                  <div className="p-4 rounded-xl bg-primary-500/10 border border-primary-500/20 text-xs text-slate-300 space-y-1.5">
+                  <div className="p-4 rounded-xl bg-[#315C46]/10 border border-[#315C46]/20 text-xs text-[#68766B] space-y-1.5">
 
-                    <div className="flex items-center gap-2 font-bold text-primary-300">
+                    <div className="flex items-center gap-2 font-bold text-[#315C46]">
                       <Sparkles className="h-4 w-4 text-amber-400" />
 
                       AI Curriculum Recommendation
                     </div>
 
-                    <p className="leading-relaxed text-slate-300">
+                    <p className="leading-relaxed text-[#68766B]">
                       {heatmapAdvice}
                     </p>
 
@@ -486,8 +486,8 @@ export default function FacultyDashboard() {
 
             ) : (
 
-              <div className="rounded-xl border border-slate-800 p-6 text-center">
-                <p className="text-sm text-slate-400">
+              <div className="rounded-xl border border-[#D9E1D2] p-6 text-center">
+                <p className="text-sm text-[#68766B]">
                   No confusion data available for this lecture yet.
                 </p>
               </div>
@@ -498,8 +498,8 @@ export default function FacultyDashboard() {
 
         ) : (
 
-          <div className="rounded-xl border border-slate-800 bg-brand-950 p-8 text-center">
-            <p className="text-sm text-slate-400">
+          <div className="rounded-xl border border-[#D9E1D2] bg-[#E2E8D8] p-8 text-center">
+            <p className="text-sm text-[#68766B]">
               No lecture selected.
             </p>
           </div>
@@ -512,23 +512,23 @@ export default function FacultyDashboard() {
           LECTURE ANALYTICS
       ========================================================= */}
 
-      <div className="glass-panel rounded-2xl p-6 border border-slate-800 bg-brand-900/40">
+      <div className="glass-panel rounded-2xl p-6 border border-[#D9E1D2] bg-[#E2E8D8]">
 
-        <h4 className="font-outfit font-bold text-sm text-white mb-6 uppercase tracking-wider flex items-center gap-2">
-          <BookOpen className="h-4.5 w-4.5 text-primary-400" />
+        <h4 className="font-outfit font-bold text-sm text-[#26332A] mb-6 uppercase tracking-wider flex items-center gap-2">
+          <BookOpen className="h-4.5 w-4.5 text-[#315C46]" />
           Lecture Analytics Overview
         </h4>
 
         {lectures.length === 0 ? (
 
           <div className="py-10 text-center">
-            <BookOpen className="h-8 w-8 text-slate-600 mx-auto mb-3" />
+            <BookOpen className="h-8 w-8 text-[#68766B] mx-auto mb-3" />
 
-            <p className="text-sm font-semibold text-slate-300">
+            <p className="text-sm font-semibold text-[#68766B]">
               No lecture data available
             </p>
 
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-[#68766B] mt-1">
               Your imported lectures will appear here.
             </p>
           </div>
@@ -540,7 +540,7 @@ export default function FacultyDashboard() {
             <table className="w-full text-left text-xs">
 
               <thead>
-                <tr className="border-b border-slate-800 text-slate-500 uppercase tracking-wider font-semibold">
+                <tr className="border-b border-[#D9E1D2] text-[#68766B] uppercase tracking-wider font-semibold">
 
                   <th className="pb-3 px-4">
                     Lecture Info
@@ -579,26 +579,26 @@ export default function FacultyDashboard() {
 
                   <tr
                     key={lecture.id}
-                    className="text-slate-300 hover:bg-brand-900/20 transition-colors"
+                    className="text-[#68766B] hover:bg-[#E2E8D8] transition-colors"
                   >
 
                     <td className="py-4 px-4">
 
                       <div className="space-y-0.5">
 
-                        <span className="text-[9px] font-bold text-primary-400 block uppercase tracking-widest">
+                        <span className="text-[9px] font-bold text-[#315C46] block uppercase tracking-widest">
                           {lecture.course_name || dashboardData.course_name || 'Course'}
                         </span>
 
-                        <span className="font-bold text-white text-xs block leading-snug">
+                        <span className="font-bold text-[#26332A] text-xs block leading-snug">
                           {lecture.title || 'Untitled Lecture'}
                         </span>
 
-                        <span className="text-[9px] text-slate-500 block">
+                        <span className="text-[9px] text-[#68766B] block">
                           Duration: {lecture.duration || 'N/A'}
                         </span>
 
-                        <span className="text-[8px] text-slate-600 block">
+                        <span className="text-[8px] text-[#68766B] block">
                           ID: {lecture.id}
                         </span>
 
@@ -606,7 +606,7 @@ export default function FacultyDashboard() {
 
                     </td>
 
-                    <td className="py-4 text-center text-slate-400">
+                    <td className="py-4 text-center text-[#68766B]">
                       {lecture.instructor ||
                         dashboardData.faculty_name ||
                         'Faculty'}
@@ -616,11 +616,11 @@ export default function FacultyDashboard() {
                       {lecture.views ?? 0}
                     </td>
 
-                    <td className="py-4 text-center font-bold text-slate-200">
+                    <td className="py-4 text-center font-bold text-[#26332A]">
                       {lecture.watch_percentage ?? 0}%
                     </td>
 
-                    <td className="py-4 text-center font-bold text-primary-400">
+                    <td className="py-4 text-center font-bold text-[#315C46]">
                       {lecture.avg_quiz_score ?? 0}%
                     </td>
 
@@ -634,7 +634,7 @@ export default function FacultyDashboard() {
                               ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
                               : lecture.confusion_level === 'Low'
                                 ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                                : 'bg-slate-500/10 text-slate-400 border border-slate-500/20'
+                                : 'bg-slate-500/10 text-[#68766B] border border-slate-500/20'
                         }`}
                       >
                         {lecture.confusion_level || 'No Data'}
@@ -648,7 +648,7 @@ export default function FacultyDashboard() {
                         onClick={() =>
                           navigate(`/faculty/lecture/${lecture.id}`)
                         }
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-600/10 border border-primary-500/20 text-primary-400 hover:bg-primary-600 hover:text-white transition-all text-xs font-bold"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-black/10 border border-[#315C46]/20 text-[#315C46] hover:bg-black hover:text-[#26332A] transition-all text-xs font-bold"
                       >
                         Analyze
                         <ArrowRight className="h-3 w-3" />
@@ -674,10 +674,10 @@ export default function FacultyDashboard() {
           STUDENT PERFORMANCE
       ========================================================= */}
 
-      <div className="glass-panel rounded-2xl p-6 border border-slate-800 bg-brand-900/40">
+      <div className="glass-panel rounded-2xl p-6 border border-[#D9E1D2] bg-[#E2E8D8]">
 
-        <h4 className="font-outfit font-bold text-sm text-white mb-6 uppercase tracking-wider flex items-center gap-2">
-          <Users className="h-4.5 w-4.5 text-primary-400" />
+        <h4 className="font-outfit font-bold text-sm text-[#26332A] mb-6 uppercase tracking-wider flex items-center gap-2">
+          <Users className="h-4.5 w-4.5 text-[#315C46]" />
           Student Performance Directory
         </h4>
 
@@ -685,13 +685,13 @@ export default function FacultyDashboard() {
 
           <div className="py-10 text-center">
 
-            <Users className="h-8 w-8 text-slate-600 mx-auto mb-3" />
+            <Users className="h-8 w-8 text-[#68766B] mx-auto mb-3" />
 
-            <p className="text-sm font-semibold text-slate-300">
+            <p className="text-sm font-semibold text-[#68766B]">
               No student data available
             </p>
 
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-[#68766B] mt-1">
               Student analytics will appear here when student activity is available.
             </p>
 
@@ -704,7 +704,7 @@ export default function FacultyDashboard() {
             <table className="w-full text-left text-xs">
 
               <thead>
-                <tr className="border-b border-slate-800 text-slate-500 uppercase tracking-wider font-semibold">
+                <tr className="border-b border-[#D9E1D2] text-[#68766B] uppercase tracking-wider font-semibold">
 
                   <th className="pb-3 px-4">
                     Student
@@ -753,14 +753,14 @@ export default function FacultyDashboard() {
                   return (
                     <tr
                       key={student.student_id}
-                      className="text-slate-300 hover:bg-brand-900/20 transition-colors"
+                      className="text-[#68766B] hover:bg-[#E2E8D8] transition-colors"
                     >
 
-                      <td className="py-4 px-4 font-semibold text-slate-200">
+                      <td className="py-4 px-4 font-semibold text-[#26332A]">
 
                         <div className="flex items-center gap-3">
 
-                          <div className="h-7 w-7 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-[10px] text-slate-300">
+                          <div className="h-7 w-7 rounded-full bg-slate-800 border border-slate-300 flex items-center justify-center font-bold text-[10px] text-[#68766B]">
                             {initials}
                           </div>
 
@@ -776,7 +776,7 @@ export default function FacultyDashboard() {
                         {student.completed_count ?? 0} / {lectures.length}
                       </td>
 
-                      <td className="py-4 text-center font-bold text-primary-400">
+                      <td className="py-4 text-center font-bold text-[#315C46]">
                         {student.avg_quiz_score ?? 0}%
                       </td>
 
@@ -790,7 +790,7 @@ export default function FacultyDashboard() {
                                 ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
                                 : student.confusion_level === 'Low'
                                   ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                                  : 'bg-slate-500/10 text-slate-400 border border-slate-500/20'
+                                  : 'bg-slate-500/10 text-[#68766B] border border-slate-500/20'
                           }`}
                         >
                           {student.confusion_level || 'No Data'}
@@ -808,7 +808,7 @@ export default function FacultyDashboard() {
                                 ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
                                 : student.risk_level === 'Low'
                                   ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                                  : 'bg-slate-500/10 text-slate-400 border border-slate-500/20'
+                                  : 'bg-slate-500/10 text-[#68766B] border border-slate-500/20'
                           }`}
                         >
                           {student.risk_level || 'No Data'}
@@ -824,7 +824,7 @@ export default function FacultyDashboard() {
                               `/faculty/student/${student.student_id}`
                             )
                           }
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-600/10 border border-primary-500/20 text-primary-400 hover:bg-primary-600 hover:text-white transition-all text-xs font-bold"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-black/10 border border-[#315C46]/20 text-[#315C46] hover:bg-black hover:text-[#26332A] transition-all text-xs font-bold"
                         >
                           Profile
                           <ArrowRight className="h-3 w-3" />

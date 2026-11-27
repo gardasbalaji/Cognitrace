@@ -125,25 +125,25 @@ export default function Sidebar({ mode }) {
   const displayName = user?.full_name || (mode === 'student' ? 'Student' : 'Faculty Member');
 
   return (
-    <aside className="w-64 glass-panel border-r border-slate-800/80 min-h-screen flex flex-col z-10 shrink-0">
+    <aside className="w-64 bg-[#EFF1E7] border-r border-[#E2E7DD] min-h-screen flex flex-col z-10 shrink-0">
 
       {/* Brand Header */}
-      <div className="p-6 border-b border-slate-800/60 flex items-center gap-3">
-        <GraduationCap className="h-8 w-8 text-primary-500" />
+      <div className="p-6 border-b border-[#E2E7DD] flex items-center gap-3">
+        <GraduationCap className="h-7 w-7 text-[#315C46]" />
 
         <div>
-          <h1 className="font-outfit font-bold text-lg leading-tight tracking-tight text-white">
-            CogniTrace
+          <h1 className="font-outfit font-extrabold text-lg leading-tight tracking-tight text-[#26332A]">
+            Cogni<span className="text-[#315C46]">Trace</span>
           </h1>
 
-          <span className="text-[10px] text-primary-400 font-semibold tracking-wider uppercase">
+          <span className="text-[10px] text-[#315C46] font-bold tracking-wider uppercase">
             Analytics Shell
           </span>
         </div>
       </div>
 
       {/* Nav Links */}
-      <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
+      <nav className="flex-1 px-3 py-6 space-y-1.5 overflow-y-auto">
         {links.map((link) => {
           const Icon = link.icon;
           const isActive = location.pathname === link.path ||(
@@ -155,16 +155,18 @@ export default function Sidebar({ mode }) {
             <NavLink
               key={link.path}
               to={link.path}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${isActive
-                  ? 'bg-primary-600 text-white shadow-lg shadow-primary-600/20'
-                  : 'text-slate-400 hover:text-white hover:bg-brand-900/60'
-                }`}
+              className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 ${
+                isActive
+                  ? 'bg-[#315C46] text-[#FFFFFF] shadow-sm'
+                  : 'text-[#68766B] hover:text-[#26332A] hover:bg-[#E8EDE1]'
+              }`}
             >
               <Icon
-                className={`h-4.5 w-4.5 ${isActive
-                    ? 'text-white'
-                    : 'text-slate-400 group-hover:text-white'
-                  }`}
+                className={`h-4 w-4 ${
+                  isActive
+                    ? 'text-[#FFFFFF]'
+                    : 'text-[#6F9279]'
+                }`}
               />
 
               <span>{link.name}</span>
@@ -174,20 +176,20 @@ export default function Sidebar({ mode }) {
       </nav>
 
       {/* Footer / Logout */}
-      <div className="p-4 border-t border-slate-800/60 space-y-2">
+      <div className="p-4 border-t border-[#E2E7DD] space-y-2">
 
         <button
           onClick={handleLogout}
-          className="flex items-center gap-2 w-full px-3 py-2.5 text-xs font-semibold text-slate-400 hover:text-rose-400 transition-colors bg-brand-950/40 rounded-lg border border-slate-800/60 hover:border-rose-900/40"
+          className="flex items-center gap-2 w-full px-3 py-2 text-xs font-bold text-[#315C46] hover:text-rose-700 transition-colors bg-[#E2E8D8] hover:bg-[#E8EDE1] rounded-xl border border-[#D9E1D2] cursor-pointer"
         >
           <LogOut className="h-3.5 w-3.5" />
           Logout
         </button>
 
         {/* Logged-in User Identity */}
-        <div className="px-3 py-2 text-[10px] text-slate-500 font-medium truncate">
+        <div className="px-3 py-1.5 text-[10px] text-[#879187] font-medium truncate">
           Logged in as:{' '}
-          <span className="text-slate-300 font-semibold truncate block">
+          <span className="text-[#26332A] font-bold truncate block">
             {displayName}
           </span>
         </div>

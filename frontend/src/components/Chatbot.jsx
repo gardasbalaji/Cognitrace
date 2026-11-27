@@ -74,7 +74,7 @@ export default function Chatbot() {
         onClick={() => setIsOpen((previous) => !previous)}
         aria-label={isOpen ? 'Close AI chatbot' : 'Open AI chatbot'}
         aria-expanded={isOpen}
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full border border-primary-400/40 bg-primary-600 text-2xl text-white shadow-xl transition hover:scale-105 hover:bg-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-300"
+        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full border border-[#315C46]/30 bg-[#315C46] text-2xl text-white shadow-xl transition hover:scale-105 hover:bg-[#E2E8D8] focus:outline-none focus:ring-2 focus:ring-[#315C46]"
       >
         {isOpen ? <X size={24} /> : '🤖'}
       </button>
@@ -84,17 +84,17 @@ export default function Chatbot() {
         <section
           role="dialog"
           aria-label="CogniTrace AI chatbot"
-          className="fixed bottom-24 right-4 z-50 flex h-[min(520px,70vh)] w-[min(380px,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-slate-700 bg-slate-950 text-white shadow-2xl sm:right-6"
+          className="fixed bottom-24 right-4 z-50 flex h-[min(520px,70vh)] w-[min(380px,calc(100vw-2rem))] flex-col overflow-hidden rounded-3xl border border-[#D9E1D2] bg-[#F8F8F2] text-[#26332A] shadow-2xl sm:right-6"
         >
           {/* Header */}
-          <header className="flex items-center justify-between border-b border-slate-700 bg-slate-900 px-4 py-4">
+          <header className="flex items-center justify-between border-b border-[#E2E7DD] bg-[#EFF1E7] px-4 py-3.5">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-600/20 text-xl">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#FCFCF8] border border-[#D9E1D2] text-xl">
                 🤖
               </div>
               <div>
-                <h2 className="text-sm font-bold">CogniTrace AI</h2>
-                <p className="mt-1 text-xs text-slate-400">
+                <h2 className="text-sm font-bold text-[#26332A]">CogniTrace AI</h2>
+                <p className="mt-0.5 text-xs text-[#68766B]">
                   Your study assistant
                 </p>
               </div>
@@ -104,7 +104,7 @@ export default function Chatbot() {
               type="button"
               onClick={() => setIsOpen(false)}
               aria-label="Close chatbot"
-              className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-800 hover:text-white"
+              className="rounded-lg p-2 text-[#68766B] transition hover:bg-[#E8EDE1] hover:text-[#26332A]"
             >
               <X size={19} />
             </button>
@@ -112,7 +112,7 @@ export default function Chatbot() {
 
           {/* Messages */}
           <div
-            className="flex-1 space-y-4 overflow-y-auto bg-slate-950 p-4"
+            className="flex-1 space-y-4 overflow-y-auto bg-[#F8F8F2] p-4"
             aria-live="polite"
           >
             {messages.map((message, index) => (
@@ -123,10 +123,10 @@ export default function Chatbot() {
                 }`}
               >
                 <div
-                  className={`max-w-[85%] whitespace-pre-wrap break-words rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+                  className={`max-w-[85%] whitespace-pre-wrap break-words rounded-2xl px-4 py-3 text-xs sm:text-sm leading-relaxed ${
                     message.role === 'user'
-                      ? 'rounded-br-sm bg-primary-600 text-white'
-                      : 'rounded-bl-sm border border-slate-700 bg-slate-900 text-slate-100'
+                      ? 'rounded-br-sm bg-[#315C46] text-white shadow-sm'
+                      : 'rounded-bl-sm border border-[#D9E1D2] bg-[#E2E8D8] text-[#26332A]'
                   }`}
                 >
                   {message.content}
@@ -136,8 +136,8 @@ export default function Chatbot() {
 
             {loading && (
               <div className="flex justify-start">
-                <div className="flex items-center gap-2 rounded-2xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-slate-300">
-                  <LoaderCircle size={16} className="animate-spin" />
+                <div className="flex items-center gap-2 rounded-2xl border border-[#D9E1D2] bg-[#E2E8D8] px-4 py-3 text-xs sm:text-sm text-[#68766B]">
+                  <LoaderCircle size={16} className="animate-spin text-[#315C46]" />
                   Thinking...
                 </div>
               </div>
@@ -150,13 +150,13 @@ export default function Chatbot() {
           {error && (
             <div
               role="alert"
-              className="border-t border-rose-900/50 bg-rose-950/40 px-4 py-2 text-xs text-rose-300"
+              className="border-t border-rose-200 bg-rose-50 px-4 py-2 text-xs text-rose-700"
             >
               {error}
               <button
                 type="button"
                 onClick={() => setError('')}
-                className="ml-2 underline"
+                className="ml-2 underline font-bold"
               >
                 Dismiss
               </button>
@@ -166,7 +166,7 @@ export default function Chatbot() {
           {/* Input */}
           <form
             onSubmit={sendMessage}
-            className="flex items-end gap-2 border-t border-slate-700 bg-slate-900 p-3"
+            className="flex items-end gap-2 border-t border-[#E2E7DD] bg-[#EFF1E7] p-3"
           >
             <textarea
               ref={inputRef}
@@ -187,14 +187,14 @@ export default function Chatbot() {
               rows={1}
               maxLength={4000}
               disabled={loading}
-              className="max-h-24 min-h-11 flex-1 resize-y rounded-xl border border-slate-700 bg-slate-950 px-3 py-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-primary-500 disabled:opacity-60"
+              className="max-h-24 min-h-11 flex-1 resize-y rounded-xl border border-[#D9E1D2] bg-[#FCFCF8] px-3 py-3 text-xs sm:text-sm text-[#26332A] outline-none placeholder:text-[#68766B] focus:border-[#315C46] disabled:opacity-60 font-medium"
             />
 
             <button
               type="submit"
               disabled={loading || !input.trim()}
               aria-label="Send message"
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary-600 text-white transition hover:bg-primary-500 disabled:cursor-not-allowed disabled:opacity-40"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#315C46] text-white transition hover:bg-[#E2E8D8] disabled:cursor-not-allowed disabled:opacity-40"
             >
               {loading ? (
                 <LoaderCircle size={18} className="animate-spin" />

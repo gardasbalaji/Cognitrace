@@ -150,11 +150,11 @@ export default function LectureAnalyticsPlaceholder() {
 
   if (loading) {
     return (
-      <div className="flex-1 flex items-center justify-center p-8 min-h-screen bg-brand-950">
+      <div className="flex-1 flex items-center justify-center p-8 min-h-screen bg-[#F8F8F2]">
         <div className="flex flex-col items-center gap-4">
-          <div className="h-10 w-10 rounded-full border-4 border-t-primary-500 border-slate-800 animate-spin" />
+          <div className="h-10 w-10 rounded-full border-4 border-t-primary-500 border-[#D9E1D2] animate-spin" />
 
-          <span className="text-slate-400 text-sm font-medium">
+          <span className="text-[#68766B] text-sm font-medium">
             Loading lecture analytics...
           </span>
         </div>
@@ -164,31 +164,31 @@ export default function LectureAnalyticsPlaceholder() {
 
   if (error || !lectureData) {
     return (
-      <div className="flex-1 p-8 min-h-screen bg-brand-950 text-slate-100">
+      <div className="flex-1 p-8 min-h-screen bg-[#F8F8F2] text-[#26332A]">
         <button
           onClick={() => navigate('/faculty/dashboard')}
-          className="inline-flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-white transition-colors mb-8"
+          className="inline-flex items-center gap-2 text-xs font-semibold text-[#68766B] hover:text-[#26332A] transition-colors mb-8"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Faculty Dashboard
         </button>
 
         <div className="max-w-3xl mx-auto">
-          <div className="rounded-2xl border border-rose-500/20 bg-rose-500/10 p-8 text-center">
+          <div className="rounded-2xl border border-[#FECDD3] bg-[#FFF1F2] text-[#BE123C] p-8 text-center">
 
             <AlertTriangle className="h-10 w-10 text-rose-400 mx-auto mb-4" />
 
-            <h2 className="text-lg font-bold text-white">
+            <h2 className="text-lg font-bold text-[#26332A]">
               Lecture Analytics Unavailable
             </h2>
 
-            <p className="text-sm text-slate-400 mt-2">
+            <p className="text-sm text-[#68766B] mt-2">
               {error || 'The requested lecture could not be found.'}
             </p>
 
-            <p className="text-xs text-slate-500 mt-4">
+            <p className="text-xs text-[#68766B] mt-4">
               Requested Lecture ID:
-              <span className="text-slate-300 ml-1 font-mono">
+              <span className="text-[#68766B] ml-1 font-mono">
                 {lectureId}
               </span>
             </p>
@@ -447,14 +447,14 @@ export default function LectureAnalyticsPlaceholder() {
         );
 
   return (
-    <div className="flex-1 p-8 overflow-y-auto space-y-8 max-w-6xl mx-auto bg-brand-950 text-slate-100 min-h-screen">
+    <div className="flex-1 p-8 overflow-y-auto space-y-8 max-w-6xl mx-auto bg-[#F8F8F2] text-[#26332A] min-h-screen">
 
       {/* =========================================================
           BACK BUTTON
       ========================================================= */}
       <button
         onClick={() => navigate('/faculty/dashboard')}
-        className="inline-flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-white transition-colors"
+        className="inline-flex items-center gap-2 text-xs font-semibold text-[#68766B] hover:text-[#26332A] transition-colors"
       >
         <ArrowLeft className="h-4 w-4" />
         Back to Faculty Dashboard
@@ -463,26 +463,26 @@ export default function LectureAnalyticsPlaceholder() {
       {/* =========================================================
           LECTURE HEADER
       ========================================================= */}
-      <div className="space-y-2 border-b border-slate-800 pb-6 flex flex-col md:flex-row md:justify-between md:items-end">
+      <div className="space-y-2 border-b border-[#D9E1D2] pb-6 flex flex-col md:flex-row md:justify-between md:items-end">
 
         <div>
 
-          <span className="text-[9px] text-primary-400 font-bold uppercase tracking-widest block">
+          <span className="text-[9px] text-[#315C46] font-bold uppercase tracking-widest block">
             {courseName}
           </span>
 
-          <h3 className="font-outfit font-extrabold text-2xl text-white mt-1">
+          <h3 className="font-outfit font-extrabold text-2xl text-[#26332A] mt-1">
             {title}
           </h3>
 
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-[#68766B] mt-1">
             Instructor:{' '}
-            <span className="text-slate-300">
+            <span className="text-[#68766B]">
               {instructor}
             </span>
           </p>
 
-          <p className="text-[10px] text-slate-600 mt-2 font-mono">
+          <p className="text-[10px] text-[#68766B] mt-2 font-mono">
             Lecture ID: {lectureId}
           </p>
 
@@ -490,16 +490,16 @@ export default function LectureAnalyticsPlaceholder() {
 
         <div className="flex flex-wrap gap-3 text-[10px] font-bold uppercase tracking-wider mt-4 md:mt-0">
 
-          <span className="bg-brand-950/80 border border-slate-800 text-slate-350 px-3 py-1.5 rounded-xl flex items-center gap-1.5">
-            <Clock className="h-3.5 w-3.5 text-slate-500" />
+          <span className="bg-[#D9E1D2]/40 border border-[#D9E1D2] text-slate-350 px-3 py-1.5 rounded-xl flex items-center gap-1.5">
+            <Clock className="h-3.5 w-3.5 text-[#68766B]" />
             {duration}
           </span>
 
-          <span className="bg-primary-600/10 border border-primary-500/20 text-primary-400 px-3 py-1.5 rounded-xl">
+          <span className="bg-black/10 border border-[#315C46]/20 text-[#315C46] px-3 py-1.5 rounded-xl">
             {difficulty}
           </span>
 
-          <span className="bg-brand-950/80 border border-slate-800 text-slate-350 px-3 py-1.5 rounded-xl">
+          <span className="bg-[#D9E1D2]/40 border border-[#D9E1D2] text-slate-350 px-3 py-1.5 rounded-xl">
             Views: {views}
           </span>
 
@@ -513,11 +513,11 @@ export default function LectureAnalyticsPlaceholder() {
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
 
         <div className="glass-panel rounded-xl p-4 space-y-1.5">
-          <span className="text-[9px] text-slate-500 font-bold uppercase block">
+          <span className="text-[9px] text-[#26332A] font-bold uppercase block">
             Completion Rate
           </span>
 
-          <span className="text-xl font-bold text-white">
+          <span className="text-xl font-bold text-[#26332A]">
             {activeSessionMatches
               ? Math.round(
                   (
@@ -532,31 +532,31 @@ export default function LectureAnalyticsPlaceholder() {
         </div>
 
         <div className="glass-panel rounded-xl p-4 space-y-1.5">
-          <span className="text-[9px] text-slate-500 font-bold uppercase block">
+          <span className="text-[9px] text-[#26332A] font-bold uppercase block">
             Avg Watch Time
           </span>
 
-          <span className="text-xl font-bold text-white">
+          <span className="text-xl font-bold text-[#26332A]">
             {avgWatchTime}
           </span>
         </div>
 
         <div className="glass-panel rounded-xl p-4 space-y-1.5">
-          <span className="text-[9px] text-slate-500 font-bold uppercase block">
+          <span className="text-[9px] text-[#26332A] font-bold uppercase block">
             Avg Quiz Score
           </span>
 
-          <span className="text-xl font-bold text-white">
+          <span className="text-xl font-bold text-[#26332A]">
             {avgQuizScore}%
           </span>
         </div>
 
         <div className="glass-panel rounded-xl p-4 space-y-1.5">
-          <span className="text-[9px] text-slate-500 font-bold uppercase block">
+          <span className="text-[9px] text-[#26332A] font-bold uppercase block">
             Avg Confusion Score
           </span>
 
-          <span className="text-xl font-bold text-white">
+          <span className="text-xl font-bold text-[#26332A]">
             {activeConfusionScore}%
           </span>
         </div>
@@ -566,7 +566,7 @@ export default function LectureAnalyticsPlaceholder() {
             Attention Needed
           </span>
 
-          <span className="text-xl font-bold text-white">
+          <span className="text-xl font-bold text-[#26332A]">
             {activeSessionMatches &&
             Number(activeSession.confusion_score || 0) >= 60
               ? riskStudents + 1
@@ -580,16 +580,16 @@ export default function LectureAnalyticsPlaceholder() {
       {/* =========================================================
           LECTURE QUALITY
       ========================================================= */}
-      <div className="glass-panel rounded-2xl p-6 border border-slate-800 bg-brand-900/40 flex flex-col md:flex-row justify-between items-center gap-6">
+      <div className="glass-panel rounded-2xl p-6 border border-[#D9E1D2] bg-[#E2E8D8] flex flex-col md:flex-row justify-between items-center gap-6">
 
         <div className="space-y-2 max-w-md">
 
-          <h4 className="font-outfit font-bold text-sm text-white flex items-center gap-2">
-            <Award className="h-4 w-4 text-primary-400" />
+          <h4 className="font-outfit font-bold text-sm text-[#26332A] flex items-center gap-2">
+            <Award className="h-4 w-4 text-[#315C46]" />
             Lecture Quality Rating
           </h4>
 
-          <p className="text-xs text-slate-400 leading-relaxed">
+          <p className="text-xs text-[#68766B] leading-relaxed">
             Quality information is calculated from the actual lecture
             analytics returned by the Faculty backend.
           </p>
@@ -604,12 +604,12 @@ export default function LectureAnalyticsPlaceholder() {
                 {qualityScore}/100
               </span>
 
-              <span className="block text-[9px] uppercase tracking-wider text-slate-500 font-bold mt-1">
+              <span className="block text-[9px] uppercase tracking-wider text-[#26332A] font-bold mt-1">
                 Pedagogical Index
               </span>
             </>
           ) : (
-            <span className="text-sm text-slate-500">
+            <span className="text-sm text-[#68766B]">
               No quality data
             </span>
           )}
@@ -626,21 +626,21 @@ export default function LectureAnalyticsPlaceholder() {
         {/* TIMELINE */}
         <div className="glass-panel rounded-2xl p-6 lg:col-span-2 space-y-6">
 
-          <h4 className="font-outfit font-bold text-xs text-white uppercase tracking-wider flex items-center gap-2">
-            <Activity className="h-4 w-4 text-primary-400" />
+          <h4 className="font-outfit font-bold text-xs text-[#26332A] uppercase tracking-wider flex items-center gap-2">
+            <Activity className="h-4 w-4 text-[#315C46]" />
             Timeline Confusion Heatmap Density
           </h4>
 
           {confusionTimeline.length === 0 ? (
-            <div className="rounded-xl border border-slate-800 bg-brand-950/50 p-8 text-center">
+            <div className="rounded-xl border border-[#D9E1D2] bg-[#D9E1D2]/40 p-8 text-center">
 
-              <Activity className="h-8 w-8 text-slate-600 mx-auto mb-3" />
+              <Activity className="h-8 w-8 text-[#68766B] mx-auto mb-3" />
 
-              <p className="text-sm font-semibold text-slate-300">
+              <p className="text-sm font-semibold text-[#68766B]">
                 No confusion timeline data
               </p>
 
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-[#68766B] mt-1">
                 Student interaction data will appear here when available.
               </p>
 
@@ -682,7 +682,7 @@ export default function LectureAnalyticsPlaceholder() {
 
                     </div>
 
-                    <div className="w-full bg-slate-900 h-2.5 rounded-full overflow-hidden flex">
+                    <div className="w-full bg-[#FCFCF8] h-2.5 rounded-full overflow-hidden flex">
 
                       <div
                         className={`h-full rounded-full transition-all duration-500 ${
@@ -703,7 +703,7 @@ export default function LectureAnalyticsPlaceholder() {
                     </div>
 
                     {item.notes && (
-                      <span className="text-[9px] text-slate-500 italic block pl-1">
+                      <span className="text-[9px] text-[#68766B] italic block pl-1">
                         Note: {item.notes}
                       </span>
                     )}
@@ -720,17 +720,17 @@ export default function LectureAnalyticsPlaceholder() {
         {/* CONFUSING CONCEPTS */}
         <div className="glass-panel rounded-2xl p-6 space-y-6">
 
-          <h4 className="font-outfit font-bold text-xs text-white uppercase tracking-wider flex items-center gap-2">
-            <AlertTriangle className="h-4 w-4 text-primary-400" />
+          <h4 className="font-outfit font-bold text-xs text-[#26332A] uppercase tracking-wider flex items-center gap-2">
+            <AlertTriangle className="h-4 w-4 text-[#315C46]" />
             Ranked Confusing Concepts
           </h4>
 
           {confusingConcepts.length === 0 ? (
             <div className="text-center py-8">
 
-              <AlertTriangle className="h-7 w-7 text-slate-600 mx-auto mb-3" />
+              <AlertTriangle className="h-7 w-7 text-[#68766B] mx-auto mb-3" />
 
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-[#68766B]">
                 No confusing concepts available.
               </p>
 
@@ -751,16 +751,16 @@ export default function LectureAnalyticsPlaceholder() {
                 return (
                   <div
                     key={`${lectureId}-concept-${index}`}
-                    className="p-4 bg-brand-950/40 border border-slate-900 rounded-xl flex gap-3.5 items-center justify-between"
+                    className="p-4 bg-[#D9E1D2]/40 border border-[#D9E1D2] rounded-xl flex gap-3.5 items-center justify-between"
                   >
 
                     <div className="flex items-center gap-3">
 
-                      <span className="h-6 w-6 rounded-full bg-brand-900 border border-slate-800 text-[10px] text-slate-300 font-bold flex items-center justify-center">
+                      <span className="h-6 w-6 rounded-full bg-[#FCFCF8] border border-[#D9E1D2] text-[10px] text-[#68766B] font-bold flex items-center justify-center">
                         {rank}
                       </span>
 
-                      <span className="text-xs font-bold text-slate-200">
+                      <span className="text-xs font-bold text-[#26332A]">
                         {concept.name || 'Unknown Concept'}
                       </span>
 
@@ -792,10 +792,10 @@ export default function LectureAnalyticsPlaceholder() {
       {/* =========================================================
           FACULTY SUGGESTIONS
       ========================================================= */}
-      <div className="glass-panel rounded-2xl p-6 border border-slate-800 bg-brand-900/40 space-y-4">
+      <div className="glass-panel rounded-2xl p-6 border border-[#D9E1D2] bg-[#E2E8D8] space-y-4">
 
-        <h4 className="font-outfit font-bold text-xs text-white uppercase tracking-wider flex items-center gap-2">
-          <Info className="h-4 w-4 text-primary-400" />
+        <h4 className="font-outfit font-bold text-xs text-[#26332A] uppercase tracking-wider flex items-center gap-2">
+          <Info className="h-4 w-4 text-[#315C46]" />
           Instructor Action Suggestions
         </h4>
 
@@ -808,7 +808,7 @@ export default function LectureAnalyticsPlaceholder() {
               (suggestion, index) => (
                 <div
                   key={`${lectureId}-suggestion-${index}`}
-                  className="p-3.5 bg-brand-950/40 border border-slate-900 rounded-xl text-xs text-slate-300 leading-relaxed"
+                  className="p-3.5 bg-[#D9E1D2]/40 border border-[#D9E1D2] rounded-xl text-xs text-[#68766B] leading-relaxed"
                 >
                   {suggestion}
                 </div>
@@ -817,7 +817,7 @@ export default function LectureAnalyticsPlaceholder() {
 
           </div>
         ) : (
-          <div className="text-slate-500 italic text-xs">
+          <div className="text-[#68766B] italic text-xs">
             No suggestions calculated for this lecture.
           </div>
         )}
@@ -827,70 +827,70 @@ export default function LectureAnalyticsPlaceholder() {
       {/* =========================================================
           TELEMETRY
       ========================================================= */}
-      <div className="glass-panel rounded-2xl p-6 border border-slate-800 bg-brand-900/40 space-y-6">
+      <div className="glass-panel rounded-2xl p-6 border border-[#D9E1D2] bg-[#E2E8D8] space-y-6">
 
-        <h4 className="font-outfit font-bold text-xs text-white uppercase tracking-wider flex items-center gap-2">
-          <BarChart2 className="h-4 w-4 text-primary-400" />
+        <h4 className="font-outfit font-bold text-xs text-[#26332A] uppercase tracking-wider flex items-center gap-2">
+          <BarChart2 className="h-4 w-4 text-[#315C46]" />
           Aggregated Telemetry Summary
         </h4>
 
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
 
-          <div className="p-3 bg-brand-950/40 border border-slate-900 rounded-xl text-center space-y-1">
+          <div className="p-3 bg-[#D9E1D2]/40 border border-[#D9E1D2] rounded-xl text-center space-y-1">
 
-            <span className="text-[9px] text-slate-500 font-semibold block uppercase">
+            <span className="text-[9px] text-[#26332A] font-semibold block uppercase">
               Total Plays
             </span>
 
-            <span className="text-base font-bold text-white">
+            <span className="text-base font-bold text-[#26332A]">
               {totalPlays}
             </span>
 
           </div>
 
-          <div className="p-3 bg-brand-950/40 border border-slate-900 rounded-xl text-center space-y-1">
+          <div className="p-3 bg-[#D9E1D2]/40 border border-[#D9E1D2] rounded-xl text-center space-y-1">
 
-            <span className="text-[9px] text-slate-500 font-semibold block uppercase">
+            <span className="text-[9px] text-[#26332A] font-semibold block uppercase">
               Pauses
             </span>
 
-            <span className="text-base font-bold text-white">
+            <span className="text-base font-bold text-[#26332A]">
               {activePauses}
             </span>
 
           </div>
 
-          <div className="p-3 bg-brand-950/40 border border-slate-900 rounded-xl text-center space-y-1">
+          <div className="p-3 bg-[#D9E1D2]/40 border border-[#D9E1D2] rounded-xl text-center space-y-1">
 
-            <span className="text-[9px] text-slate-500 font-semibold block uppercase">
+            <span className="text-[9px] text-[#26332A] font-semibold block uppercase">
               Rewinds
             </span>
 
-            <span className="text-base font-bold text-white">
+            <span className="text-base font-bold text-[#26332A]">
               {activeRewinds}
             </span>
 
           </div>
 
-          <div className="p-3 bg-brand-950/40 border border-slate-900 rounded-xl text-center space-y-1">
+          <div className="p-3 bg-[#D9E1D2]/40 border border-[#D9E1D2] rounded-xl text-center space-y-1">
 
-            <span className="text-[9px] text-slate-500 font-semibold block uppercase">
+            <span className="text-[9px] text-[#26332A] font-semibold block uppercase">
               Forward Seeks
             </span>
 
-            <span className="text-base font-bold text-white">
+            <span className="text-base font-bold text-[#26332A]">
               {activeSeeks}
             </span>
 
           </div>
 
-          <div className="p-3 bg-brand-950/40 border border-slate-900 rounded-xl text-center space-y-1">
+          <div className="p-3 bg-[#D9E1D2]/40 border border-[#D9E1D2] rounded-xl text-center space-y-1">
 
-            <span className="text-[9px] text-slate-500 font-semibold block uppercase">
+            <span className="text-[9px] text-[#26332A] font-semibold block uppercase">
               Speed Adjustments
             </span>
 
-            <span className="text-base font-bold text-white">
+            <span className="text-base font-bold text-[#26332A]">
               {activeSpeedChanges}
             </span>
 
@@ -901,9 +901,9 @@ export default function LectureAnalyticsPlaceholder() {
         {activeSessionMatches &&
         Array.isArray(activeSession.repeated_timestamps) &&
         activeSession.repeated_timestamps.length > 0 && (
-          <div className="p-4 bg-brand-950/60 border border-slate-900 rounded-xl space-y-2">
+          <div className="p-4 bg-[#D9E1D2]/40 border border-[#D9E1D2] rounded-xl space-y-2">
 
-            <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">
+            <span className="text-[9px] font-bold text-[#26332A] uppercase tracking-widest block">
               Active Session Revisited Segments
             </span>
 
@@ -930,23 +930,23 @@ export default function LectureAnalyticsPlaceholder() {
       {/* =========================================================
           STUDENT PERFORMANCE
       ========================================================= */}
-      <div className="glass-panel rounded-2xl p-6 border border-slate-800 bg-brand-900/40">
+      <div className="glass-panel rounded-2xl p-6 border border-[#D9E1D2] bg-[#E2E8D8]">
 
-        <h4 className="font-outfit font-bold text-xs text-white uppercase tracking-wider mb-6 flex items-center gap-2">
-          <Users className="h-4 w-4 text-primary-400" />
+        <h4 className="font-outfit font-bold text-xs text-[#26332A] uppercase tracking-wider mb-6 flex items-center gap-2">
+          <Users className="h-4 w-4 text-[#315C46]" />
           Student Performance Records
         </h4>
 
         {displayStudents.length === 0 ? (
           <div className="py-10 text-center">
 
-            <Users className="h-8 w-8 text-slate-600 mx-auto mb-3" />
+            <Users className="h-8 w-8 text-[#68766B] mx-auto mb-3" />
 
-            <p className="text-sm font-semibold text-slate-300">
+            <p className="text-sm font-semibold text-[#68766B]">
               No student data available
             </p>
 
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-[#68766B] mt-1">
               Student activity for this lecture will appear here when available.
             </p>
 
@@ -958,7 +958,7 @@ export default function LectureAnalyticsPlaceholder() {
 
               <thead>
 
-                <tr className="border-b border-slate-800 text-slate-500 uppercase tracking-wider font-semibold">
+                <tr className="border-b border-[#D9E1D2] text-[#68766B] uppercase tracking-wider font-semibold">
 
                   <th className="pb-3 px-4">
                     Student
@@ -1003,14 +1003,14 @@ export default function LectureAnalyticsPlaceholder() {
                   return (
                     <tr
                       key={`${lectureId}-student-${index}`}
-                      className="text-slate-300 hover:bg-brand-900/10 transition-colors"
+                      className="text-[#68766B] hover:bg-[#E2E8D8] transition-colors"
                     >
 
-                      <td className="py-4 px-4 font-semibold text-slate-200">
+                      <td className="py-4 px-4 font-semibold text-[#26332A]">
 
                         <div className="flex items-center gap-3">
 
-                          <div className="h-7 w-7 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-[10px] text-slate-300">
+                          <div className="h-7 w-7 rounded-full bg-slate-800 border border-slate-300 flex items-center justify-center font-bold text-[10px] text-[#68766B]">
                             {(student.name || 'Student')
                               .split(' ')
                               .map((part) => part[0])
@@ -1027,15 +1027,15 @@ export default function LectureAnalyticsPlaceholder() {
 
                       </td>
 
-                      <td className="py-4 text-center font-mono font-bold text-slate-200">
+                      <td className="py-4 text-center font-mono font-bold text-[#26332A]">
                         {student.watch_percentage ?? 0}%
                       </td>
 
-                      <td className="py-4 text-center font-mono text-slate-400">
+                      <td className="py-4 text-center font-mono text-[#68766B]">
                         {student.watch_time || 'N/A'}
                       </td>
 
-                      <td className="py-4 text-center font-bold text-primary-400">
+                      <td className="py-4 text-center font-bold text-[#315C46]">
                         {student.quiz_score ?? 'N/A'}
                       </td>
 
@@ -1049,7 +1049,7 @@ export default function LectureAnalyticsPlaceholder() {
                                 ? 'bg-amber-500/10 text-amber-400'
                                 : confusionLevel === 'Low'
                                   ? 'bg-emerald-500/10 text-emerald-400'
-                                  : 'bg-slate-500/10 text-slate-400'
+                                  : 'bg-slate-500/10 text-[#68766B]'
                           }`}
                         >
                           {confusionLevel}
@@ -1067,7 +1067,7 @@ export default function LectureAnalyticsPlaceholder() {
                                 ? 'bg-amber-500/10 text-amber-400'
                                 : riskLevel === 'Low'
                                   ? 'bg-emerald-500/10 text-emerald-400'
-                                  : 'bg-slate-500/10 text-slate-400'
+                                  : 'bg-slate-500/10 text-[#68766B]'
                           }`}
                         >
                           {riskLevel}

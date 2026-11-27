@@ -85,17 +85,17 @@ const LectureFeedbackForm = ({ lectureId, onSubmitted, onSkip }) => {
   };
 
   if (loading) {
-    return <div className="text-center p-8 text-white">Loading feedback form...</div>;
+    return <div className="text-center p-8 text-[#68766B]">Loading feedback form...</div>;
   }
 
   if (alreadySubmitted) {
     return (
-      <div className="text-center p-8">
-        <h3 className="text-xl font-bold text-white mb-4">Feedback Submitted</h3>
-        <p className="text-slate-400 mb-6">You have already submitted feedback for this lecture.</p>
+      <div className="text-center p-8 bg-[#F8F8F2] border border-[#D9E1D2] rounded-3xl">
+        <h3 className="text-xl font-bold text-[#26332A] mb-2">Feedback Submitted</h3>
+        <p className="text-[#68766B] mb-6 text-sm">You have already submitted feedback for this lecture.</p>
         <button 
           onClick={onSubmitted}
-          className="px-6 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-lg font-semibold"
+          className="px-6 py-2.5 bg-[#315C46] hover:bg-[#264B39] text-[#FFFFFF] rounded-full font-bold text-xs shadow-sm transition cursor-pointer"
         >
           Continue
         </button>
@@ -105,23 +105,23 @@ const LectureFeedbackForm = ({ lectureId, onSubmitted, onSkip }) => {
 
   if (success) {
     return (
-      <div className="text-center p-8">
-        <div className="mx-auto h-12 w-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-2xl text-emerald-500 mb-4">
-          ?
+      <div className="text-center p-8 bg-[#F8F8F2] border border-[#D9E1D2] rounded-3xl">
+        <div className="mx-auto h-12 w-12 rounded-full bg-[#DCE8DC] border border-[#D9E1D2] flex items-center justify-center text-xl text-[#264B39] mb-4 font-bold">
+          ✓
         </div>
-        <h3 className="text-xl font-bold text-white mb-2">Thank you!</h3>
-        <p className="text-slate-400">Your feedback has been submitted successfully.</p>
+        <h3 className="text-xl font-bold text-[#26332A] mb-2">Thank you!</h3>
+        <p className="text-[#68766B] text-sm">Your feedback has been submitted successfully.</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-brand-950 p-6 rounded-xl max-w-2xl w-full max-h-[85vh] overflow-y-auto custom-scrollbar">
-      <h2 className="text-2xl font-bold text-white mb-2">Lecture Feedback</h2>
-      <p className="text-slate-400 mb-6 text-sm">Help us understand your learning experience. Your feedback helps improve future lectures.</p>
+    <div className="bg-[#F8F8F2] p-6 sm:p-8 rounded-3xl border border-[#D9E1D2] max-w-2xl w-full max-h-[85vh] overflow-y-auto text-[#26332A] shadow-2xl">
+      <h2 className="text-2xl font-bold text-[#26332A] mb-2">Lecture Feedback</h2>
+      <p className="text-[#68766B] mb-6 text-sm leading-relaxed">Help us understand your learning experience. Your feedback helps improve future lectures.</p>
       
       {error && (
-        <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-lg mb-6 text-sm">
+        <div className="bg-rose-50 border border-rose-200 text-rose-700 px-4 py-3 rounded-2xl mb-6 text-xs font-medium">
           {error}
         </div>
       )}
@@ -129,7 +129,7 @@ const LectureFeedbackForm = ({ lectureId, onSubmitted, onSkip }) => {
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Q1 */}
         <div className="space-y-3">
-          <label className="block text-white font-semibold">1. How well did you understand the concepts explained in this lecture? <span className="text-red-400">*</span></label>
+          <label className="block text-[#26332A] font-bold text-sm">1. How well did you understand the concepts explained in this lecture? <span className="text-rose-600">*</span></label>
           <div className="space-y-2">
             {[
               {val: "1", label: "I understood everything."},
@@ -137,8 +137,8 @@ const LectureFeedbackForm = ({ lectureId, onSubmitted, onSkip }) => {
               {val: "3", label: "I understood some concepts, but struggled with others."},
               {val: "4", label: "I found most concepts difficult to understand."}
             ].map(opt => (
-              <label key={opt.val} className="flex items-center space-x-3 text-slate-300">
-                <input type="radio" name="understanding" value={opt.val} checked={formData.understanding === opt.val} onChange={handleChange} className="text-primary-500 bg-slate-800 border-slate-700" required />
+              <label key={opt.val} className="flex items-center space-x-3 text-[#26332A] text-xs sm:text-sm p-2 rounded-xl hover:bg-[#E8EDE1] transition cursor-pointer">
+                <input type="radio" name="understanding" value={opt.val} checked={formData.understanding === opt.val} onChange={handleChange} className="text-[#315C46] focus:ring-[#315C46] border-[#D9E1D2]" required />
                 <span>{opt.label}</span>
               </label>
             ))}
@@ -147,7 +147,7 @@ const LectureFeedbackForm = ({ lectureId, onSubmitted, onSkip }) => {
 
         {/* Q2 */}
         <div className="space-y-3">
-          <label className="block text-white font-semibold">2. How would you rate the overall difficulty of this lecture? <span className="text-red-400">*</span></label>
+          <label className="block text-[#26332A] font-bold text-sm">2. How would you rate the overall difficulty of this lecture? <span className="text-rose-600">*</span></label>
           <div className="space-y-2">
             {[
               {val: "1", label: "Very easy"},
@@ -156,8 +156,8 @@ const LectureFeedbackForm = ({ lectureId, onSubmitted, onSkip }) => {
               {val: "4", label: "Difficult"},
               {val: "5", label: "Very difficult"}
             ].map(opt => (
-              <label key={opt.val} className="flex items-center space-x-3 text-slate-300">
-                <input type="radio" name="difficulty" value={opt.val} checked={formData.difficulty === opt.val} onChange={handleChange} className="text-primary-500 bg-slate-800 border-slate-700" required />
+              <label key={opt.val} className="flex items-center space-x-3 text-[#26332A] text-xs sm:text-sm p-2 rounded-xl hover:bg-[#E8EDE1] transition cursor-pointer">
+                <input type="radio" name="difficulty" value={opt.val} checked={formData.difficulty === opt.val} onChange={handleChange} className="text-[#315C46] focus:ring-[#315C46] border-[#D9E1D2]" required />
                 <span>{opt.label}</span>
               </label>
             ))}
@@ -166,7 +166,7 @@ const LectureFeedbackForm = ({ lectureId, onSubmitted, onSkip }) => {
 
         {/* Q3 */}
         <div className="space-y-3">
-          <label className="block text-white font-semibold">3. Was the explanation clear and easy to follow? <span className="text-red-400">*</span></label>
+          <label className="block text-[#26332A] font-bold text-sm">3. Was the explanation clear and easy to follow? <span className="text-rose-600">*</span></label>
           <div className="space-y-2">
             {[
               {val: "1", label: "Very clear"},
@@ -174,8 +174,8 @@ const LectureFeedbackForm = ({ lectureId, onSubmitted, onSkip }) => {
               {val: "3", label: "Somewhat unclear"},
               {val: "4", label: "Very unclear"}
             ].map(opt => (
-              <label key={opt.val} className="flex items-center space-x-3 text-slate-300">
-                <input type="radio" name="clarity" value={opt.val} checked={formData.clarity === opt.val} onChange={handleChange} className="text-primary-500 bg-slate-800 border-slate-700" required />
+              <label key={opt.val} className="flex items-center space-x-3 text-[#26332A] text-xs sm:text-sm p-2 rounded-xl hover:bg-[#E8EDE1] transition cursor-pointer">
+                <input type="radio" name="clarity" value={opt.val} checked={formData.clarity === opt.val} onChange={handleChange} className="text-[#315C46] focus:ring-[#315C46] border-[#D9E1D2]" required />
                 <span>{opt.label}</span>
               </label>
             ))}
@@ -184,15 +184,15 @@ const LectureFeedbackForm = ({ lectureId, onSubmitted, onSkip }) => {
 
         {/* Q4 */}
         <div className="space-y-3">
-          <label className="block text-white font-semibold">4. Was the pace of the lecture comfortable? <span className="text-red-400">*</span></label>
+          <label className="block text-[#26332A] font-bold text-sm">4. Was the pace of the lecture comfortable? <span className="text-rose-600">*</span></label>
           <div className="space-y-2">
             {[
               {val: "1", label: "Too slow"},
               {val: "2", label: "Just right"},
               {val: "3", label: "Too fast"}
             ].map(opt => (
-              <label key={opt.val} className="flex items-center space-x-3 text-slate-300">
-                <input type="radio" name="pace" value={opt.val} checked={formData.pace === opt.val} onChange={handleChange} className="text-primary-500 bg-slate-800 border-slate-700" required />
+              <label key={opt.val} className="flex items-center space-x-3 text-[#26332A] text-xs sm:text-sm p-2 rounded-xl hover:bg-[#E8EDE1] transition cursor-pointer">
+                <input type="radio" name="pace" value={opt.val} checked={formData.pace === opt.val} onChange={handleChange} className="text-[#315C46] focus:ring-[#315C46] border-[#D9E1D2]" required />
                 <span>{opt.label}</span>
               </label>
             ))}
@@ -201,7 +201,7 @@ const LectureFeedbackForm = ({ lectureId, onSubmitted, onSkip }) => {
 
         {/* Q5 */}
         <div className="space-y-3">
-          <label className="block text-white font-semibold">5. Which part of the lecture did you find most difficult? <span className="text-red-400">*</span></label>
+          <label className="block text-[#26332A] font-bold text-sm">5. Which part of the lecture did you find most difficult? <span className="text-rose-600">*</span></label>
           <div className="space-y-2">
             {[
               {val: "1", label: "Introduction / Basic concepts"},
@@ -210,8 +210,8 @@ const LectureFeedbackForm = ({ lectureId, onSubmitted, onSkip }) => {
               {val: "4", label: "Final concepts / Summary"},
               {val: "5", label: "I did not find any part difficult."}
             ].map(opt => (
-              <label key={opt.val} className="flex items-center space-x-3 text-slate-300">
-                <input type="radio" name="difficult_part" value={opt.val} checked={formData.difficult_part === opt.val} onChange={handleChange} className="text-primary-500 bg-slate-800 border-slate-700" required />
+              <label key={opt.val} className="flex items-center space-x-3 text-[#26332A] text-xs sm:text-sm p-2 rounded-xl hover:bg-[#E8EDE1] transition cursor-pointer">
+                <input type="radio" name="difficult_part" value={opt.val} checked={formData.difficult_part === opt.val} onChange={handleChange} className="text-[#315C46] focus:ring-[#315C46] border-[#D9E1D2]" required />
                 <span>{opt.label}</span>
               </label>
             ))}
@@ -220,7 +220,7 @@ const LectureFeedbackForm = ({ lectureId, onSubmitted, onSkip }) => {
 
         {/* Q6 */}
         <div className="space-y-3">
-          <label className="block text-white font-semibold">6. What additional learning support would help you understand this topic better? <span className="text-red-400">*</span></label>
+          <label className="block text-[#26332A] font-bold text-sm">6. What additional learning support would help you understand this topic better? <span className="text-rose-600">*</span></label>
           <div className="space-y-2">
             {[
               {val: "1", label: "More real-life examples"},
@@ -230,8 +230,8 @@ const LectureFeedbackForm = ({ lectureId, onSubmitted, onSkip }) => {
               {val: "5", label: "More practice questions and quizzes"},
               {val: "6", label: "No additional support needed."}
             ].map(opt => (
-              <label key={opt.val} className="flex items-center space-x-3 text-slate-300">
-                <input type="radio" name="additional_support" value={opt.val} checked={formData.additional_support === opt.val} onChange={handleChange} className="text-primary-500 bg-slate-800 border-slate-700" required />
+              <label key={opt.val} className="flex items-center space-x-3 text-[#26332A] text-xs sm:text-sm p-2 rounded-xl hover:bg-[#E8EDE1] transition cursor-pointer">
+                <input type="radio" name="additional_support" value={opt.val} checked={formData.additional_support === opt.val} onChange={handleChange} className="text-[#315C46] focus:ring-[#315C46] border-[#D9E1D2]" required />
                 <span>{opt.label}</span>
               </label>
             ))}
@@ -240,31 +240,31 @@ const LectureFeedbackForm = ({ lectureId, onSubmitted, onSkip }) => {
 
         {/* Q7 */}
         <div className="space-y-3">
-          <label className="block text-white font-semibold">7. Do you have any suggestions or feedback about this lecture?</label>
+          <label className="block text-[#26332A] font-bold text-sm">7. Do you have any suggestions or feedback about this lecture?</label>
           <textarea 
             name="suggestion"
             value={formData.suggestion}
             onChange={handleChange}
             maxLength={2000}
             rows={4}
-            className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-white focus:outline-none focus:border-primary-500"
+            className="w-full bg-[#FCFCF8] border border-[#D9E1D2] rounded-2xl p-3 text-[#26332A] focus:outline-none focus:border-[#315C46] focus:ring-1 focus:ring-[#315C46] text-xs sm:text-sm placeholder-[#879187]"
             placeholder="Your suggestions (optional)..."
           ></textarea>
-          <div className="text-right text-xs text-slate-500">{formData.suggestion.length}/2000</div>
+          <div className="text-right text-[10px] text-[#879187]">{formData.suggestion.length}/2000</div>
         </div>
 
-        <div className="pt-4 flex items-center justify-between border-t border-slate-800">
+        <div className="pt-4 flex items-center justify-between border-t border-[#D9E1D2]">
           <button 
             type="button" 
             onClick={onSkip}
-            className="px-6 py-2 text-slate-400 hover:text-white font-semibold"
+            className="px-6 py-2.5 bg-[#E2E8D8] text-[#315C46] hover:bg-[#E8EDE1] border border-[#D9E1D2] rounded-full font-bold text-xs transition cursor-pointer"
           >
             Skip
           </button>
           <button 
             type="submit" 
             disabled={submitting}
-            className="px-6 py-2 bg-primary-600 hover:bg-primary-500 disabled:opacity-50 text-white rounded-lg font-bold"
+            className="px-6 py-2.5 bg-[#315C46] hover:bg-[#264B39] disabled:opacity-50 text-[#FFFFFF] rounded-full font-bold text-xs shadow-sm transition cursor-pointer"
           >
             {submitting ? 'Submitting...' : 'Submit Feedback'}
           </button>
