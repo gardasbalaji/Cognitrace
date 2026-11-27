@@ -150,7 +150,7 @@ export default function SignIn() {
 
     const googleClientId =
       import.meta.env.VITE_GOOGLE_CLIENT_ID ||
-      '454928666283-b2a12stu9r96pkni5ur32r0cd4heflj1.apps.googleusercontent.com';
+      '665689614355-pftf1b4otha1kvi53n0vsruh25vmjqh6.apps.googleusercontent.com';
 
     let intervalId = null;
     let attempts = 0;
