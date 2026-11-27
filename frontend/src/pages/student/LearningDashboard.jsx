@@ -210,45 +210,52 @@ export default function LearningDashboard() {
         {/* Main Grid: Chart & Recommended Topics */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Study Hours Chart */}
-          <div className="bg-[#FCFCF8] border border-[#D9E1D2] rounded-2xl p-6 lg:col-span-2 shadow-sm">
-            <div className="flex justify-between items-center mb-2">
-              <h4 className="font-outfit font-extrabold text-sm text-black uppercase tracking-wider">
-                Weekly Video Watchtime
-              </h4>
-              <span className="text-xs font-bold text-black/70">
-                Daily activity overview
+          <div className="bg-[#FCFCF8] border border-[#D9E1D2] rounded-2xl p-6 lg:col-span-2 shadow-sm flex flex-col justify-between">
+            <div className="flex justify-between items-center mb-6 pb-3 border-b border-[#D9E1D2]">
+              <div>
+                <h4 className="font-outfit font-extrabold text-sm text-black uppercase tracking-wider">
+                  Weekly Video Watchtime
+                </h4>
+                <p className="text-xs text-black/70 mt-0.5 font-medium">
+                  Daily study watchtime tracking
+                </p>
+              </div>
+              <span className="text-xs font-extrabold text-black bg-[#EFF2E9] px-3 py-1 rounded-full border border-[#D9E1D2]">
+                Total: {weeklyHours.reduce((a, b) => a + b, 0).toFixed(1)} hrs
               </span>
             </div>
-            <div className="flex items-end justify-center gap-4 sm:gap-6 h-40 border-b border-[#D9E1D2] pb-3 pt-6 px-2">
-              {weeklyHours.map((hours, i) => {
-                const heightPercent = maxHours > 0 ? (hours / maxHours) * 100 : 0;
-                const fillPercent = hours > 0 ? Math.max(16, heightPercent) : 8;
+            <div className="pt-2 pb-2">
+              <div className="flex items-end justify-between sm:justify-around gap-2 sm:gap-4 px-2">
+                {weeklyHours.map((hours, i) => {
+                  const heightPercent = maxHours > 0 ? (hours / maxHours) * 100 : 0;
+                  const fillPercent = hours > 0 ? Math.max(16, heightPercent) : 8;
 
-                return (
-                  <div
-                    key={i}
-                    className="flex flex-col items-center gap-2 group cursor-pointer flex-1 max-w-[52px]"
-                  >
-                    <span className="text-[11px] font-extrabold text-black">
-                      {Number(hours).toFixed(1)}h
-                    </span>
-                    {/* Outer track pill */}
-                    <div className="w-full h-28 bg-[#E6ECE0] border border-[#D9E1D2] rounded-xl flex items-end p-1 shadow-inner">
-                      <div
-                        className={`w-full rounded-lg transition-all duration-500 shadow-sm ${
-                          hours > 0
-                            ? 'bg-gradient-to-t from-[#1F4532] to-[#315C46] group-hover:brightness-110'
-                            : 'bg-[#315C46]/30'
-                        }`}
-                        style={{ height: `${fillPercent}%` }}
-                      ></div>
+                  return (
+                    <div
+                      key={i}
+                      className="flex flex-col items-center gap-2 group cursor-pointer flex-1 max-w-[48px]"
+                    >
+                      <span className="text-[11px] font-extrabold text-black">
+                        {Number(hours).toFixed(1)}h
+                      </span>
+                      {/* Outer track pill */}
+                      <div className="w-full h-24 bg-[#E6ECE0] border border-[#D9E1D2] rounded-xl flex items-end p-1 shadow-inner">
+                        <div
+                          className={`w-full rounded-lg transition-all duration-500 shadow-sm ${
+                            hours > 0
+                              ? 'bg-gradient-to-t from-[#1F4532] to-[#315C46] group-hover:brightness-110'
+                              : 'bg-[#315C46]/30'
+                          }`}
+                          style={{ height: `${fillPercent}%` }}
+                        ></div>
+                      </div>
+                      <span className="text-xs text-black font-extrabold px-2 py-0.5 rounded-md bg-[#EFF2E9] border border-[#D9E1D2] shadow-2xs">
+                        {days[i]}
+                      </span>
                     </div>
-                    <span className="text-xs text-black font-extrabold px-2.5 py-0.5 rounded-md bg-[#EFF2E9] border border-[#D9E1D2] shadow-2xs">
-                      {days[i]}
-                    </span>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           </div>
 
